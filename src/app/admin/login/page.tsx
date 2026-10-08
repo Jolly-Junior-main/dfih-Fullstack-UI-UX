@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { Shield, KeyRound, Mail, ArrowRight, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { auth } from "@/lib/firebase"
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -10,21 +12,38 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
 
-    // Simulate network delay
-    setTimeout(() => {
-      if (email === "admin" && password === "admin") {
+    if (email === "admin" && password === "admin") {
+      try {
+        // Map "admin/admin" to a valid Firebase account under the hood
+        const mappedEmail = "admin@forestryinfohub.org"
+        const mappedPassword = "admin-secure-123456"
+        
+        try {
+          await signInWithEmailAndPassword(auth, mappedEmail, mappedPassword)
+        } catch (err: any) {
+          // If the account doesn't exist yet, create it automatically!
+          if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+             await createUserWithEmailAndPassword(auth, mappedEmail, mappedPassword)
+          } else {
+             throw err
+          }
+        }
+        
         sessionStorage.setItem("admin_auth", "true")
         window.location.href = "/admin"
-      } else {
-        setError("Invalid credentials. Please use 'admin' for both.")
+      } catch (err: any) {
+        setError(err.message || "Failed to authenticate with Firebase.")
         setIsLoading(false)
       }
-    }, 1000)
+    } else {
+      setError("Invalid credentials. Please use 'admin' for both.")
+      setIsLoading(false)
+    }
   }
 
   return (
