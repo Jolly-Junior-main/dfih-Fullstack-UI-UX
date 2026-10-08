@@ -61,9 +61,12 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="mt-12 text-center">
-          <Link href="/" className="text-sm text-[#f5f0e6]/40 hover:text-[#f5f0e6] transition-colors">
+        <div className="mt-12 text-center space-y-4">
+          <Link href="/" className="block text-sm text-[#f5f0e6]/40 hover:text-[#f5f0e6] transition-colors">
             &larr; Back to Home
+          </Link>
+          <Link href="/admin/login" className="block text-xs text-[#84cc16]/50 hover:text-[#84cc16] transition-colors underline underline-offset-4">
+            Administrator Access &rarr;
           </Link>
         </div>
 
