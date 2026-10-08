@@ -6,15 +6,25 @@ import Link from "next/link"
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     setIsLoading(true)
-    // Simulate auth delay before redirecting to dashboard
+
+    // Simulate network delay
     setTimeout(() => {
-      sessionStorage.setItem("admin_auth", "true")
-      window.location.href = "/admin"
-    }, 1500)
+      if (email === "admin" && password === "admin") {
+        sessionStorage.setItem("admin_auth", "true")
+        window.location.href = "/admin"
+      } else {
+        setError("Invalid credentials. Please use 'admin' for both.")
+        setIsLoading(false)
+      }
+    }, 1000)
   }
 
   return (
@@ -39,14 +49,22 @@ export default function AdminLoginPage() {
         <div className="bg-white/15 backdrop-blur-xl border border-white/20 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
           
           <form onSubmit={handleLogin} className="space-y-6 relative z-10">
+            {error && (
+              <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-sm font-medium">
+                {error}
+              </div>
+            )}
+            
             <div>
-              <label className="block text-sm font-medium text-[#f5f0e6]/80 mb-2">Admin Email</label>
+              <label className="block text-sm font-medium text-[#f5f0e6]/80 mb-2">Admin Username</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#f5f0e6]/50" size={18} />
                 <input 
-                  type="email" 
+                  type="text" 
                   required
-                  placeholder="admin@forestryinfohub.org"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin"
                   className="w-full bg-black/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#f5f0e6] placeholder:text-[#f5f0e6]/30 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                 />
               </div>
@@ -61,7 +79,9 @@ export default function AdminLoginPage() {
                 <input 
                   type="password" 
                   required
-                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="admin"
                   className="w-full bg-black/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#f5f0e6] placeholder:text-[#f5f0e6]/30 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                 />
               </div>
