@@ -12,6 +12,7 @@ export default function AdminLoginPage() {
     setIsLoading(true)
     // Simulate auth delay before redirecting to dashboard
     setTimeout(() => {
+      sessionStorage.setItem("admin_auth", "true")
       window.location.href = "/admin"
     }, 1500)
   }

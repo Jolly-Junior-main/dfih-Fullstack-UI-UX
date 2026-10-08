@@ -1,6 +1,7 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Users, FileText, Database, Settings, Activity, LayoutDashboard, Shield, FolderGit2 } from "lucide-react"
 
@@ -17,10 +18,33 @@ const sidebarLinks = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
   const isLoginPage = pathname === "/admin/login"
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    if (!isLoginPage) {
+      const auth = sessionStorage.getItem("admin_auth")
+      if (!auth) {
+        router.push("/admin/login")
+      } else {
+        setIsAuthenticated(true)
+      }
+    }
+  }, [isLoginPage, router])
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("admin_auth")
+    router.push("/admin/login")
+  }
 
   if (isLoginPage) {
     return <>{children}</>
+  }
+
+  // Prevent flash of unauthenticated content
+  if (!isAuthenticated) {
+    return <div className="min-h-screen bg-[#2d3a2a]"></div>
   }
 
   return (
@@ -51,13 +75,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
           
           <div className="pt-6 mt-6 border-t border-white/10">
-            <Link 
-              href="/admin/login"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-red-400/80 hover:bg-red-500/20 hover:text-red-400"
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-red-400/80 hover:bg-red-500/20 hover:text-red-400 cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
               <span className="font-medium text-sm">Logout</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
