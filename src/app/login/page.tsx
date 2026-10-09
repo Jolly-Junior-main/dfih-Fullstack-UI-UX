@@ -1,9 +1,26 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { ArrowRight, Leaf } from "lucide-react"
 
 export default function LoginPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    // Simulate auth for contributor portal
+    setTimeout(() => {
+      sessionStorage.setItem("user_auth", "true")
+      router.push("/submit")
+    }, 800)
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff] pt-20">
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
@@ -23,12 +40,13 @@ export default function LoginPage() {
               Sign in to manage your submissions and access the contributor dashboard.
             </p>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleLogin}>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#0f172a]/80">Email address</label>
                 <Input 
                   type="email" 
                   placeholder="name@example.com"
+                  required
                   className="bg-[#ffffff] border-white/20 text-[#0f172a] h-12 focus:border-[#84cc16]"
                 />
               </div>
@@ -41,12 +59,13 @@ export default function LoginPage() {
                 <Input 
                   type="password" 
                   placeholder="••••••••"
+                  required
                   className="bg-[#ffffff] border-white/20 text-[#0f172a] h-12 focus:border-[#84cc16]"
                 />
               </div>
 
-              <Button className="w-full h-12 bg-[#84cc16] text-[#ffffff] hover:bg-[#65a30d] font-bold text-sm rounded-xl mt-4">
-                Sign in <ArrowRight className="w-4 h-4 ml-2" />
+              <Button disabled={loading} className="w-full h-12 bg-[#84cc16] text-[#0f172a] hover:bg-[#84cc16]/90 font-bold text-sm rounded-xl mt-4">
+                {loading ? "Signing in..." : <><span className="text-[#0f172a]">Sign in</span> <ArrowRight className="w-4 h-4 ml-2 text-[#0f172a]" /></>}
               </Button>
             </form>
 

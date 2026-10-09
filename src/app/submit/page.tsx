@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Check, ChevronRight, UploadCloud, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +16,18 @@ const steps = [
 ]
 
 export default function SubmitResourcePage() {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
+  const [isAuthorized, setIsAuthorized] = useState(false)
+
+  useEffect(() => {
+    const auth = sessionStorage.getItem("user_auth")
+    if (!auth) {
+      router.push("/login")
+    } else {
+      setIsAuthorized(true)
+    }
+  }, [router])
 
   // Dummy state to hold form data for the review step
   const [formData, setFormData] = useState({
@@ -38,10 +50,14 @@ export default function SubmitResourcePage() {
     if (currentStep > 1) setCurrentStep(c => c - 1)
   }
 
+  if (!isAuthorized) {
+    return <div className="flex flex-col min-h-screen pt-20 bg-[#ffffff] justify-center items-center"><p className="text-slate-500 font-medium">Checking authorization...</p></div>
+  }
+
   return (
     <div className="flex flex-col min-h-screen pt-20 bg-[#ffffff]">
       {/* Header Area */}
-      <div className="border-b border-[#0f172a]/5 bg-[#5e7a5a]">
+      <div className="border-b border-[#0f172a]/5 bg-slate-50">
         <div className="container mx-auto px-6 py-12 max-w-4xl text-center">
           <div className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold mb-4">Contributor Portal</div>
           <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-[#0f172a] mb-4">Submit Resource</h1>
