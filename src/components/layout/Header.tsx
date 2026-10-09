@@ -53,7 +53,7 @@ export function Header() {
                   priority
                 />
               </div>
-              <div className="hidden sm:block text-[#698765]">
+              <div className="hidden sm:block text-[#ffffff]">
                 <h1 className="text-xl font-bold leading-tight tracking-tight">DFIH</h1>
                 <p className="text-[10px] uppercase tracking-widest opacity-80 font-medium">Forests - Lungs of the World</p>
               </div>
@@ -67,8 +67,8 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full transition-all text-[#698765] hover:bg-black/5 hover:text-[#2d3a2a]",
-                  pathname === item.href && "bg-[#698765] text-white hover:text-white hover:bg-[#698765]"
+                  "inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full transition-all text-[#ffffff] hover:bg-black/5 hover:text-[#ffffff]",
+                  pathname === item.href && "bg-[#ffffff] text-white hover:text-white hover:bg-[#ffffff]"
                 )}
               >
                 {item.name}
@@ -81,24 +81,24 @@ export function Header() {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="rounded-full text-[#698765] hover:bg-black/5" 
+              className="rounded-full text-[#ffffff] hover:bg-black/5" 
               asChild
             >
               <Link href="/resources">
                 <Search className="h-5 w-5" />
               </Link>
             </Button>
-            <div className="h-6 w-px mx-2 bg-[#698765]/20" aria-hidden="true" />
+            <div className="h-6 w-px mx-2 bg-[#ffffff]/20" aria-hidden="true" />
             <Button 
               variant="outline" 
-              className="hidden lg:flex rounded-full border-[#698765]/30 bg-transparent text-[#698765] hover:bg-[#698765] hover:text-white" 
+              className="hidden lg:flex rounded-full border-[#ffffff]/30 bg-transparent text-[#ffffff] hover:bg-[#ffffff] hover:text-white" 
               asChild
             >
               <Link href="/login">Log in</Link>
             </Button>
             <Button 
               variant="default" 
-              className="rounded-full bg-[#84cc16] text-[#2d3a2a] hover:bg-[#84cc16]/90 font-bold tracking-wide uppercase text-[10px] px-6 shadow-sm" 
+              className="rounded-full bg-[#84cc16] text-[#ffffff] hover:bg-[#84cc16]/90 font-bold tracking-wide uppercase text-[10px] px-6 shadow-sm" 
               asChild
             >
               <Link href="/submit">
@@ -109,13 +109,13 @@ export function Header() {
 
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center space-x-1">
-            <Button variant="ghost" size="icon" className="text-[#698765] hover:bg-black/5" asChild>
+            <Button variant="ghost" size="icon" className="text-[#ffffff] hover:bg-black/5" asChild>
               <Link href="/resources"><Search className="h-5 w-5" /></Link>
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="text-[#698765] hover:bg-black/5"
+              className="text-[#ffffff] hover:bg-black/5"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
             >
@@ -139,8 +139,8 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "block py-3 px-4 text-base font-semibold rounded-lg text-[#698765]/80 hover:bg-black/5 hover:text-[#698765]",
-                  pathname === item.href && "bg-[#698765] text-white hover:text-white hover:bg-[#698765]"
+                  "block py-3 px-4 text-base font-semibold rounded-lg text-[#ffffff]/80 hover:bg-black/5 hover:text-[#ffffff]",
+                  pathname === item.href && "bg-[#ffffff] text-white hover:text-white hover:bg-[#ffffff]"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -148,10 +148,10 @@ export function Header() {
               </Link>
             ))}
             <div className="border-t border-black/10 mt-4 pt-4 pb-2 space-y-3">
-              <Button variant="outline" className="w-full justify-center border-[#698765]/30 bg-transparent text-[#698765] hover:bg-[#698765] hover:text-white" asChild>
+              <Button variant="outline" className="w-full justify-center border-[#ffffff]/30 bg-transparent text-[#ffffff] hover:bg-[#ffffff] hover:text-white" asChild>
                 <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log in</Link>
               </Button>
-              <Button variant="default" className="w-full justify-center bg-[#84cc16] text-[#2d3a2a] hover:bg-[#84cc16]/90 font-bold tracking-wide uppercase text-[10px]" asChild>
+              <Button variant="default" className="w-full justify-center bg-[#84cc16] text-[#ffffff] hover:bg-[#84cc16]/90 font-bold tracking-wide uppercase text-[10px]" asChild>
                 <Link href="/submit" onClick={() => setMobileMenuOpen(false)}>Submit Resource</Link>
               </Button>
             </div>

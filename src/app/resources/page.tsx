@@ -43,17 +43,17 @@ export default function ResourcesPage() {
             {themes.map((theme, idx) => {
               const Icon = theme.icon
               return (
-                <div key={idx} className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-[24px] p-6 flex flex-col items-start justify-between min-h-[160px] group cursor-pointer hover:bg-[#698765]/40 hover:border-[#84cc16]/30 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-xl relative overflow-hidden">
+                <div key={idx} className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-[24px] p-6 flex flex-col items-start justify-between min-h-[160px] group cursor-pointer hover:bg-[#ffffff]/40 hover:border-[#84cc16]/30 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-xl relative overflow-hidden">
                   
                   {/* Subtle highlight effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                  <div className="flex items-center justify-center w-12 h-12 rounded-[14px] bg-[#577353] border border-white/20 text-[#84cc16] group-hover:scale-110 group-hover:bg-[#84cc16] group-hover:text-[#2d3a2a] transition-all duration-300 shadow-inner z-10">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-[14px] bg-[#f8fafc] border border-white/20 text-[#84cc16] group-hover:scale-110 group-hover:bg-[#84cc16] group-hover:text-[#ffffff] transition-all duration-300 shadow-inner z-10">
                     <Icon className="w-5 h-5" strokeWidth={2} />
                   </div>
                   
                   <div className="z-10 mt-6">
-                    <h3 className="text-[15px] font-medium text-[#f5f0e6] leading-tight group-hover:text-white transition-colors">
+                    <h3 className="text-[15px] font-medium text-[#0f172a] leading-tight group-hover:text-white transition-colors">
                       {theme.name}
                     </h3>
                   </div>

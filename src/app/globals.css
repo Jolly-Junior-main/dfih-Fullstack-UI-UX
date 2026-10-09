@@ -2,33 +2,33 @@
 
 :root {
   /* Earthy Editorial Theme (Based on Courtix) - Now Default for everything */
-  --background: #698765; /* Deep earthy forest/olive green */
-  --foreground: #f5f0e6; /* Cream/Beige text */
+  --background: #ffffff; /* Deep earthy forest/olive green */
+  --foreground: #0f172a; /* Cream/Beige text */
   
-  --card: #577353; /* Slightly lighter olive for cards */
-  --card-foreground: #f5f0e6;
+  --card: #f8fafc; /* Slightly lighter olive for cards */
+  --card-foreground: #0f172a;
   
-  --popover: #577353;
-  --popover-foreground: #f5f0e6;
+  --popover: #f8fafc;
+  --popover-foreground: #0f172a;
   
-  --primary: #f5f0e6; /* Cream as primary button */
-  --primary-foreground: #698765; /* Dark text on cream button */
+  --primary: #0f172a; /* Cream as primary button */
+  --primary-foreground: #ffffff; /* Dark text on cream button */
   
-  --secondary: #2c3a2f;
-  --secondary-foreground: #f5f0e6;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
   
-  --muted: #2c3a2f;
-  --muted-foreground: #9caaa0;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
   
-  --accent: #2c3a2f;
-  --accent-foreground: #f5f0e6;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
   
-  --destructive: #7f1d1d;
-  --destructive-foreground: #f5f0e6;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
 
-  --border: #354739;
-  --input: #354739;
-  --ring: #f5f0e6;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0f172a;
 }
 
 @theme inline {

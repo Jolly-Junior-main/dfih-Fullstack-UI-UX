@@ -41,7 +41,7 @@ export default function AdminSettingsPage() {
       {/* Success Toast */}
       <div className={`fixed top-24 right-10 z-50 flex items-center gap-3 bg-white border border-[#84cc16] shadow-xl px-4 py-3 rounded-xl transition-all duration-300 ${showToast ? 'translate-x-0 opacity-100' : 'translate-x-12 opacity-0 pointer-events-none'}`}>
         <CheckCircle2 className="text-[#84cc16]" size={20} />
-        <span className="font-medium text-[#2d3a2a]">Settings saved successfully!</span>
+        <span className="font-medium text-[#ffffff]">Settings saved successfully!</span>
       </div>
 
       <div className="max-w-4xl mx-auto">
@@ -49,12 +49,12 @@ export default function AdminSettingsPage() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight text-[#f5f0e6]">Platform Settings</h1>
-            <p className="text-[#f5f0e6]/60 mt-1">Configure global appearance, system behavior, and integrations.</p>
+            <h1 className="text-3xl font-medium tracking-tight text-[#0f172a]">Platform Settings</h1>
+            <p className="text-[#0f172a]/60 mt-1">Configure global appearance, system behavior, and integrations.</p>
           </div>
           <button 
             onClick={handleSave}
-            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#2d3a2a] px-5 py-2.5 rounded-xl font-semibold transition-colors shadow-lg"
+            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#ffffff] px-5 py-2.5 rounded-xl font-semibold transition-colors shadow-lg"
           >
             <Save size={18} />
             Save Changes
@@ -81,8 +81,8 @@ export default function AdminSettingsPage() {
                   onClick={() => setActiveTab(tab.name)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${
                     isActive 
-                      ? 'bg-white/15 text-[#f5f0e6] border border-white/20 shadow-md font-medium' 
-                      : 'text-[#f5f0e6]/60 hover:bg-white/5 hover:text-[#f5f0e6]'
+                      ? 'bg-white/15 text-[#0f172a] border border-white/20 shadow-md font-medium' 
+                      : 'text-[#0f172a]/60 hover:bg-white/5 hover:text-[#0f172a]'
                   }`}
                 >
                   <Icon size={18} className={isActive ? 'text-[#84cc16]' : ''} />
@@ -99,44 +99,44 @@ export default function AdminSettingsPage() {
             {activeTab === "General" ? (
               <>
                 <div>
-                  <h3 className="text-xl font-semibold text-[#f5f0e6] mb-4">Site Information</h3>
+                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Site Information</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-[#f5f0e6]/70 mb-1">Site Name</label>
+                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Site Name</label>
                       <input 
                         type="text" 
                         value={formData.siteName}
                         onChange={(e) => setFormData({...formData, siteName: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#f5f0e6]/70 mb-1">Support Email</label>
+                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Support Email</label>
                       <input 
                         type="email" 
                         value={formData.supportEmail}
                         onChange={(e) => setFormData({...formData, supportEmail: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#f5f0e6]/70 mb-1">Site Description</label>
+                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Site Description</label>
                       <textarea 
                         rows={3}
                         value={formData.description}
                         onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]/50 transition-colors resize-none"
+                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors resize-none"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-[#f5f0e6] mb-4">Maintenance Mode</h3>
+                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Maintenance Mode</h3>
                   <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5">
                     <div>
-                      <p className="font-medium text-[#f5f0e6]">Enable Maintenance Mode</p>
-                      <p className="text-sm text-[#f5f0e6]/60 mt-1">Only Administrators will be able to log in when active.</p>
+                      <p className="font-medium text-[#0f172a]">Enable Maintenance Mode</p>
+                      <p className="text-sm text-[#0f172a]/60 mt-1">Only Administrators will be able to log in when active.</p>
                     </div>
                     <div 
                       onClick={() => setFormData({...formData, maintenanceMode: !formData.maintenanceMode})}
@@ -148,17 +148,17 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div className="pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-[#f5f0e6] mb-4">Cache Settings</h3>
+                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Cache Settings</h3>
                   <div className="flex flex-col gap-4">
-                    <p className="text-sm text-[#f5f0e6]/60">Clear the application cache to ensure new content and styles are distributed to Edge nodes.</p>
-                    <button onClick={handleClearCache} className="self-start px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl text-[#f5f0e6] font-medium transition-colors">
+                    <p className="text-sm text-[#0f172a]/60">Clear the application cache to ensure new content and styles are distributed to Edge nodes.</p>
+                    <button onClick={handleClearCache} className="self-start px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl text-[#0f172a] font-medium transition-colors">
                       Purge Cloudflare Cache
                     </button>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="py-10 text-center text-[#f5f0e6]/60">
+              <div className="py-10 text-center text-[#0f172a]/60">
                 <p>This settings tab is currently under construction.</p>
               </div>
             )}

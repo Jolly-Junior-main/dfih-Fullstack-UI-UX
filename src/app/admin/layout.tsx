@@ -44,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Prevent flash of unauthenticated content
   if (!isAuthenticated) {
-    return <div className="min-h-screen bg-[#2d3a2a]"></div>
+    return <div className="min-h-screen bg-[#ffffff]"></div>
   }
 
   return (
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className="w-64 flex-shrink-0 hidden md:block border-r border-white/20 bg-white/10 backdrop-blur-sm relative z-10 flex flex-col">
         <div className="p-6 flex-1 flex flex-col">
-          <div className="text-xs font-bold text-[#f5f0e6]/50 uppercase tracking-wider mb-6">Admin Menu</div>
+          <div className="text-xs font-bold text-[#0f172a]/50 uppercase tracking-wider mb-6">Admin Menu</div>
           <nav className="space-y-2 flex-1">
             {sidebarLinks.map((link, idx) => {
               const Icon = link.icon
@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     isActive 
                       ? 'bg-[#84cc16]/20 text-[#84cc16] border border-[#84cc16]/30 shadow-inner' 
-                      : 'text-[#f5f0e6]/70 hover:bg-[#577353]/30 hover:text-[#f5f0e6]'
+                      : 'text-[#0f172a]/70 hover:bg-[#f8fafc]/30 hover:text-[#0f172a]'
                   }`}
                 >
                   <Icon size={18} />

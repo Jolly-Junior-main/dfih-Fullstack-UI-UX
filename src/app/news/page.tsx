@@ -38,13 +38,13 @@ const newsItems = [
 
 export default function NewsPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#698765] pt-32 pb-24">
+    <div className="flex flex-col min-h-screen bg-[#ffffff] pt-32 pb-24">
       <div className="container mx-auto px-6 md:px-12 max-w-6xl">
         
         <div className="mb-16">
           <div className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold mb-4">Latest Updates</div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-[#f5f0e6] mb-6">News & Insights</h1>
-          <p className="text-[#f5f0e6]/70 text-lg max-w-2xl leading-relaxed">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-[#0f172a] mb-6">News & Insights</h1>
+          <p className="text-[#0f172a]/70 text-lg max-w-2xl leading-relaxed">
             Stay informed with the latest updates from the Digital Forestry Information Hub, including platform features, global forestry news, and expert analyses.
           </p>
         </div>
@@ -54,31 +54,31 @@ export default function NewsPage() {
             <Link 
               href={`#`} 
               key={item.id}
-              className="group bg-[#577353] border border-white/20 rounded-3xl overflow-hidden hover:border-[#84cc16]/50 transition-colors shadow-lg flex flex-col"
+              className="group bg-[#f8fafc] border border-white/20 rounded-3xl overflow-hidden hover:border-[#84cc16]/50 transition-colors shadow-lg flex flex-col"
             >
               <div 
                 className="h-64 w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                 style={{ backgroundImage: `url('${item.image}')` }}
               />
-              <div className="p-8 flex flex-col flex-1 relative z-10 bg-[#577353]">
+              <div className="p-8 flex flex-col flex-1 relative z-10 bg-[#f8fafc]">
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-[10px] font-bold tracking-widest uppercase bg-[#84cc16]/20 text-[#84cc16] px-3 py-1 rounded-full">
                     {item.category}
                   </span>
-                  <span className="text-xs text-[#f5f0e6]/50 flex items-center gap-1">
+                  <span className="text-xs text-[#0f172a]/50 flex items-center gap-1">
                     <Calendar className="w-3 h-3" /> {item.date}
                   </span>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-[#f5f0e6] mb-4 group-hover:text-[#84cc16] transition-colors leading-tight">
+                <h3 className="text-2xl font-bold text-[#0f172a] mb-4 group-hover:text-[#84cc16] transition-colors leading-tight">
                   {item.title}
                 </h3>
                 
-                <p className="text-[#f5f0e6]/70 text-sm leading-relaxed mb-8 flex-1">
+                <p className="text-[#0f172a]/70 text-sm leading-relaxed mb-8 flex-1">
                   {item.summary}
                 </p>
                 
-                <div className="flex items-center text-xs font-bold uppercase tracking-widest text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors">
+                <div className="flex items-center text-xs font-bold uppercase tracking-widest text-[#0f172a] group-hover:text-[#84cc16] transition-colors">
                   Read Article <ArrowRight className="w-4 h-4 ml-2" />
                 </div>
               </div>

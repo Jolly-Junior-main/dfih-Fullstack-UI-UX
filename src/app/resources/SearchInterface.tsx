@@ -71,12 +71,12 @@ export function SearchInterface() {
 
   const renderFilterGroup = (title: string, options: string[], idPrefix: string) => (
     <div className="mb-6">
-      <h3 className="text-sm font-semibold text-[#f5f0e6] mb-3">{title}</h3>
+      <h3 className="text-sm font-semibold text-[#0f172a] mb-3">{title}</h3>
       <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
         {options.map((option) => (
           <div key={`${idPrefix}-${option}`} className="flex items-start space-x-3">
-            <Checkbox id={`${idPrefix}-${option}`} className="mt-1 border-[#f5f0e6]/20 data-[state=checked]:bg-[#84cc16] data-[state=checked]:border-[#84cc16]" />
-            <Label htmlFor={`${idPrefix}-${option}`} className="text-sm font-normal text-[#f5f0e6]/70 cursor-pointer hover:text-white leading-snug">
+            <Checkbox id={`${idPrefix}-${option}`} className="mt-1 border-[#0f172a]/20 data-[state=checked]:bg-[#84cc16] data-[state=checked]:border-[#84cc16]" />
+            <Label htmlFor={`${idPrefix}-${option}`} className="text-sm font-normal text-[#0f172a]/70 cursor-pointer hover:text-white leading-snug">
               {option}
             </Label>
           </div>
@@ -88,7 +88,7 @@ export function SearchInterface() {
   const Sidebar = () => (
     <div className="bg-white/15 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-lg">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-bold text-[#f5f0e6]">Filters</h2>
+        <h2 className="text-lg font-bold text-[#0f172a]">Filters</h2>
         <button className="text-sm text-[#84cc16] hover:underline">Clear all</button>
       </div>
       
@@ -110,10 +110,10 @@ export function SearchInterface() {
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
-          <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-[#698765] border-r border-white/20 pb-12 shadow-xl z-50 h-full">
+          <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-[#ffffff] border-r border-white/20 pb-12 shadow-xl z-50 h-full">
             <div className="flex items-center justify-between px-4 pt-5 pb-2 border-b border-white/20">
-              <h2 className="text-lg font-bold text-[#f5f0e6]">Filters</h2>
-              <Button variant="ghost" size="icon" onClick={() => setMobileFiltersOpen(false)} className="text-[#f5f0e6]">
+              <h2 className="text-lg font-bold text-[#0f172a]">Filters</h2>
+              <Button variant="ghost" size="icon" onClick={() => setMobileFiltersOpen(false)} className="text-[#0f172a]">
                 <X className="h-6 w-6" />
               </Button>
             </div>
@@ -134,51 +134,51 @@ export function SearchInterface() {
         {/* Search Bar & Mobile Controls */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#f5f0e6]/50" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#0f172a]/50" />
             <Input 
               type="search" 
               placeholder="Search resources by keyword, title, or author..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-[#577353] border-white/20 text-[#f5f0e6] placeholder:text-[#f5f0e6]/30 focus:border-[#84cc16]"
+              className="pl-10 h-12 bg-[#f8fafc] border-white/20 text-[#0f172a] placeholder:text-[#0f172a]/30 focus:border-[#84cc16]"
             />
           </div>
           <div className="flex gap-2">
             <Button 
               variant="outline" 
-              className="h-12 lg:hidden flex-1 sm:flex-none border-white/20 bg-[#577353] text-[#f5f0e6]"
+              className="h-12 lg:hidden flex-1 sm:flex-none border-white/20 bg-[#f8fafc] text-[#0f172a]"
               onClick={() => setMobileFiltersOpen(true)}
             >
               <Filter className="mr-2 h-4 w-4" /> Filters
             </Button>
             <div className="relative hidden sm:block">
-              <select className="h-12 w-40 appearance-none rounded-md border border-white/20 bg-[#577353] pl-4 pr-10 text-sm text-[#f5f0e6] focus:border-[#84cc16] focus:outline-none focus:ring-1 focus:ring-[#84cc16] cursor-pointer">
+              <select className="h-12 w-40 appearance-none rounded-md border border-white/20 bg-[#f8fafc] pl-4 pr-10 text-sm text-[#0f172a] focus:border-[#84cc16] focus:outline-none focus:ring-1 focus:ring-[#84cc16] cursor-pointer">
                 <option>Sort by: Newest</option>
                 <option>Sort by: Oldest</option>
                 <option>Sort by: A-Z</option>
                 <option>Sort by: Z-A</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#f5f0e6]/50 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#0f172a]/50 pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* Results Info */}
         <div className="mb-6 flex items-center justify-between">
-          <p className="text-[#f5f0e6]/70 font-medium text-sm">
-            Showing <span className="font-bold text-[#f5f0e6]">1</span> to <span className="font-bold text-[#f5f0e6]">5</span> of <span className="font-bold text-[#f5f0e6]">248</span> results
+          <p className="text-[#0f172a]/70 font-medium text-sm">
+            Showing <span className="font-bold text-[#0f172a]">1</span> to <span className="font-bold text-[#0f172a]">5</span> of <span className="font-bold text-[#0f172a]">248</span> results
           </p>
         </div>
 
         {/* Active Filters */}
         <div className="mb-6 flex flex-wrap gap-2">
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-[#577353] px-3 py-1 text-xs font-medium text-[#f5f0e6]">
+          <span className="inline-flex items-center rounded-full border border-white/20 bg-[#f8fafc] px-3 py-1 text-xs font-medium text-[#0f172a]">
             Year: 2024
-            <button className="ml-1 text-[#f5f0e6]/50 hover:text-white"><X className="h-3 w-3" /></button>
+            <button className="ml-1 text-[#0f172a]/50 hover:text-white"><X className="h-3 w-3" /></button>
           </span>
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-[#577353] px-3 py-1 text-xs font-medium text-[#f5f0e6]">
+          <span className="inline-flex items-center rounded-full border border-white/20 bg-[#f8fafc] px-3 py-1 text-xs font-medium text-[#0f172a]">
             Type: Report
-            <button className="ml-1 text-[#f5f0e6]/50 hover:text-white"><X className="h-3 w-3" /></button>
+            <button className="ml-1 text-[#0f172a]/50 hover:text-white"><X className="h-3 w-3" /></button>
           </span>
         </div>
 
@@ -190,33 +190,33 @@ export function SearchInterface() {
         </div>
 
         {/* Pagination */}
-        <div className="mt-12 flex items-center justify-between border-t border-white/20 bg-[#577353] px-4 py-3 sm:px-6 rounded-2xl">
+        <div className="mt-12 flex items-center justify-between border-t border-white/20 bg-[#f8fafc] px-4 py-3 sm:px-6 rounded-2xl">
           <div className="flex flex-1 justify-between sm:hidden">
-            <Button variant="outline" className="border-white/20 bg-transparent text-[#f5f0e6]">Previous</Button>
-            <Button variant="outline" className="border-white/20 bg-transparent text-[#f5f0e6]">Next</Button>
+            <Button variant="outline" className="border-white/20 bg-transparent text-[#0f172a]">Previous</Button>
+            <Button variant="outline" className="border-white/20 bg-transparent text-[#0f172a]">Next</Button>
           </div>
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-[#f5f0e6]/70">
-                Showing <span className="font-medium text-[#f5f0e6]">1</span> to <span className="font-medium text-[#f5f0e6]">5</span> of <span className="font-medium text-[#f5f0e6]">248</span> results
+              <p className="text-sm text-[#0f172a]/70">
+                Showing <span className="font-medium text-[#0f172a]">1</span> to <span className="font-medium text-[#0f172a]">5</span> of <span className="font-medium text-[#0f172a]">248</span> results
               </p>
             </div>
             <div>
               <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                <button className="relative inline-flex items-center rounded-l-md px-3 py-2 text-[#f5f0e6]/50 border border-white/20 hover:bg-[#f5f0e6]/5">
+                <button className="relative inline-flex items-center rounded-l-md px-3 py-2 text-[#0f172a]/50 border border-white/20 hover:bg-[#0f172a]/5">
                   <span className="sr-only">Previous</span>
                   &larr;
                 </button>
-                <button aria-current="page" className="relative z-10 inline-flex items-center bg-[#f5f0e6] px-4 py-2 text-sm font-semibold text-[#698765]">
+                <button aria-current="page" className="relative z-10 inline-flex items-center bg-[#0f172a] px-4 py-2 text-sm font-semibold text-[#ffffff]">
                   1
                 </button>
-                <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[#f5f0e6] border border-white/20 hover:bg-[#f5f0e6]/5">
+                <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[#0f172a] border border-white/20 hover:bg-[#0f172a]/5">
                   2
                 </button>
-                <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[#f5f0e6] border border-white/20 hover:bg-[#f5f0e6]/5">
+                <button className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[#0f172a] border border-white/20 hover:bg-[#0f172a]/5">
                   3
                 </button>
-                <button className="relative inline-flex items-center rounded-r-md px-3 py-2 text-[#f5f0e6]/50 border border-white/20 hover:bg-[#f5f0e6]/5">
+                <button className="relative inline-flex items-center rounded-r-md px-3 py-2 text-[#0f172a]/50 border border-white/20 hover:bg-[#0f172a]/5">
                   <span className="sr-only">Next</span>
                   &rarr;
                 </button>
