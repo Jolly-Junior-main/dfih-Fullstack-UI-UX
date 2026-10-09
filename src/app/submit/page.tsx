@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import Link from "next/link"
+import { db } from "@/lib/firebase"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 
 const steps = [
   { id: 1, name: "Document Info" },
@@ -19,6 +21,7 @@ export default function SubmitResourcePage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const auth = sessionStorage.getItem("user_auth")
@@ -265,9 +268,11 @@ export default function SubmitResourcePage() {
               </Button>
             ) : (
               <Button 
-                className="bg-[#0f172a] text-[#ffffff] hover:bg-[#e6dfcf] font-bold px-8"
+                onClick={handleSubmit}
+                disabled={isSubmitting || !formData.title}
+                className="bg-[#0f172a] text-[#ffffff] hover:bg-slate-800 font-bold px-8 disabled:opacity-50"
               >
-                Submit to Repository
+                {isSubmitting ? "Submitting..." : "Submit to Repository"}
               </Button>
             )}
           </div>
