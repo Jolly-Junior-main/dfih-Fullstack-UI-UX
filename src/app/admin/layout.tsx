@@ -9,11 +9,11 @@ const sidebarLinks = [
   { name: "Overview", icon: LayoutDashboard, href: "/admin" },
   { name: "Research Submissions", icon: FileText, href: "/admin/research" },
   { name: "Content", icon: FileText, href: "/admin/content" },
+  { name: "News Updates", icon: Activity, href: "/admin/news" },
+  { name: "Static Pages", icon: FileText, href: "/admin/pages" },
   { name: "Categories", icon: FolderGit2, href: "/admin/categories" },
   { name: "Users & Roles", icon: Users, href: "/admin/users" },
   { name: "System Logs", icon: Activity, href: "/admin/logs" },
-  { name: "Security", icon: Shield, href: "/admin/security" },
-  { name: "Database", icon: Database, href: "/admin/database" },
   { name: "Settings", icon: Settings, href: "/admin/settings" },
 ]
 

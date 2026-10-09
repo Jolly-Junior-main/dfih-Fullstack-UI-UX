@@ -1,8 +1,34 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { db } from "@/lib/firebase"
+import { doc, getDoc } from "firebase/firestore"
 
 export default function Home() {
+  const [content, setContent] = useState({
+    heroTitle: "Digital Forestry Information Hub",
+    heroSubtitle: "At DFIH, We Build Strong Frameworks, Smart Strategies, And Confident Decisions At Every Level.",
+    heroButtonText: "Explore Data"
+  })
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const docRef = doc(db, "page_content", "home")
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setContent(prev => ({...prev, ...docSnap.data()}))
+        }
+      } catch (e) {
+        console.error("Error fetching home content:", e)
+      }
+    }
+    fetchContent()
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff] text-[#0f172a] selection:bg-[#0f172a] selection:text-[#ffffff] overflow-hidden">
       
@@ -52,7 +78,9 @@ export default function Home() {
           
           <div className="text-center">
             <h1 className="text-[10vw] sm:text-[8vw] md:text-[60px] lg:text-[80px] font-bold tracking-tighter leading-[1.1] text-[#0f172a] mix-blend-normal drop-shadow-2xl">
-              Digital Forestry<br />Information Hub
+              {content.heroTitle.split(' ').map((word, i) => (
+                <span key={i}>{word}{(i === 1) ? <br /> : ' '}</span>
+              ))}
             </h1>
           </div>
         </div>
@@ -62,10 +90,7 @@ export default function Home() {
       <section className="relative z-20 container mx-auto px-6 md:px-12 -mt-16 sm:-mt-32 md:-mt-48 pb-20 md:pb-32">
         <div className="max-w-4xl">
           <h2 className="text-3xl md:text-[3.5rem] leading-[1.2] md:leading-[1.1] font-medium tracking-tight mb-12 md:mb-16">
-            At DFIH, We Build Strong<br className="hidden md:block" />
-            Frameworks, Smart Strategies,<br className="hidden md:block" />
-            And Confident Decisions At Every<br className="hidden md:block" />
-            Level.
+            {content.heroSubtitle}
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-start">

@@ -1,8 +1,35 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Bell, MoreVertical, Plus, ArrowRight, Activity, Users, Globe } from "lucide-react"
+import { db } from "@/lib/firebase"
+import { doc, getDoc } from "firebase/firestore"
 
 export default function AboutPage() {
+  const [content, setContent] = useState({
+    title: "About Us",
+    content: "Building the definitive global repository for forestry research.",
+    missionTitle: "Our Mission & Impact",
+    missionContent: "The Digital Forestry Information Hub (DFIH) was established to bridge the gap between academic research and actionable policymaking. By centralizing millions of datasets, peer-reviewed articles, and on-the-ground management manuals, we empower researchers and governments to make data-driven decisions that protect our world's lungs."
+  })
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const docRef = doc(db, "page_content", "about")
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setContent(prev => ({...prev, ...docSnap.data()}))
+        }
+      } catch (e) {
+        console.error("Error fetching about content:", e)
+      }
+    }
+    fetchContent()
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen pt-24 pb-12 bg-[#ffffff] relative selection:bg-[#84cc16] selection:text-[#18221a]">
       
@@ -25,8 +52,8 @@ export default function AboutPage() {
             {/* Header Section */}
             <div className="flex justify-between items-end">
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-[#0f172a] mb-2">About Us</h1>
-                <p className="text-[#0f172a]/70 text-sm">Building the definitive global repository for forestry research.</p>
+                <h1 className="text-4xl md:text-5xl font-bold text-[#0f172a] mb-2">{content.title}</h1>
+                <p className="text-[#0f172a]/70 text-sm max-w-xl">{content.content}</p>
               </div>
             </div>
 
@@ -66,14 +93,14 @@ export default function AboutPage() {
             {/* Main Mission / "Statistic" Chart Area */}
             <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6 md:p-8 flex-1 flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-center mb-8 relative z-10">
-                <h2 className="text-[#0f172a] font-semibold text-lg">Our Mission & Impact</h2>
+                <h2 className="text-[#0f172a] font-semibold text-lg">{content.missionTitle}</h2>
                 <div className="px-4 py-2 rounded-full border border-white/20 text-[#0f172a]/80 text-xs flex items-center gap-2">
                   2020 - Present
                 </div>
               </div>
               
-              <p className="text-[#0f172a]/80 text-sm md:text-base leading-relaxed mb-12 max-w-2xl relative z-10">
-                The Digital Forestry Information Hub (DFIH) was established to bridge the gap between academic research and actionable policymaking. By centralizing millions of datasets, peer-reviewed articles, and on-the-ground management manuals, we empower researchers and governments to make data-driven decisions that protect our world's lungs.
+              <p className="text-[#0f172a]/80 text-sm md:text-base leading-relaxed mb-12 max-w-2xl relative z-10 whitespace-pre-wrap">
+                {content.missionContent}
               </p>
 
               {/* Fake Chart Graphic matching the aesthetic */}
