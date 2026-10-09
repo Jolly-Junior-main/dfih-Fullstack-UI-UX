@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import Link from "next/link"
+import { db } from "@/lib/firebase"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 
 const steps = [
   { id: 1, name: "Basic Info" },
@@ -27,6 +29,7 @@ export default function SubmitResourcePage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const auth = sessionStorage.getItem("user_auth")
@@ -74,6 +77,25 @@ export default function SubmitResourcePage() {
 
   const handleBack = () => {
     if (currentStep > 1) setCurrentStep(c => c - 1)
+  }
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true)
+      await addDoc(collection(db, "research_submissions"), {
+        ...formData,
+        status: "Pending Review",
+        author: "Researcher User", // Mock user for now since auth is mocked
+        createdAt: serverTimestamp()
+      })
+      alert("Research submitted successfully! It is now pending review by an administrator.")
+      router.push("/") // Redirect home or somewhere else
+    } catch (error) {
+      console.error("Error submitting document: ", error)
+      alert("There was an error submitting your research.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (!isAuthorized) {
@@ -381,9 +403,11 @@ export default function SubmitResourcePage() {
               </Button>
             ) : (
               <Button 
-                className="bg-[#0f172a] text-[#ffffff] hover:bg-slate-800 font-bold px-8"
+                onClick={handleSubmit}
+                disabled={isSubmitting || !formData.title}
+                className="bg-[#0f172a] text-[#ffffff] hover:bg-slate-800 font-bold px-8 disabled:opacity-50"
               >
-                Submit Listing
+                {isSubmitting ? "Submitting..." : "Submit Listing"}
               </Button>
             )}
           </div>

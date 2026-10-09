@@ -7,6 +7,7 @@ import { Users, FileText, Database, Settings, Activity, LayoutDashboard, Shield,
 
 const sidebarLinks = [
   { name: "Overview", icon: LayoutDashboard, href: "/admin" },
+  { name: "Research Submissions", icon: FileText, href: "/admin/research" },
   { name: "Content", icon: FileText, href: "/admin/content" },
   { name: "Categories", icon: FolderGit2, href: "/admin/categories" },
   { name: "Users & Roles", icon: Users, href: "/admin/users" },
