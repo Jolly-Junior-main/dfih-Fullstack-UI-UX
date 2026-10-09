@@ -50,17 +50,25 @@ export default function AdminResearchPage() {
             <h1 className="text-3xl font-medium tracking-tight text-[#0f172a]">Research Submissions</h1>
             <p className="text-[#0f172a]/60 mt-1">Review, approve, and manage research submitted by users.</p>
           </div>
-          <div className="flex items-center gap-4 bg-[#84cc16]/10 px-4 py-2 rounded-xl border border-white/20">
-            <div className="text-sm">
-              <span className="font-bold text-[#84cc16] text-xl">{submissions.length}</span>
-              <span className="text-[#0f172a]/60 ml-2">Total Submissions</span>
-            </div>
-            <div className="w-px h-8 bg-white/20 mx-2"></div>
-            <div className="text-sm">
-              <span className="font-bold text-yellow-500 text-xl">
-                {submissions.filter(s => s.status === 'Pending Review').length}
-              </span>
-              <span className="text-[#0f172a]/60 ml-2">Pending</span>
+          <div className="flex gap-4 items-center">
+            <a 
+              href="/admin/research/add" 
+              className="flex items-center justify-center bg-[#0f172a] text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 transition-colors"
+            >
+              Add Research
+            </a>
+            <div className="flex items-center gap-4 bg-[#84cc16]/10 px-4 py-2 rounded-xl border border-white/20">
+              <div className="text-sm">
+                <span className="font-bold text-[#84cc16] text-xl">{submissions.length}</span>
+                <span className="text-[#0f172a]/60 ml-2">Total Submissions</span>
+              </div>
+              <div className="w-px h-8 bg-white/20 mx-2"></div>
+              <div className="text-sm">
+                <span className="font-bold text-yellow-500 text-xl">
+                  {submissions.filter(s => s.status === 'Pending Review').length}
+                </span>
+                <span className="text-[#0f172a]/60 ml-2">Pending</span>
+              </div>
             </div>
           </div>
         </div>
