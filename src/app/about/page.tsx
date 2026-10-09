@@ -11,7 +11,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2000')] bg-cover bg-center opacity-20" />
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#84cc16]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#84cc16]/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
-        <div className="absolute inset-0 bg-[#ffffff]/60 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[#84cc16]/60 backdrop-blur-sm" />
       </div>
 
       <div className="container mx-auto px-4 md:px-8 relative z-10 flex-1 flex flex-col">
@@ -31,9 +31,9 @@ export default function AboutPage() {
             </div>
 
             {/* Top Stats Row (Like the 3 pill buttons) */}
-            <div className="bg-white/10 rounded-3xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-white/10">
+            <div className="bg-[#84cc16]/10 rounded-3xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-white/10">
               <div className="flex items-center gap-4 w-full md:w-auto">
-                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#84cc16]/10 flex items-center justify-center shrink-0">
                   <Globe className="w-5 h-5 text-[#0f172a]/90" />
                 </div>
                 <div>
@@ -41,9 +41,9 @@ export default function AboutPage() {
                   <div className="text-[#0f172a] font-bold text-xl">142 Nations</div>
                 </div>
               </div>
-              <div className="hidden md:block w-px h-10 bg-white/10" />
+              <div className="hidden md:block w-px h-10 bg-[#84cc16]/10" />
               <div className="flex items-center gap-4 w-full md:w-auto border-t border-white/10 md:border-0 pt-4 md:pt-0">
-                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#84cc16]/10 flex items-center justify-center shrink-0">
                   <Activity className="w-5 h-5 text-[#0f172a]/90" />
                 </div>
                 <div>
@@ -51,9 +51,9 @@ export default function AboutPage() {
                   <div className="text-[#0f172a] font-bold text-xl">10.5 Million</div>
                 </div>
               </div>
-              <div className="hidden md:block w-px h-10 bg-white/10" />
+              <div className="hidden md:block w-px h-10 bg-[#84cc16]/10" />
               <div className="flex items-center gap-4 w-full md:w-auto border-t border-white/10 md:border-0 pt-4 md:pt-0">
-                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#84cc16]/10 flex items-center justify-center shrink-0">
                   <Users className="w-5 h-5 text-[#0f172a]/90" />
                 </div>
                 <div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
             </div>
 
             {/* Main Mission / "Statistic" Chart Area */}
-            <div className="bg-white/10 border border-white/10 rounded-3xl p-6 md:p-8 flex-1 flex flex-col relative overflow-hidden">
+            <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6 md:p-8 flex-1 flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-center mb-8 relative z-10">
                 <h2 className="text-[#0f172a] font-semibold text-lg">Our Mission & Impact</h2>
                 <div className="px-4 py-2 rounded-full border border-white/20 text-[#0f172a]/80 text-xs flex items-center gap-2">
@@ -97,19 +97,19 @@ export default function AboutPage() {
             {/* Bottom Row: Goals & Business */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* My Goals equivalent */}
-              <div className="bg-white/10 border border-white/10 rounded-3xl p-6">
+              <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6">
                 <h3 className="text-[#0f172a] font-medium mb-6">Strategic Goals</h3>
                 <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="flex-1 bg-white/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <div className="flex-1 bg-[#84cc16]/10 rounded-2xl p-4 flex flex-col justify-between">
                     <div className="text-2xl font-bold text-[#0f172a] mb-2">80%</div>
-                    <div className="w-full h-1 bg-white/20 rounded-full mb-3">
+                    <div className="w-full h-1 bg-[#84cc16]/20 rounded-full mb-3">
                       <div className="w-[80%] h-full bg-[#84cc16] rounded-full" />
                     </div>
                     <div className="text-[10px] text-[#0f172a]/70 uppercase">Open Access Data</div>
                   </div>
-                  <div className="flex-1 bg-white/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <div className="flex-1 bg-[#84cc16]/10 rounded-2xl p-4 flex flex-col justify-between">
                     <div className="text-2xl font-bold text-[#0f172a] mb-2">95%</div>
-                    <div className="w-full h-1 bg-white/20 rounded-full mb-3">
+                    <div className="w-full h-1 bg-[#84cc16]/20 rounded-full mb-3">
                       <div className="w-[95%] h-full bg-[#84cc16] rounded-full" />
                     </div>
                     <div className="text-[10px] text-[#0f172a]/70 uppercase">Policy Integration</div>
@@ -118,16 +118,16 @@ export default function AboutPage() {
               </div>
               
               {/* Business equivalent */}
-              <div className="bg-white/10 border border-white/10 rounded-3xl p-6 flex flex-col justify-between">
+              <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6 flex flex-col justify-between">
                 <div className="flex justify-between items-center mb-4">
                   <div className="text-[#0f172a]/70 text-sm">Target Submissions</div>
-                  <div className="px-3 py-1 bg-white/10 rounded-md border border-[#84cc16]/30 text-[#84cc16] text-xs">1,000,000</div>
+                  <div className="px-3 py-1 bg-[#84cc16]/10 rounded-md border border-[#84cc16]/30 text-[#84cc16] text-xs">1,000,000</div>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 sm:gap-4 mt-4">
                   <div>
                     <div className="text-[#0f172a]/70 text-xs mb-1">Current Submissions</div>
                     <div className="text-xl font-bold text-[#0f172a]">700,345</div>
-                    <div className="w-full sm:w-32 h-1 bg-white/20 rounded-full mt-3">
+                    <div className="w-full sm:w-32 h-1 bg-[#84cc16]/20 rounded-full mt-3">
                       <div className="w-[70%] h-full bg-[#84cc16] rounded-full" />
                     </div>
                   </div>
@@ -144,7 +144,7 @@ export default function AboutPage() {
           <div className="w-full xl:w-[350px] flex flex-col gap-6">
             
             {/* Top Profile Card */}
-            <div className="bg-white/10 border border-white/10 rounded-3xl p-6 relative">
+            <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6 relative">
               <div className="flex justify-between items-start mb-6">
                 <div className="relative">
                   <Bell className="w-5 h-5 text-[#0f172a]/70" />
@@ -155,13 +155,13 @@ export default function AboutPage() {
               
               <div className="flex flex-col items-center mb-8">
                 <div className="w-20 h-20 rounded-full bg-[url('https://randomuser.me/api/portraits/women/44.jpg')] bg-cover border-4 border-white/20 mb-3" />
-                <div className="px-3 py-1 bg-white/20 rounded-full text-[#0f172a]/90 text-xs mb-3">Lead Curator</div>
+                <div className="px-3 py-1 bg-[#84cc16]/20 rounded-full text-[#0f172a]/90 text-xs mb-3">Lead Curator</div>
                 <h3 className="text-[#0f172a] font-medium text-lg">Dr. Elena Rostova</h3>
               </div>
               
               {/* Vibrant Gradient Card (Visa equivalent) */}
               <div className="bg-gradient-to-br from-[#84cc16] to-green-700 rounded-2xl p-5 shadow-[0_10px_30px_rgba(132,204,22,0.3)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/30 rounded-full blur-2xl -mr-10 -mt-10" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#84cc16]/30 rounded-full blur-2xl -mr-10 -mt-10" />
                 <div className="flex justify-between items-start mb-8 relative z-10">
                   <div className="text-white/90 font-medium tracking-widest text-sm">DFIH ALLIANCE</div>
                   <div className="text-white font-bold italic text-lg opacity-90">Core</div>
@@ -180,7 +180,7 @@ export default function AboutPage() {
             </div>
 
             {/* Bottom Month Transaction equivalent */}
-            <div className="bg-white/10 border border-white/10 rounded-3xl p-6 flex-1 flex flex-col">
+            <div className="bg-[#84cc16]/10 border border-white/10 rounded-3xl p-6 flex-1 flex flex-col">
               <h3 className="text-[#0f172a] font-medium mb-6">Recent Activity</h3>
               
               <div className="flex justify-between items-center mb-6">

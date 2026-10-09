@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen pt-20">
       {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0 hidden md:block border-r border-white/20 bg-white/10 backdrop-blur-sm relative z-10 flex flex-col">
+      <aside className="w-64 flex-shrink-0 hidden md:block border-r border-white/20 bg-[#84cc16]/10 backdrop-blur-sm relative z-10 flex flex-col">
         <div className="p-6 flex-1 flex flex-col">
           <div className="text-xs font-bold text-[#0f172a]/50 uppercase tracking-wider mb-6">Admin Menu</div>
           <nav className="space-y-2 flex-1">

@@ -14,7 +14,7 @@ export default function RegisterPage() {
     <div className="flex flex-col min-h-screen pt-20">
       <div className="flex-1 flex items-center justify-center p-6">
         
-        <div className="w-full max-w-md bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+        <div className="w-full max-w-md bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
             <Leaf size={120} />
           </div>

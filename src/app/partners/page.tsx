@@ -27,7 +27,7 @@ export default function PartnersPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {partners.map((partner, idx) => (
-            <div key={idx} className="bg-white/15 backdrop-blur-md border border-white/20 rounded-3xl p-8 flex flex-col justify-between group hover:bg-[#ffffff]/40 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl relative overflow-hidden">
+            <div key={idx} className="bg-[#84cc16]/15 backdrop-blur-md border border-white/20 rounded-3xl p-8 flex flex-col justify-between group hover:bg-[#84cc16]/40 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-10 transition-opacity">
                 <Globe size={100} />
               </div>

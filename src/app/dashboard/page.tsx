@@ -38,7 +38,7 @@ export default function ContributorDashboard() {
           {stats.map((stat, idx) => {
             const Icon = stat.icon
             return (
-              <div key={idx} className="bg-white/15 backdrop-blur-md border border-white/20 rounded-3xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
+              <div key={idx} className="bg-[#84cc16]/15 backdrop-blur-md border border-white/20 rounded-3xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 <div>
                   <p className="text-sm text-[#0f172a]/70 font-medium mb-1">{stat.name}</p>
@@ -53,7 +53,7 @@ export default function ContributorDashboard() {
         </div>
 
         {/* Recent Submissions */}
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 shadow-xl">
+        <div className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 shadow-xl">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-medium text-[#0f172a]">Recent Submissions</h2>
             <Link href="#" className="text-sm text-[#84cc16] hover:underline">View all</Link>
@@ -65,7 +65,7 @@ export default function ContributorDashboard() {
               { title: "Impact of Wildfires on Soil Ecosystems", type: "Report", date: "Sep 28, 2026", status: "In Review", color: "text-yellow-400" },
               { title: "Deforestation Rates in the Amazon (Q3)", type: "Analysis", date: "Sep 15, 2026", status: "Needs Revision", color: "text-red-400" }
             ].map((item, i) => (
-              <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-[#f8fafc]/50 transition-colors cursor-pointer group">
+              <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-[#84cc16]/5 border border-white/10 hover:bg-[#f8fafc]/50 transition-colors cursor-pointer group">
                 <div className="flex items-center gap-4 mb-4 sm:mb-0">
                   <div className="w-10 h-10 rounded-full bg-[#ffffff] flex items-center justify-center text-[#0f172a]/80 group-hover:text-white group-hover:scale-110 transition-all">
                     <FileText size={18} />
@@ -75,7 +75,7 @@ export default function ContributorDashboard() {
                     <p className="text-xs text-[#0f172a]/50 mt-1">{item.type} • Submitted {item.date}</p>
                   </div>
                 </div>
-                <div className={`px-4 py-1.5 rounded-full text-xs font-medium bg-black/20 backdrop-blur-sm border border-white/5 ${item.color}`}>
+                <div className={`px-4 py-1.5 rounded-full text-xs font-medium bg-[#84cc16]/20 backdrop-blur-sm border border-white/5 ${item.color}`}>
                   {item.status}
                 </div>
               </div>

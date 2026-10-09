@@ -71,7 +71,7 @@ export default function SubmitResourcePage() {
                         ? "bg-[#84cc16] border-[#84cc16] text-[#ffffff]" 
                         : isActive 
                           ? "bg-[#f8fafc] border-[#84cc16] text-[#84cc16]"
-                          : "bg-[#f8fafc] border-[#0f172a]/20 text-[#0f172a]/40"
+                          : "bg-[#f8fafc] border-[#0f172a]/20 text-[#0f172a]/60"
                     }`}
                   >
                     {isCompleted ? <Check className="w-5 h-5" /> : step.id}
@@ -86,7 +86,7 @@ export default function SubmitResourcePage() {
         </div>
 
         {/* Form Container */}
-        <div className="bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 mt-16 shadow-2xl">
+        <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 mt-16 shadow-2xl">
           
           {/* STEP 1: Document Info */}
           {currentStep === 1 && (
@@ -159,7 +159,7 @@ export default function SubmitResourcePage() {
           {currentStep === 3 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h2 className="text-2xl font-bold text-[#0f172a] mb-6">3. Upload Resource</h2>
-              <div className="border-2 border-dashed border-[#0f172a]/20 rounded-2xl bg-[#ffffff]/50 flex flex-col items-center justify-center p-6 md:p-12 text-center hover:bg-[#ffffff] hover:border-[#84cc16]/50 transition-colors cursor-pointer">
+              <div className="border-2 border-dashed border-[#0f172a]/20 rounded-2xl bg-[#84cc16]/50 flex flex-col items-center justify-center p-6 md:p-12 text-center hover:bg-[#ffffff] hover:border-[#84cc16]/50 transition-colors cursor-pointer">
                 <div className="w-12 h-12 md:w-16 md:h-16 bg-[#84cc16]/10 rounded-full flex items-center justify-center mb-4 md:mb-6">
                   <UploadCloud className="w-6 h-6 md:w-8 md:h-8 text-[#84cc16]" />
                 </div>

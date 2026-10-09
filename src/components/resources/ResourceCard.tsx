@@ -30,7 +30,7 @@ export function ResourceCard({
   onDownload
 }: ResourceCardProps) {
   return (
-    <Card className="flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-white/20 bg-white/15 backdrop-blur-md rounded-[20px] overflow-hidden group hover:-translate-y-1">
+    <Card className="flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-white/20 bg-[#84cc16]/15 backdrop-blur-md rounded-[20px] overflow-hidden group hover:-translate-y-1">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start mb-3">
           <Badge variant="secondary" className="uppercase tracking-wider text-[10px] font-bold bg-[#ffffff] text-[#84cc16] border border-[#84cc16]/20">
@@ -53,7 +53,7 @@ export function ResourceCard({
         </p>
       </CardContent>
       
-      <CardFooter className="pt-4 border-t border-white/20 bg-[#ffffff]/30 flex gap-3 mt-4">
+      <CardFooter className="pt-4 border-t border-white/20 bg-[#84cc16]/30 flex gap-3 mt-4">
         <Button 
           variant="outline" 
           className="w-full flex-1 border-[#0f172a]/20 bg-transparent text-[#0f172a] hover:bg-[#0f172a] hover:text-[#ffffff]"

@@ -57,13 +57,13 @@ export default function AdminCategoriesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {categories.map((category: any) => (
-            <div key={category.id} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl relative group hover:bg-white/15 transition-all">
+            <div key={category.id} className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl relative group hover:bg-[#84cc16]/15 transition-all">
               <div className="flex justify-between items-start mb-4">
                 <div className="bg-[#84cc16]/20 p-3 rounded-xl border border-[#84cc16]/30">
                   <GitMerge className="text-[#84cc16]" size={24} />
                 </div>
                 <div className="flex gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="p-2 hover:bg-white/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="Edit">
+                  <button className="p-2 hover:bg-[#84cc16]/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="Edit">
                     <Edit2 size={16} />
                   </button>
                   <button onClick={() => handleDelete(category.id)} className="p-2 hover:bg-red-500/20 rounded-lg text-[#0f172a]/70 hover:text-red-400 transition-colors" title="Delete">
@@ -78,18 +78,18 @@ export default function AdminCategoriesPage() {
               <div className="pt-4 border-t border-white/10 flex justify-between items-center">
                 <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                   category.status === 'Active' ? 'bg-[#84cc16]/20 text-[#84cc16] border-[#84cc16]/30' :
-                  'bg-white/10 text-[#0f172a]/70 border-white/20'
+                  'bg-[#84cc16]/10 text-[#0f172a]/70 border-white/20'
                 }`}>
                   {category.status}
                 </span>
-                <span className="text-[#0f172a]/40 text-xs cursor-pointer hover:text-white transition-colors">Manage Sub-categories</span>
+                <span className="text-[#0f172a]/60 text-xs cursor-pointer hover:text-white transition-colors">Manage Sub-categories</span>
               </div>
             </div>
           ))}
 
           {/* Add New Card */}
-          <button onClick={handleAdd} className="bg-white/5 hover:bg-white/10 backdrop-blur-md border-2 border-dashed border-white/20 hover:border-white/40 rounded-3xl p-6 h-full min-h-[220px] flex flex-col items-center justify-center gap-4 transition-all group">
-            <div className="bg-white/10 p-4 rounded-full group-hover:scale-110 transition-transform">
+          <button onClick={handleAdd} className="bg-[#84cc16]/5 hover:bg-[#84cc16]/10 backdrop-blur-md border-2 border-dashed border-white/20 hover:border-white/40 rounded-3xl p-6 h-full min-h-[220px] flex flex-col items-center justify-center gap-4 transition-all group">
+            <div className="bg-[#84cc16]/10 p-4 rounded-full group-hover:scale-110 transition-transform">
               <Plus className="text-[#0f172a]" size={32} />
             </div>
             <span className="text-[#0f172a] font-medium">Create New Taxonomy</span>

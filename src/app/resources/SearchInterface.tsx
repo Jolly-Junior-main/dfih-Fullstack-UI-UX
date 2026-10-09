@@ -86,7 +86,7 @@ export function SearchInterface() {
   )
 
   const Sidebar = () => (
-    <div className="bg-white/15 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-lg">
+    <div className="bg-[#84cc16]/15 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-lg">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-bold text-[#0f172a]">Filters</h2>
         <button className="text-sm text-[#84cc16] hover:underline">Clear all</button>
@@ -109,7 +109,7 @@ export function SearchInterface() {
       {/* Mobile Filters Drawer */}
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
+          <div className="fixed inset-0 bg-[#84cc16]/60 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
           <div className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-[#ffffff] border-r border-white/20 pb-12 shadow-xl z-50 h-full">
             <div className="flex items-center justify-between px-4 pt-5 pb-2 border-b border-white/20">
               <h2 className="text-lg font-bold text-[#0f172a]">Filters</h2>
@@ -140,7 +140,7 @@ export function SearchInterface() {
               placeholder="Search resources by keyword, title, or author..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-[#f8fafc] border-white/20 text-[#0f172a] placeholder:text-[#0f172a]/30 focus:border-[#84cc16]"
+              className="pl-10 h-12 bg-[#f8fafc] border-white/20 text-[#0f172a] placeholder:text-[#0f172a]/50 focus:border-[#84cc16]"
             />
           </div>
           <div className="flex gap-2">

@@ -43,7 +43,7 @@ export default function ResourcesPage() {
             {themes.map((theme, idx) => {
               const Icon = theme.icon
               return (
-                <div key={idx} className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-[24px] p-6 flex flex-col items-start justify-between min-h-[160px] group cursor-pointer hover:bg-[#ffffff]/40 hover:border-[#84cc16]/30 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-xl relative overflow-hidden">
+                <div key={idx} className="bg-[#84cc16]/15 backdrop-blur-sm border border-white/20 rounded-[24px] p-6 flex flex-col items-start justify-between min-h-[160px] group cursor-pointer hover:bg-[#84cc16]/40 hover:border-[#84cc16]/30 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-xl relative overflow-hidden">
                   
                   {/* Subtle highlight effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />

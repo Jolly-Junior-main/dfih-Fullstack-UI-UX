@@ -18,7 +18,7 @@ export default function ContactPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Location Card */}
-            <div className="bg-white/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
+            <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
               <div className="w-14 h-14 bg-[#0f172a]/5 rounded-full flex items-center justify-center mb-6">
                 <MapPin className="w-6 h-6 text-[#84cc16]" />
               </div>
@@ -31,7 +31,7 @@ export default function ContactPage() {
             </div>
 
             {/* Email Card */}
-            <div className="bg-white/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
+            <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
               <div className="w-14 h-14 bg-[#0f172a]/5 rounded-full flex items-center justify-center mb-6">
                 <Mail className="w-6 h-6 text-[#84cc16]" />
               </div>
@@ -42,7 +42,7 @@ export default function ContactPage() {
             </div>
 
             {/* Phone Card */}
-            <div className="bg-white/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
+            <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
               <div className="w-14 h-14 bg-[#0f172a]/5 rounded-full flex items-center justify-center mb-6">
                 <Phone className="w-6 h-6 text-[#84cc16]" />
               </div>
@@ -82,7 +82,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right: Form */}
-            <div className="bg-white/15 backdrop-blur-xl border border-white/20 p-8 md:p-10 rounded-3xl shadow-2xl">
+            <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 p-8 md:p-10 rounded-3xl shadow-2xl">
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -126,7 +126,7 @@ export default function ContactPage() {
         {/* Placeholder for map - using a stylized dark map image for now so it doesn't break */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2000')] bg-cover bg-center opacity-30 mix-blend-luminosity grayscale" />
         <div className="absolute inset-0 border-t border-white/20" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#ffffff]/90 backdrop-blur-md p-6 rounded-2xl border border-[#0f172a]/20 shadow-2xl flex items-center gap-4">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#84cc16]/90 backdrop-blur-md p-6 rounded-2xl border border-[#0f172a]/20 shadow-2xl flex items-center gap-4">
            <div className="w-12 h-12 bg-[#84cc16]/20 rounded-full flex items-center justify-center">
              <MapPin className="w-6 h-6 text-[#84cc16]" />
            </div>

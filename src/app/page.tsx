@@ -24,7 +24,7 @@ export default function Home() {
         </div>
 
         {/* Small Intro Text (Top Left of Hero) */}
-        <div className="absolute top-40 left-8 md:left-24 z-20 max-w-sm text-sm md:text-base leading-relaxed text-[#0f172a] hidden md:block p-6 rounded-2xl backdrop-blur-md bg-black/20 border border-[#0f172a]/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+        <div className="absolute top-40 left-8 md:left-24 z-20 max-w-sm text-sm md:text-base leading-relaxed text-[#0f172a] hidden md:block p-6 rounded-2xl backdrop-blur-md bg-[#84cc16]/20 border border-[#0f172a]/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
           The Global Repository.<br />
           Helping Researchers And Policymakers<br />
           Improve Sustainable Management<br />
@@ -35,7 +35,7 @@ export default function Home() {
         <div className="relative z-10 flex flex-col items-center justify-center gap-8 md:gap-12 w-full px-4 mt-20 md:mt-0">
           
           {/* Glassmorphism Logo Container */}
-          <div className="w-[70vw] max-w-[250px] md:max-w-[350px] aspect-auto rounded-2xl md:rounded-[2rem] backdrop-blur-xl bg-white/40 border border-white/60 shadow-[0_8px_32px_0_rgba(0,0,0,0.3),inset_0_0_30px_rgba(255,255,255,0.6)] flex items-center justify-center p-2 md:p-4 relative overflow-hidden">
+          <div className="w-[70vw] max-w-[250px] md:max-w-[350px] aspect-auto rounded-2xl md:rounded-[2rem] backdrop-blur-xl bg-[#84cc16]/40 border border-white/60 shadow-[0_8px_32px_0_rgba(0,0,0,0.3),inset_0_0_30px_rgba(255,255,255,0.6)] flex items-center justify-center p-2 md:p-4 relative overflow-hidden">
             {/* Glass reflection gradients */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none" />
             <div className="absolute top-0 inset-x-0 h-1/3 bg-gradient-to-b from-white/50 to-transparent pointer-events-none" />

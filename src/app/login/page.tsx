@@ -8,7 +8,7 @@ export default function LoginPage() {
     <div className="flex flex-col min-h-screen bg-[#ffffff] pt-20">
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
         
-        <div className="w-full max-w-md bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+        <div className="w-full max-w-md bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
           
           {/* Subtle Background Accent */}
           <div className="absolute top-0 right-0 -mr-12 -mt-12 w-32 h-32 bg-[#84cc16] opacity-10 rounded-full blur-3xl" />
@@ -62,7 +62,7 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-12 text-center space-y-4">
-          <Link href="/" className="block text-sm text-[#0f172a]/40 hover:text-[#0f172a] transition-colors">
+          <Link href="/" className="block text-sm text-[#0f172a]/60 hover:text-[#0f172a] transition-colors">
             &larr; Back to Home
           </Link>
           <Link href="/admin/login" className="block text-xs text-[#84cc16]/50 hover:text-[#84cc16] transition-colors underline underline-offset-4">

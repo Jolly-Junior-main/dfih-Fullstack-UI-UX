@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
         
         {/* Logo / Header */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-xl mb-4">
+          <div className="bg-[#84cc16]/10 backdrop-blur-md p-4 rounded-full border border-white/20 shadow-xl mb-4">
             <Shield size={36} className="text-[#84cc16]" />
           </div>
           <h1 className="text-3xl font-bold text-[#0f172a] tracking-tight">Admin Portal</h1>
@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Login Form Container */}
-        <div className="bg-white/15 backdrop-blur-xl border border-white/20 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+        <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
           
           <form onSubmit={handleLogin} className="space-y-6 relative z-10">
             {error && (
@@ -88,7 +88,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin"
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#0f172a] placeholder:text-[#0f172a]/30 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                  className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#0f172a] placeholder:text-[#0f172a]/50 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                 />
               </div>
             </div>
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="admin"
-                  className="w-full bg-black/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#0f172a] placeholder:text-[#0f172a]/30 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                  className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-[#0f172a] placeholder:text-[#0f172a]/50 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                 />
               </div>
             </div>

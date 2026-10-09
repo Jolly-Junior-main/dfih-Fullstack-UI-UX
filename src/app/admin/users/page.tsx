@@ -63,25 +63,25 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Filters and Search */}
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row gap-4">
+        <div className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0f172a]/40" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0f172a]/60" size={18} />
             <input 
               type="text" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search users by name or email..." 
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#0f172a] placeholder:text-[#0f172a]/40 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+              className="w-full bg-[#84cc16]/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#0f172a] placeholder:text-[#0f172a]/60 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
             />
           </div>
           <div className="flex gap-4">
-            <select className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] focus:outline-none appearance-none cursor-pointer">
+            <select className="bg-[#84cc16]/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] focus:outline-none appearance-none cursor-pointer">
               <option>All Roles</option>
               <option>Administrators</option>
               <option>Reviewers</option>
               <option>Contributors</option>
             </select>
-            <select className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] focus:outline-none appearance-none cursor-pointer hidden md:block">
+            <select className="bg-[#84cc16]/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] focus:outline-none appearance-none cursor-pointer hidden md:block">
               <option>All Statuses</option>
               <option>Active</option>
               <option>Pending</option>
@@ -91,11 +91,11 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-black/20 text-[#0f172a]/60 text-sm border-b border-white/10">
+                <tr className="bg-[#84cc16]/20 text-[#0f172a]/60 text-sm border-b border-white/10">
                   <th className="p-4 font-medium">User</th>
                   <th className="p-4 font-medium">Role</th>
                   <th className="p-4 font-medium">Status</th>
@@ -105,7 +105,7 @@ export default function AdminUsersPage() {
               </thead>
               <tbody className="text-[#0f172a] text-sm">
                 {filteredUsers.length > 0 ? filteredUsers.map((user: any) => (
-                  <tr key={user.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                  <tr key={user.id} className="border-b border-white/5 hover:bg-[#84cc16]/5 transition-colors group">
                     <td className="p-4">
                       <div className="flex flex-col">
                         <span className="font-medium">{user.name}</span>
@@ -132,7 +132,7 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="p-4 text-[#0f172a]/70">{user.lastActive}</td>
                     <td className="p-4 text-right flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 hover:bg-white/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="Edit Permissions">
+                      <button className="p-2 hover:bg-[#84cc16]/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="Edit Permissions">
                         <Edit2 size={16} />
                       </button>
                       <button onClick={() => handleDelete(user.id)} className="p-2 hover:bg-red-500/20 rounded-lg text-[#0f172a]/70 hover:text-red-400 transition-colors" title="Revoke Access">
@@ -149,11 +149,11 @@ export default function AdminUsersPage() {
             </table>
           </div>
           
-          <div className="p-4 border-t border-white/10 bg-black/10 flex items-center justify-between text-sm text-[#0f172a]/60">
+          <div className="p-4 border-t border-white/10 bg-[#84cc16]/10 flex items-center justify-between text-sm text-[#0f172a]/60">
             <span>Showing {filteredUsers.length} users</span>
             <div className="flex gap-2">
-              <button className="px-3 py-1 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50" disabled>Previous</button>
-              <button className="px-3 py-1 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50" disabled>Next</button>
+              <button className="px-3 py-1 rounded-lg hover:bg-[#84cc16]/10 transition-colors disabled:opacity-50" disabled>Previous</button>
+              <button className="px-3 py-1 rounded-lg hover:bg-[#84cc16]/10 transition-colors disabled:opacity-50" disabled>Next</button>
             </div>
           </div>
         </div>

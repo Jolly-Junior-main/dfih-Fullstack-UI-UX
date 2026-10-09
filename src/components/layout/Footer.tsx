@@ -11,7 +11,7 @@ export function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
             <Link href="/" className="flex items-center gap-3 inline-flex">
-              <div className="bg-white/90 p-1 rounded-md shadow-sm">
+              <div className="bg-[#84cc16]/90 p-1 rounded-md shadow-sm">
                 <Image 
                   src="/logo.png" 
                   alt="DFIH Logo" 

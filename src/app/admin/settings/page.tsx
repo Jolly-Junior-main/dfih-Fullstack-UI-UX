@@ -81,8 +81,8 @@ export default function AdminSettingsPage() {
                   onClick={() => setActiveTab(tab.name)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${
                     isActive 
-                      ? 'bg-white/15 text-[#0f172a] border border-white/20 shadow-md font-medium' 
-                      : 'text-[#0f172a]/60 hover:bg-white/5 hover:text-[#0f172a]'
+                      ? 'bg-[#84cc16]/15 text-[#0f172a] border border-white/20 shadow-md font-medium' 
+                      : 'text-[#0f172a]/60 hover:bg-[#84cc16]/5 hover:text-[#0f172a]'
                   }`}
                 >
                   <Icon size={18} className={isActive ? 'text-[#84cc16]' : ''} />
@@ -94,7 +94,7 @@ export default function AdminSettingsPage() {
           </div>
 
           {/* Settings Content Area */}
-          <div className="flex-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl space-y-8">
+          <div className="flex-1 bg-[#84cc16]/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl space-y-8">
             
             {activeTab === "General" ? (
               <>
@@ -107,7 +107,7 @@ export default function AdminSettingsPage() {
                         type="text" 
                         value={formData.siteName}
                         onChange={(e) => setFormData({...formData, siteName: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                       />
                     </div>
                     <div>
@@ -116,7 +116,7 @@ export default function AdminSettingsPage() {
                         type="email" 
                         value={formData.supportEmail}
                         onChange={(e) => setFormData({...formData, supportEmail: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
                       />
                     </div>
                     <div>
@@ -125,7 +125,7 @@ export default function AdminSettingsPage() {
                         rows={3}
                         value={formData.description}
                         onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors resize-none"
+                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors resize-none"
                       />
                     </div>
                   </div>
@@ -133,16 +133,16 @@ export default function AdminSettingsPage() {
 
                 <div className="pt-8 border-t border-white/10">
                   <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Maintenance Mode</h3>
-                  <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5">
+                  <div className="flex items-center justify-between p-4 bg-[#84cc16]/20 rounded-xl border border-white/5">
                     <div>
                       <p className="font-medium text-[#0f172a]">Enable Maintenance Mode</p>
                       <p className="text-sm text-[#0f172a]/60 mt-1">Only Administrators will be able to log in when active.</p>
                     </div>
                     <div 
                       onClick={() => setFormData({...formData, maintenanceMode: !formData.maintenanceMode})}
-                      className={`w-12 h-6 rounded-full relative cursor-pointer border transition-colors ${formData.maintenanceMode ? 'bg-[#84cc16] border-[#84cc16]' : 'bg-white/10 border-white/20'}`}
+                      className={`w-12 h-6 rounded-full relative cursor-pointer border transition-colors ${formData.maintenanceMode ? 'bg-[#84cc16] border-[#84cc16]' : 'bg-[#84cc16]/10 border-white/20'}`}
                     >
-                      <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${formData.maintenanceMode ? 'bg-black translate-x-6' : 'bg-white/40'}`}></div>
+                      <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${formData.maintenanceMode ? 'bg-black translate-x-6' : 'bg-[#84cc16]/40'}`}></div>
                     </div>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ export default function AdminSettingsPage() {
                   <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Cache Settings</h3>
                   <div className="flex flex-col gap-4">
                     <p className="text-sm text-[#0f172a]/60">Clear the application cache to ensure new content and styles are distributed to Edge nodes.</p>
-                    <button onClick={handleClearCache} className="self-start px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl text-[#0f172a] font-medium transition-colors">
+                    <button onClick={handleClearCache} className="self-start px-4 py-2 bg-[#84cc16]/10 hover:bg-[#84cc16]/15 border border-white/20 rounded-xl text-[#0f172a] font-medium transition-colors">
                       Purge Cloudflare Cache
                     </button>
                   </div>

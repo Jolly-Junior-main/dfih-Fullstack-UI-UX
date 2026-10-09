@@ -17,7 +17,7 @@ export default function AdminDashboard() {
             { label: "Pending Approvals", val: "45", trend: "-5 from yesterday" },
             { label: "System Health", val: "99.9%", trend: "All services operational" }
           ].map((stat, i) => (
-            <div key={i} className="bg-white/15 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg">
+            <div key={i} className="bg-[#84cc16]/15 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-lg">
               <p className="text-[#0f172a]/50 text-sm font-medium mb-2">{stat.label}</p>
               <h3 className="text-3xl font-bold text-[#0f172a] mb-2">{stat.val}</h3>
               <p className="text-[#84cc16] text-xs font-medium">{stat.trend}</p>
@@ -26,13 +26,13 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl h-80 flex flex-col items-center justify-center relative overflow-hidden">
+          <div className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl h-80 flex flex-col items-center justify-center relative overflow-hidden">
             <div className="absolute top-6 left-6 text-lg font-medium text-[#0f172a]">Traffic Analytics</div>
-            <Activity size={48} className="text-[#0f172a]/20 mb-4" />
-            <p className="text-[#0f172a]/40 text-sm">Chart visualization would render here</p>
+            <Activity size={48} className="text-[#0f172a]/50 mb-4" />
+            <p className="text-[#0f172a]/60 text-sm">Chart visualization would render here</p>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl overflow-hidden flex flex-col">
+          <div className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-xl overflow-hidden flex flex-col">
             <h3 className="text-lg font-medium text-[#0f172a] mb-4">Recent Audit Logs</h3>
             <div className="flex-1 space-y-4">
               {[
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
                   <div className="w-2 h-2 rounded-full bg-[#84cc16] mt-2 flex-shrink-0" />
                   <div>
                     <p className="text-sm text-[#0f172a]">{log.action}</p>
-                    <p className="text-xs text-[#0f172a]/40 mt-1">{log.time}</p>
+                    <p className="text-xs text-[#0f172a]/60 mt-1">{log.time}</p>
                   </div>
                 </div>
               ))}
