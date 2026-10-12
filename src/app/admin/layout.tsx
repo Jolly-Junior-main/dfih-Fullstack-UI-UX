@@ -26,8 +26,42 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (!isLoginPage) {
       const auth = sessionStorage.getItem("admin_auth")
-      if (!auth) {
-        router.push("/admin/login")
+      const sessionRaw = sessionStorage.getItem("dfih_admin_session")
+      
+      let isValid = false
+      if (auth === "true") {
+        if (sessionRaw) {
+          try {
+            const parsed = JSON.parse(sessionRaw)
+            if (
+              typeof parsed.token === "string" &&
+              parsed.token.startsWith("dfih_sec_") &&
+              typeof parsed.expiresAt === "number" &&
+              parsed.expiresAt > Date.now()
+            ) {
+              isValid = true
+            }
+          } catch {
+            isValid = false
+          }
+        } else {
+          // If admin_auth is set without token, generate active token to enforce expiry moving forward
+          const now = Date.now()
+          const newSession = {
+            token: `dfih_sec_${now}_${Math.random().toString(36).substring(2, 12)}`,
+            issuedAt: now,
+            expiresAt: now + (2 * 60 * 60 * 1000),
+            role: "super_admin",
+          }
+          sessionStorage.setItem("dfih_admin_session", JSON.stringify(newSession))
+          isValid = true
+        }
+      }
+
+      if (!isValid) {
+        sessionStorage.removeItem("admin_auth")
+        sessionStorage.removeItem("dfih_admin_session")
+        router.replace("/admin/login")
       } else {
         setIsAuthenticated(true)
       }
@@ -36,7 +70,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     sessionStorage.removeItem("admin_auth")
-    router.push("/admin/login")
+    sessionStorage.removeItem("dfih_admin_session")
+    router.replace("/admin/login")
   }
 
   if (isLoginPage) {

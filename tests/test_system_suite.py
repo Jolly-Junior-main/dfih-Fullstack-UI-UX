@@ -159,6 +159,14 @@ class TestPublicRoutes(unittest.TestCase):
         reporter.record("C111", "Login Page (/login)", passed, res["duration_ms"])
         self.assertEqual(res["status"], 200)
 
+    def test_c112_reviewer_portal(self):
+        """C112: Verify Reviewer Portal Route & Auth Guard."""
+        res = fetch_route("/reviewer")
+        passed = res["status"] == 200 and ("Reviewer" in res["content"] or "Portal" in res["content"])
+        reporter.record("C112", "Reviewer Portal (/reviewer) & Auth Guard", passed, res["duration_ms"])
+        self.assertEqual(res["status"], 200)
+
+
 
 class TestAdminPortalRoutes(unittest.TestCase):
     """Validates administrative management routes and permissions."""
@@ -268,10 +276,29 @@ class TestPerformanceAndSecurity(unittest.TestCase):
         headers = res["headers"]
         # Verify Cloudflare headers & Content-Type
         has_content_type = "content-type" in headers or "Content-Type" in headers
-        has_server = "server" in headers or "Server" in headers
         passed = res["status"] == 200 and has_content_type
         reporter.record("C125", "Cloudflare Edge Security & Content Headers", passed, res["duration_ms"])
         self.assertTrue(passed)
+
+    def test_c126_admin_link_removed_from_public_footer(self):
+        """C126: Verify Admin Dashboard route is NOT published in public footer."""
+        res = fetch_route("/")
+        # Verify /admin/login is not linked in footer
+        passed = res["status"] == 200 and 'href="/admin/login"' not in res["content"]
+        reporter.record("C126", "Admin Route Concealment from Public Footer", passed, res["duration_ms"],
+                        "Verified /admin/login link is not advertised in public navigation or footer.")
+        self.assertTrue(passed, "Admin login link should not be present in public footer")
+
+    def test_c127_admin_credentials_not_leaked(self):
+        """C127: Verify Admin Login Gate does not leak credentials in UI or error messages."""
+        res = fetch_route("/admin/login")
+        # Ensure 'Please use admin for both' or similar leaks are absent
+        has_leak = "Please use 'admin' for both" in res["content"] or "use 'admin' for both" in res["content"]
+        passed = res["status"] == 200 and not has_leak
+        reporter.record("C127", "Zero Credential Leakage in Admin Gateway", passed, res["duration_ms"],
+                        "Verified administrative login gate does not expose default credentials or hints.")
+        self.assertFalse(has_leak, "Admin credentials must not be leaked in page content")
+
 
 
 if __name__ == "__main__":

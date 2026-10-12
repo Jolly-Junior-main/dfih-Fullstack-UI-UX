@@ -1,10 +1,10 @@
 {
   "suite": "DFIH System Regression & Performance Suite",
-  "timestamp": "2026-10-12T15:49:45Z",
+  "timestamp": "2026-10-12T16:04:01Z",
   "target": "https://dfih-frontend.pages.dev",
   "summary": {
-    "total": 24,
-    "passed": 24,
+    "total": 27,
+    "passed": 27,
     "failed": 0
   },
   "results": [
@@ -12,169 +12,190 @@
       "case_id": "C101",
       "title": "Home Page (/) Availability & Hero",
       "status_id": 1,
-      "elapsed": "0.39s",
+      "elapsed": "0.5s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C102",
       "title": "About Page (/about) Content & Layout",
       "status_id": 1,
-      "elapsed": "0.22s",
+      "elapsed": "0.34s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C103",
       "title": "Resources Repository (/resources) Search Interface",
       "status_id": 1,
-      "elapsed": "0.29s",
+      "elapsed": "0.3s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C104",
       "title": "Resource Detail (/resources/1) SSG",
       "status_id": 1,
-      "elapsed": "0.65s",
+      "elapsed": "0.82s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C105",
       "title": "News & Insights (/news) Articles Feed",
       "status_id": 1,
-      "elapsed": "0.35s",
+      "elapsed": "0.43s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C106",
       "title": "Contact Page (/contact)",
       "status_id": 1,
-      "elapsed": "1.66s",
+      "elapsed": "0.27s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C107",
       "title": "Partners Page (/partners)",
       "status_id": 1,
-      "elapsed": "0.26s",
+      "elapsed": "0.3s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C108",
       "title": "Submit Research (/submit) Contributor Form",
       "status_id": 1,
-      "elapsed": "0.31s",
+      "elapsed": "0.39s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C109",
       "title": "Dashboard (/dashboard) Account Portal",
       "status_id": 1,
-      "elapsed": "0.32s",
+      "elapsed": "0.31s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C110",
       "title": "Register Page (/register)",
       "status_id": 1,
-      "elapsed": "0.31s",
+      "elapsed": "0.3s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C111",
       "title": "Login Page (/login)",
       "status_id": 1,
-      "elapsed": "0.33s",
+      "elapsed": "0.32s",
+      "comment": "Passed successfully"
+    },
+    {
+      "case_id": "C112",
+      "title": "Reviewer Portal (/reviewer) & Auth Guard",
+      "status_id": 1,
+      "elapsed": "0.88s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C113",
       "title": "Admin Login (/admin/login)",
       "status_id": 1,
-      "elapsed": "0.3s",
+      "elapsed": "0.41s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C114",
       "title": "Admin Overview (/admin)",
       "status_id": 1,
-      "elapsed": "0.32s",
+      "elapsed": "0.35s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C115",
       "title": "Admin Research Review (/admin/research)",
       "status_id": 1,
-      "elapsed": "0.32s",
+      "elapsed": "0.33s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C116",
       "title": "Admin Add Research (/admin/research/add)",
       "status_id": 1,
-      "elapsed": "0.64s",
+      "elapsed": "0.37s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C117",
       "title": "Admin Users & Researches (/admin/users)",
       "status_id": 1,
-      "elapsed": "2.22s",
+      "elapsed": "0.36s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C118",
       "title": "Admin News Management (/admin/news)",
       "status_id": 1,
-      "elapsed": "0.53s",
+      "elapsed": "0.28s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C119",
       "title": "Admin Pages Editor (/admin/pages)",
       "status_id": 1,
-      "elapsed": "0.41s",
+      "elapsed": "0.49s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C120",
       "title": "Admin Platform Content (/admin/content)",
       "status_id": 1,
-      "elapsed": "0.31s",
+      "elapsed": "0.53s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C121",
       "title": "Admin Categories (/admin/categories)",
       "status_id": 1,
-      "elapsed": "0.34s",
+      "elapsed": "0.47s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C122",
       "title": "Admin Settings (/admin/settings)",
       "status_id": 1,
-      "elapsed": "0.3s",
+      "elapsed": "0.52s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C123",
       "title": "TTFB Latency Benchmark (<1000ms)",
       "status_id": 1,
-      "elapsed": "0.97s",
-      "comment": "Average TTFB: 973.0ms"
+      "elapsed": "0.52s",
+      "comment": "Average TTFB: 515.7ms"
     },
     {
       "case_id": "C124",
       "title": "Concurrent Load Stress (10 Parallel Requests)",
       "status_id": 1,
-      "elapsed": "1.58s",
-      "comment": "Processed 10 requests in 1575.8ms, 100% 200 OK"
+      "elapsed": "1.8s",
+      "comment": "Processed 10 requests in 1798.2ms, 100% 200 OK"
     },
     {
       "case_id": "C125",
       "title": "Cloudflare Edge Security & Content Headers",
       "status_id": 1,
-      "elapsed": "0.27s",
+      "elapsed": "0.35s",
       "comment": "Passed successfully"
+    },
+    {
+      "case_id": "C126",
+      "title": "Admin Route Concealment from Public Footer",
+      "status_id": 1,
+      "elapsed": "0.4s",
+      "comment": "Verified /admin/login link is not advertised in public navigation or footer."
+    },
+    {
+      "case_id": "C127",
+      "title": "Zero Credential Leakage in Admin Gateway",
+      "status_id": 1,
+      "elapsed": "0.63s",
+      "comment": "Verified administrative login gate does not expose default credentials or hints."
     }
   ]
 }

@@ -55,7 +55,7 @@ export function Footer() {
                 <ul role="list" className="mt-4 space-y-3">
                   <li><Link href="/login" className="text-sm text-[#cbd5e1] hover:text-[#84cc16] transition-colors">Sign In</Link></li>
                   <li><Link href="/register" className="text-sm text-[#cbd5e1] hover:text-[#84cc16] transition-colors">Researcher Account</Link></li>
-                  <li><Link href="/admin/login" className="text-sm text-[#cbd5e1] hover:text-[#84cc16] transition-colors">Admin Dashboard</Link></li>
+                  <li><Link href="/dashboard" className="text-sm text-[#cbd5e1] hover:text-[#84cc16] transition-colors">Member Dashboard</Link></li>
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
