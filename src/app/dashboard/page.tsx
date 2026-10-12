@@ -21,45 +21,262 @@ export default function ContributorDashboard() {
     institution: "",
   })
 
+  const [authMode, setAuthMode] = useState<"login" | "register">("login")
+  const [loginEmail, setLoginEmail] = useState("")
+  const [loginPassword, setLoginPassword] = useState("")
+  const [regName, setRegName] = useState("")
+  const [regEmail, setRegEmail] = useState("")
+  const [regInstitution, setRegInstitution] = useState("")
+  const [regPassword, setRegPassword] = useState("")
+  const [authLoading, setAuthLoading] = useState(false)
+
   useEffect(() => {
-    const auth = sessionStorage.getItem("user_auth") || sessionStorage.getItem("admin_auth")
-    if (!auth) {
-      router.replace("/login")
+    const adminAuth = sessionStorage.getItem("admin_auth") === "true"
+    const userEmail = sessionStorage.getItem("user_email")
+    const loggedIn = sessionStorage.getItem("user_logged_in") === "true"
+
+    if (adminAuth) {
+      setUserData({
+        name: "DFIH Administrator",
+        email: "admin@dfih.org",
+        institution: "DFIH Central Governance",
+      })
+      setIsAuthorized(true)
       return
     }
 
-    const name = sessionStorage.getItem("user_name") || "Researcher Contributor"
-    const email = sessionStorage.getItem("user_email") || "contributor@dfih.org"
+    // STRICT: Only authorize if a valid email and user_logged_in exist
+    if (!userEmail || !loggedIn) {
+      sessionStorage.removeItem("user_auth")
+      sessionStorage.removeItem("user_logged_in")
+      setIsAuthorized(false)
+      return
+    }
+
+    const name = sessionStorage.getItem("user_name") || userEmail.split("@")[0]
     const institution = sessionStorage.getItem("user_institution") || "Forestry Research Department"
-    setUserData({ name, email, institution })
+    setUserData({ name, email: userEmail, institution })
     setIsAuthorized(true)
-  }, [router])
+  }, [])
+
+  const handleInlineLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    setAuthLoading(true)
+    setTimeout(() => {
+      sessionStorage.setItem("user_logged_in", "true")
+      sessionStorage.setItem("user_auth", "true")
+      sessionStorage.setItem("user_email", loginEmail)
+      const existingName = sessionStorage.getItem("user_name")
+      const resolvedName = existingName || loginEmail.split("@")[0].replace(/[._-]/g, " ")
+      const formattedName = resolvedName.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+      sessionStorage.setItem("user_name", formattedName)
+      setUserData({
+        name: formattedName,
+        email: loginEmail,
+        institution: sessionStorage.getItem("user_institution") || "Forestry Research Department"
+      })
+      setIsAuthorized(true)
+      setAuthLoading(false)
+    }, 600)
+  }
+
+  const handleInlineRegister = (e: React.FormEvent) => {
+    e.preventDefault()
+    setAuthLoading(true)
+    setTimeout(() => {
+      sessionStorage.setItem("user_logged_in", "true")
+      sessionStorage.setItem("user_auth", "true")
+      sessionStorage.setItem("user_name", regName)
+      sessionStorage.setItem("user_email", regEmail)
+      sessionStorage.setItem("user_institution", regInstitution || "Forestry Institute")
+      setUserData({
+        name: regName,
+        email: regEmail,
+        institution: regInstitution || "Forestry Institute"
+      })
+      setIsAuthorized(true)
+      setAuthLoading(false)
+    }, 600)
+  }
 
   const handleLogout = () => {
     sessionStorage.removeItem("user_auth")
+    sessionStorage.removeItem("user_logged_in")
     sessionStorage.removeItem("user_name")
     sessionStorage.removeItem("user_email")
     sessionStorage.removeItem("user_institution")
-    router.push("/login")
+    setIsAuthorized(false)
   }
 
   if (!isAuthorized) {
     return (
-      <div className="flex flex-col min-h-screen pt-24 pb-12 bg-[#163022] text-[#f5f0e6] justify-center items-center px-6">
-        <div className="bg-[#1c3d2b]/80 border border-white/10 rounded-3xl p-8 max-w-md text-center shadow-2xl backdrop-blur-md">
-          <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4 text-[#84cc16]">
-            <User size={28} />
+      <div className="flex flex-col min-h-screen pt-28 pb-16 bg-[#163022] text-[#f5f0e6] justify-center items-center px-4 sm:px-6">
+        <div className="w-full max-w-lg bg-[#1c3d2b]/90 border border-white/15 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+          
+          {/* Subtle Glow Accent */}
+          <div className="absolute top-0 right-0 -mr-12 -mt-12 w-32 h-32 bg-[#84cc16] opacity-15 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Header */}
+          <div className="text-center mb-8 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/30 flex items-center justify-center mx-auto mb-4 text-[#84cc16] shadow-inner">
+              <User size={30} />
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold mb-2">Researcher Portal</div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#f5f0e6] mb-2 tracking-tight">
+              Account Required
+            </h1>
+            <p className="text-xs sm:text-sm text-[#cbd5e1]/80 max-w-sm mx-auto">
+              Please sign in to your existing account or create a new researcher account to view your submissions and profile.
+            </p>
           </div>
-          <h2 className="text-xl font-bold text-[#f5f0e6] mb-2">Authentication Required</h2>
-          <p className="text-sm text-[#cbd5e1]/70 mb-6">
-            You must be signed in with your researcher account to view your profile and submissions.
-          </p>
-          <Link 
-            href="/login" 
-            className="inline-block bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold px-6 py-2.5 rounded-full text-sm transition-all shadow-lg shadow-[#84cc16]/20"
-          >
-            Sign In to Your Account
-          </Link>
+
+          {/* Mode Switcher Tabs */}
+          <div className="grid grid-cols-2 p-1 bg-[#12281b] rounded-2xl border border-white/10 mb-6 relative z-10">
+            <button
+              onClick={() => setAuthMode("login")}
+              className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                authMode === "login"
+                  ? "bg-[#84cc16] text-[#0f2317] shadow-md"
+                  : "text-[#cbd5e1] hover:text-white"
+              }`}
+            >
+              Log In
+            </button>
+            <button
+              onClick={() => setAuthMode("register")}
+              className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                authMode === "register"
+                  ? "bg-[#84cc16] text-[#0f2317] shadow-md"
+                  : "text-[#cbd5e1] hover:text-white"
+              }`}
+            >
+              Create Account
+            </button>
+          </div>
+
+          {/* Mode 1: Log In Form */}
+          {authMode === "login" && (
+            <form onSubmit={handleInlineLogin} className="space-y-4 relative z-10 animate-in fade-in duration-300">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#cbd5e1]">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="name@university.edu"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-semibold text-[#cbd5e1]">Password</label>
+                  <Link href="/login" className="text-[11px] text-[#84cc16] hover:underline">Forgot?</Link>
+                </div>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full mt-2 py-3.5 rounded-xl bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold text-sm transition-all shadow-lg shadow-[#84cc16]/20 cursor-pointer disabled:opacity-50"
+              >
+                {authLoading ? "Signing in..." : "Log In to Account"}
+              </button>
+
+              <div className="pt-2 text-center text-xs text-[#cbd5e1]/70">
+                New to DFIH?{" "}
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("register")}
+                  className="text-[#84cc16] font-bold hover:underline cursor-pointer"
+                >
+                  Create an account
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Mode 2: Create Account Form */}
+          {authMode === "register" && (
+            <form onSubmit={handleInlineRegister} className="space-y-4 relative z-10 animate-in fade-in duration-300">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#cbd5e1]">Full Name</label>
+                <input
+                  type="text"
+                  placeholder="Dr. Jane Doe"
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#cbd5e1]">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="jane.doe@forestry.org"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#cbd5e1]">Organization / Institution</label>
+                <input
+                  type="text"
+                  placeholder="Ministry of Environment"
+                  value={regInstitution}
+                  onChange={(e) => setRegInstitution(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#cbd5e1]">Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  required
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full mt-2 py-3.5 rounded-xl bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold text-sm transition-all shadow-lg shadow-[#84cc16]/20 cursor-pointer disabled:opacity-50"
+              >
+                {authLoading ? "Creating account..." : "Create Account & Sign In"}
+              </button>
+
+              <div className="pt-2 text-center text-xs text-[#cbd5e1]/70">
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("login")}
+                  className="text-[#84cc16] font-bold hover:underline cursor-pointer"
+                >
+                  Log in
+                </button>
+              </div>
+            </form>
+          )}
+
         </div>
       </div>
     )

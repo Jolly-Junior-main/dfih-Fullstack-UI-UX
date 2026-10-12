@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Search, Menu, X, User } from "lucide-react"
+import { Search, Menu, X, User, LogOut, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -21,12 +21,48 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const [userName, setUserName] = React.useState("")
+  const [accountMenuOpen, setAccountMenuOpen] = React.useState(false)
+  const accountMenuRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    const userAuth = sessionStorage.getItem("user_auth") || sessionStorage.getItem("admin_auth")
-    setIsLoggedIn(!!userAuth)
-    setUserName(sessionStorage.getItem("user_name") || "")
+    const admin = sessionStorage.getItem("admin_auth") === "true"
+    const email = sessionStorage.getItem("user_email")
+    const loggedIn = sessionStorage.getItem("user_logged_in") === "true"
+
+    if (admin) {
+      setIsLoggedIn(true)
+      setUserName("Admin")
+    } else if (email && loggedIn) {
+      setIsLoggedIn(true)
+      setUserName(sessionStorage.getItem("user_name") || email.split("@")[0])
+    } else {
+      // Clear any legacy stale dummy keys
+      sessionStorage.removeItem("user_auth")
+      setIsLoggedIn(false)
+      setUserName("")
+    }
   }, [pathname])
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
+        setAccountMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("user_auth")
+    sessionStorage.removeItem("user_logged_in")
+    sessionStorage.removeItem("user_name")
+    sessionStorage.removeItem("user_email")
+    sessionStorage.removeItem("user_institution")
+    setIsLoggedIn(false)
+    setUserName("")
+    setAccountMenuOpen(false)
+  }
 
   const isHome = pathname === "/"
 
@@ -99,37 +135,116 @@ export function Header() {
             
             <div className="h-6 w-px mx-1 bg-white/15" aria-hidden="true" />
             
-            {/* User Account Button: Only leads to dashboard if logged in, otherwise leads to login */}
-            {isLoggedIn ? (
-              <Link 
-                href="/dashboard"
-                className="flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-white/10 transition-colors group border border-white/10 bg-white/5"
-                title={`${userName || "User"}'s Account`}
-              >
-                <div className="w-8 h-8 rounded-full ring-2 ring-[#84cc16] overflow-hidden shadow-md shrink-0 bg-[#0f2317] flex items-center justify-center relative">
-                  <span className="text-xs font-bold text-[#84cc16]">
-                    {userName ? userName.charAt(0).toUpperCase() : "U"}
+            {/* User Account Button & Dropdown */}
+            <div className="relative" ref={accountMenuRef}>
+              {isLoggedIn ? (
+                <button 
+                  onClick={() => setAccountMenuOpen(!accountMenuOpen)}
+                  className="flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-white/10 transition-colors group border border-white/10 bg-white/5 cursor-pointer"
+                  title={`${userName || "User"}'s Account`}
+                >
+                  <div className="w-8 h-8 rounded-full ring-2 ring-[#84cc16] overflow-hidden shadow-md shrink-0 bg-[#0f2317] flex items-center justify-center relative">
+                    <span className="text-xs font-bold text-[#84cc16]">
+                      {userName ? userName.charAt(0).toUpperCase() : "U"}
+                    </span>
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#84cc16] rounded-full border-2 border-[#163022]" />
+                  </div>
+                  <span className="text-xs font-semibold text-[#f5f0e6] hidden xl:inline group-hover:text-[#84cc16] transition-colors max-w-[120px] truncate">
+                    {userName || "Account"}
                   </span>
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#84cc16] rounded-full border-2 border-[#163022]" />
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setAccountMenuOpen(!accountMenuOpen)}
+                  className="flex items-center gap-2 p-1.5 px-3 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#84cc16]/50 transition-all text-[#cbd5e1] hover:text-white group cursor-pointer"
+                  title="Account Access"
+                >
+                  <div className="w-7 h-7 rounded-full ring-1 ring-white/20 p-0.5 overflow-hidden shrink-0 bg-white/10 flex items-center justify-center text-[#cbd5e1] group-hover:text-[#84cc16] transition-colors">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-semibold hidden lg:inline">
+                    Account
+                  </span>
+                </button>
+              )}
+
+              {/* Floating Dropdown Dialog */}
+              {accountMenuOpen && (
+                <div className="absolute right-0 mt-3 w-72 bg-[#163022] border border-white/15 rounded-3xl p-5 shadow-2xl backdrop-blur-2xl z-50 animate-in fade-in zoom-in-95">
+                  {isLoggedIn ? (
+                    <div>
+                      <div className="flex items-center gap-3 pb-3 mb-3 border-b border-white/10">
+                        <div className="w-10 h-10 rounded-full ring-2 ring-[#84cc16] bg-[#0f2317] flex items-center justify-center text-[#84cc16] font-bold text-sm shrink-0">
+                          {userName ? userName.charAt(0).toUpperCase() : "U"}
+                        </div>
+                        <div className="overflow-hidden">
+                          <p className="text-sm font-bold text-[#f5f0e6] truncate">{userName}</p>
+                          <p className="text-[10px] text-[#84cc16] font-medium flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#84cc16] inline-block animate-pulse"></span>
+                            Logged in
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Link 
+                          href="/dashboard"
+                          onClick={() => setAccountMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/10 text-xs font-semibold text-[#f5f0e6] transition-colors"
+                        >
+                          <User size={15} className="text-[#84cc16]" />
+                          My Profile & Submissions
+                        </Link>
+                        <Link 
+                          href="/submit"
+                          onClick={() => setAccountMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-white/10 text-xs font-semibold text-[#f5f0e6] transition-colors"
+                        >
+                          <Plus size={15} className="text-[#84cc16]" />
+                          Submit New Resource
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-red-500/10 text-xs font-semibold text-red-300 transition-colors cursor-pointer text-left"
+                        >
+                          <LogOut size={15} />
+                          Log Out
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold mb-1">
+                        Researcher Portal
+                      </div>
+                      <h4 className="text-base font-bold text-[#f5f0e6] mb-1">
+                        Sign In or Register
+                      </h4>
+                      <p className="text-xs text-[#cbd5e1]/80 mb-4 leading-relaxed">
+                        Please log in to your account or create a new researcher account to access your profile and submissions.
+                      </p>
+
+                      <div className="space-y-2">
+                        <Link 
+                          href="/login"
+                          onClick={() => setAccountMenuOpen(false)}
+                          className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold text-xs transition-all shadow-md shadow-[#84cc16]/20"
+                        >
+                          Log In to Account
+                        </Link>
+                        <Link 
+                          href="/register"
+                          onClick={() => setAccountMenuOpen(false)}
+                          className="w-full flex items-center justify-center py-2.5 px-4 rounded-xl border border-white/20 hover:bg-white/10 text-[#f5f0e6] font-semibold text-xs transition-all"
+                        >
+                          Create New Account
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <span className="text-xs font-semibold text-[#f5f0e6] hidden xl:inline group-hover:text-[#84cc16] transition-colors max-w-[120px] truncate">
-                  {userName || "Account"}
-                </span>
-              </Link>
-            ) : (
-              <Link 
-                href="/login"
-                className="flex items-center gap-2 p-1.5 px-3 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-[#84cc16]/50 transition-all text-[#cbd5e1] hover:text-white group"
-                title="Log In to View Account"
-              >
-                <div className="w-7 h-7 rounded-full ring-1 ring-white/20 p-0.5 overflow-hidden shrink-0 bg-white/10 flex items-center justify-center text-[#cbd5e1] group-hover:text-[#84cc16] transition-colors">
-                  <User className="w-4 h-4" />
-                </div>
-                <span className="text-xs font-medium hidden lg:inline">
-                  Log in
-                </span>
-              </Link>
-            )}
+              )}
+            </div>
 
             {!isLoggedIn && (
               <Button 

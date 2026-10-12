@@ -17,6 +17,7 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setTimeout(() => {
+      sessionStorage.setItem("user_logged_in", "true")
       sessionStorage.setItem("user_auth", "true")
       sessionStorage.setItem("user_email", email)
       const existingName = sessionStorage.getItem("user_name")

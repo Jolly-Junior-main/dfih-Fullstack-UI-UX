@@ -24,8 +24,10 @@ export default function SubmitResourcePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    const auth = sessionStorage.getItem("user_auth")
-    if (!auth) {
+    const email = sessionStorage.getItem("user_email")
+    const loggedIn = sessionStorage.getItem("user_logged_in") === "true"
+    const admin = sessionStorage.getItem("admin_auth") === "true"
+    if (!admin && (!email || !loggedIn)) {
       router.push("/login")
     } else {
       setIsAuthorized(true)

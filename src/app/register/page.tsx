@@ -19,6 +19,7 @@ export default function RegisterPage() {
     e.preventDefault()
     setLoading(true)
     setTimeout(() => {
+      sessionStorage.setItem("user_logged_in", "true")
       sessionStorage.setItem("user_auth", "true")
       sessionStorage.setItem("user_name", fullName)
       sessionStorage.setItem("user_email", email)
