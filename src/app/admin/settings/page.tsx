@@ -21,7 +21,7 @@ export default function AdminSettingsPage() {
       if (docSnapshot.exists()) {
         setFormData(docSnapshot.data() as any)
       }
-    })
+    }, (err) => console.error("Error fetching settings:", err))
     return () => unsubscribe()
   }, [])
 
@@ -32,29 +32,29 @@ export default function AdminSettingsPage() {
   }
 
   const handleClearCache = () => {
-    alert("Cloudflare Edge Cache has been queued for purging.")
+    alert("Cloudflare Edge Cache purge request has been queued.")
   }
 
   return (
-    <main className="p-6 md:p-10 relative">
+    <main className="p-6 md:p-10 bg-[#163022] min-h-screen text-[#f5f0e6] relative">
       
       {/* Success Toast */}
-      <div className={`fixed top-24 right-10 z-50 flex items-center gap-3 bg-white border border-[#84cc16] shadow-xl px-4 py-3 rounded-xl transition-all duration-300 ${showToast ? 'translate-x-0 opacity-100' : 'translate-x-12 opacity-0 pointer-events-none'}`}>
+      <div className={`fixed top-24 right-10 z-50 flex items-center gap-3 bg-[#1c3d2b] border border-[#84cc16] shadow-2xl px-5 py-3 rounded-2xl transition-all duration-300 ${showToast ? 'translate-x-0 opacity-100' : 'translate-x-12 opacity-0 pointer-events-none'}`}>
         <CheckCircle2 className="text-[#84cc16]" size={20} />
-        <span className="font-medium text-[#ffffff]">Settings saved successfully!</span>
+        <span className="font-semibold text-[#f5f0e6] text-sm">Settings saved successfully!</span>
       </div>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight text-[#0f172a]">Platform Settings</h1>
-            <p className="text-[#0f172a]/60 mt-1">Configure global appearance, system behavior, and integrations.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-[#f5f0e6]">Platform Settings</h1>
+            <p className="text-[#cbd5e1]/70 mt-1">Configure global appearance, system behavior, and platform defaults.</p>
           </div>
           <button 
             onClick={handleSave}
-            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#ffffff] px-5 py-2.5 rounded-xl font-semibold transition-colors shadow-lg"
+            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-[#84cc16]/20 cursor-pointer"
           >
             <Save size={18} />
             Save Changes
@@ -79,87 +79,89 @@ export default function AdminSettingsPage() {
                 <button 
                   key={idx} 
                   onClick={() => setActiveTab(tab.name)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left font-medium text-sm cursor-pointer ${
                     isActive 
-                      ? 'bg-[#84cc16]/15 text-[#0f172a] border border-white/20 shadow-md font-medium' 
-                      : 'text-[#0f172a]/60 hover:bg-[#84cc16]/5 hover:text-[#0f172a]'
+                      ? 'bg-[#84cc16]/20 text-[#84cc16] border border-[#84cc16]/30 shadow-inner' 
+                      : 'text-[#cbd5e1]/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <Icon size={18} className={isActive ? 'text-[#84cc16]' : ''} />
+                  <Icon size={18} />
                   {tab.name}
                 </button>
               )
-            })
-            }
+            })}
           </div>
 
           {/* Settings Content Area */}
-          <div className="flex-1 bg-[#84cc16]/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl space-y-8">
+          <div className="flex-1 bg-[#1c3d2b]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-8">
             
             {activeTab === "General" ? (
               <>
                 <div>
-                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Site Information</h3>
+                  <h3 className="text-xl font-bold text-[#f5f0e6] mb-4">Site Information</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Site Name</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#cbd5e1] mb-2">Site Name</label>
                       <input 
                         type="text" 
                         value={formData.siteName}
                         onChange={(e) => setFormData({...formData, siteName: e.target.value})}
-                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-2.5 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16] transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Support Email</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#cbd5e1] mb-2">Support Email</label>
                       <input 
                         type="email" 
                         value={formData.supportEmail}
                         onChange={(e) => setFormData({...formData, supportEmail: e.target.value})}
-                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+                        className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-2.5 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16] transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-[#0f172a]/70 mb-1">Site Description</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#cbd5e1] mb-2">Site Description</label>
                       <textarea 
                         rows={3}
                         value={formData.description}
                         onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        className="w-full bg-[#84cc16]/20 border border-white/10 rounded-xl px-4 py-2 text-[#0f172a] focus:outline-none focus:border-[#84cc16]/50 transition-colors resize-none"
+                        className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-2.5 text-[#f5f0e6] focus:outline-none focus:border-[#84cc16] transition-colors resize-none"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Maintenance Mode</h3>
-                  <div className="flex items-center justify-between p-4 bg-[#84cc16]/20 rounded-xl border border-white/5">
+                  <h3 className="text-xl font-bold text-[#f5f0e6] mb-4">Maintenance Mode</h3>
+                  <div className="flex items-center justify-between p-4 bg-[#12281b]/70 rounded-2xl border border-white/5">
                     <div>
-                      <p className="font-medium text-[#0f172a]">Enable Maintenance Mode</p>
-                      <p className="text-sm text-[#0f172a]/60 mt-1">Only Administrators will be able to log in when active.</p>
+                      <p className="font-semibold text-[#f5f0e6] text-sm">Enable Maintenance Mode</p>
+                      <p className="text-xs text-[#cbd5e1]/60 mt-1">Only Administrators will be able to log in when active.</p>
                     </div>
                     <div 
                       onClick={() => setFormData({...formData, maintenanceMode: !formData.maintenanceMode})}
-                      className={`w-12 h-6 rounded-full relative cursor-pointer border transition-colors ${formData.maintenanceMode ? 'bg-[#84cc16] border-[#84cc16]' : 'bg-[#84cc16]/10 border-white/20'}`}
+                      className={`w-12 h-6 rounded-full relative cursor-pointer border transition-colors ${formData.maintenanceMode ? 'bg-[#84cc16] border-[#84cc16]' : 'bg-white/10 border-white/20'}`}
                     >
-                      <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${formData.maintenanceMode ? 'bg-black translate-x-6' : 'bg-[#84cc16]/40'}`}></div>
+                      <div className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform ${formData.maintenanceMode ? 'bg-[#0f2317] translate-x-6' : 'bg-white/40'}`}></div>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-8 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-[#0f172a] mb-4">Cache Settings</h3>
+                  <h3 className="text-xl font-bold text-[#f5f0e6] mb-4">Cache Controls</h3>
                   <div className="flex flex-col gap-4">
-                    <p className="text-sm text-[#0f172a]/60">Clear the application cache to ensure new content and styles are distributed to Edge nodes.</p>
-                    <button onClick={handleClearCache} className="self-start px-4 py-2 bg-[#84cc16]/10 hover:bg-[#84cc16]/15 border border-white/20 rounded-xl text-[#0f172a] font-medium transition-colors">
+                    <p className="text-xs text-[#cbd5e1]/70">Purge the CDN and Edge Cache to ensure all newly updated research, news, and pages are distributed immediately.</p>
+                    <button 
+                      onClick={handleClearCache} 
+                      className="self-start px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/15 rounded-xl text-xs font-bold uppercase tracking-wider text-[#84cc16] transition-colors cursor-pointer"
+                    >
                       Purge Cloudflare Cache
                     </button>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="py-10 text-center text-[#0f172a]/60">
-                <p>This settings tab is currently under construction.</p>
+              <div className="py-12 text-center text-[#cbd5e1]/60">
+                <p className="text-sm font-medium">This settings tab is configured with automated platform defaults.</p>
               </div>
             )}
 

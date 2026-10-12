@@ -13,22 +13,24 @@ export default function AdminContentPage() {
     const q = query(collection(db, "content"), orderBy("createdAt", "desc"))
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setContent(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-    })
+    }, (err) => console.error("Error fetching content:", err))
     return () => unsubscribe()
   }, [])
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this content?")) {
+    if (confirm("Are you sure you want to delete this content item?")) {
       await deleteDoc(doc(db, "content", id))
     }
   }
 
   const handleAdd = async () => {
+    const title = prompt("Enter title for new content item:")
+    if (!title) return
     await addDoc(collection(db, "content"), {
-      title: `New Content Item ${Math.floor(Math.random() * 1000)}`,
-      type: "Draft",
-      author: "admin",
-      status: "Draft",
+      title,
+      type: "Report",
+      author: "DFIH Administrator",
+      status: "Published",
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       createdAt: serverTimestamp()
     })
@@ -40,18 +42,18 @@ export default function AdminContentPage() {
   )
 
   return (
-    <main className="p-6 md:p-10">
-      <div className="max-w-6xl mx-auto">
+    <main className="p-6 md:p-10 bg-[#163022] min-h-screen text-[#f5f0e6]">
+      <div className="max-w-[1920px] mx-auto">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight text-[#0f172a]">Manage Content</h1>
-            <p className="text-[#0f172a]/60 mt-1">Find, edit, and manage all resources across the platform.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-[#f5f0e6]">Platform Content</h1>
+            <p className="text-[#cbd5e1]/70 mt-1">Review and manage general published content assets and reports.</p>
           </div>
           <button 
             onClick={handleAdd}
-            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#ffffff] px-5 py-2.5 rounded-xl font-semibold transition-colors shadow-lg"
+            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-[#84cc16]/20 cursor-pointer shrink-0"
           >
             <Plus size={18} />
             Add Content
@@ -59,89 +61,67 @@ export default function AdminContentPage() {
         </div>
 
         {/* Filters and Search */}
-        <div className="bg-[#84cc16]/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row gap-4">
+        <div className="bg-[#1c3d2b]/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-8 shadow-xl flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#0f172a]/60" size={18} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#cbd5e1]/60" size={18} />
             <input 
               type="text" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, author, or keyword..." 
-              className="w-full bg-[#84cc16]/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#0f172a] placeholder:text-[#0f172a]/60 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+              placeholder="Search content by title or author..." 
+              className="w-full bg-[#12281b] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#f5f0e6] placeholder:text-white/40 focus:outline-none focus:border-[#84cc16] transition-colors"
             />
-          </div>
-          <div className="flex gap-4">
-            <button className="flex items-center gap-2 bg-[#84cc16]/5 hover:bg-[#84cc16]/10 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] transition-colors">
-              <Filter size={18} />
-              Filter
-            </button>
-            <select className="bg-[#84cc16]/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#0f172a] focus:outline-none appearance-none cursor-pointer hidden md:block">
-              <option>All Types</option>
-              <option>Datasets</option>
-              <option>Maps</option>
-              <option>Reports</option>
-            </select>
           </div>
         </div>
 
         {/* Content Table */}
-        <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-[#1c3d2b]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[850px]">
               <thead>
-                <tr className="bg-[#84cc16]/20 text-[#0f172a]/60 text-sm border-b border-white/10">
-                  <th className="p-4 font-medium">Title</th>
-                  <th className="p-4 font-medium">Type</th>
-                  <th className="p-4 font-medium">Author</th>
-                  <th className="p-4 font-medium">Status</th>
-                  <th className="p-4 font-medium">Updated</th>
-                  <th className="p-4 font-medium text-right">Actions</th>
+                <tr className="bg-[#12281b]/80 text-[#cbd5e1]/80 text-xs uppercase tracking-wider border-b border-white/10">
+                  <th className="p-4 font-bold">Title</th>
+                  <th className="p-4 font-bold">Type</th>
+                  <th className="p-4 font-bold">Author</th>
+                  <th className="p-4 font-bold">Status</th>
+                  <th className="p-4 font-bold">Date</th>
+                  <th className="p-4 font-bold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-[#0f172a] text-sm">
+              <tbody className="text-[#f5f0e6] text-sm divide-y divide-white/5">
                 {filteredContent.length > 0 ? filteredContent.map((item: any) => (
-                  <tr key={item.id} className="border-b border-white/5 hover:bg-[#84cc16]/5 transition-colors group">
-                    <td className="p-4 font-medium">{item.title}</td>
-                    <td className="p-4 text-[#0f172a]/70">{item.type}</td>
-                    <td className="p-4 text-[#0f172a]/70">{item.author}</td>
+                  <tr key={item.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="p-4 font-semibold text-[#f5f0e6]">{item.title}</td>
+                    <td className="p-4 text-xs text-[#cbd5e1]/80">{item.type}</td>
+                    <td className="p-4 text-xs text-[#cbd5e1]/80">{item.author}</td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                        item.status === 'Published' ? 'bg-[#84cc16]/20 text-[#84cc16] border-[#84cc16]/30' :
-                        item.status === 'Draft' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' :
-                        'bg-[#84cc16]/10 text-[#0f172a]/70 border-white/20'
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                        item.status === 'Published' ? 'bg-[#84cc16]/15 text-[#84cc16] border-[#84cc16]/30' :
+                        'bg-yellow-500/15 text-yellow-300 border-yellow-500/30'
                       }`}>
                         {item.status}
                       </span>
                     </td>
-                    <td className="p-4 text-[#0f172a]/70">{item.date}</td>
-                    <td className="p-4 text-right flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 hover:bg-[#84cc16]/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="View">
-                        <Eye size={16} />
-                      </button>
-                      <button className="p-2 hover:bg-[#84cc16]/10 rounded-lg text-[#0f172a]/70 hover:text-white transition-colors" title="Edit">
-                        <Edit2 size={16} />
-                      </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-500/20 rounded-lg text-[#0f172a]/70 hover:text-red-400 transition-colors" title="Delete">
+                    <td className="p-4 text-xs text-[#cbd5e1]/70">{item.date}</td>
+                    <td className="p-4 text-right">
+                      <button 
+                        onClick={() => handleDelete(item.id)} 
+                        className="p-2 hover:bg-red-500/20 rounded-xl text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                        title="Delete"
+                      >
                         <Trash2 size={16} />
                       </button>
                     </td>
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-[#0f172a]/50">No content found.</td>
+                    <td colSpan={6} className="p-12 text-center text-[#cbd5e1]/50">
+                      No content items found. Click "Add Content" to create one.
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
-          </div>
-          
-          <div className="p-4 border-t border-white/10 bg-[#84cc16]/10 flex items-center justify-between text-sm text-[#0f172a]/60">
-            <span>Showing {filteredContent.length} entries</span>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 rounded-lg hover:bg-[#84cc16]/10 transition-colors disabled:opacity-50" disabled>Previous</button>
-              <button className="px-3 py-1 rounded-lg bg-[#84cc16]/10 text-white transition-colors">1</button>
-              <button className="px-3 py-1 rounded-lg hover:bg-[#84cc16]/10 transition-colors disabled:opacity-50" disabled>Next</button>
-            </div>
           </div>
         </div>
 

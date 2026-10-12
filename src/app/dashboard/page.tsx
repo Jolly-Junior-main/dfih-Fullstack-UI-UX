@@ -4,13 +4,8 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { FileText, Clock, CheckCircle, AlertCircle, Plus, LogOut, User, ShieldCheck } from "lucide-react"
 import Link from "next/link"
-
-const stats = [
-  { name: "Total Submissions", value: "12", icon: FileText, color: "text-[#0f172a]" },
-  { name: "Pending Review", value: "3", icon: Clock, color: "text-yellow-400" },
-  { name: "Published", value: "8", icon: CheckCircle, color: "text-[#84cc16]" },
-  { name: "Needs Revision", value: "1", icon: AlertCircle, color: "text-red-400" },
-]
+import { db } from "@/lib/firebase"
+import { collection, query, onSnapshot, setDoc, doc, serverTimestamp, orderBy } from "firebase/firestore"
 
 export default function ContributorDashboard() {
   const router = useRouter()
@@ -20,6 +15,8 @@ export default function ContributorDashboard() {
     email: "",
     institution: "",
   })
+  const [submissions, setSubmissions] = useState<any[]>([])
+  const [submissionsLoading, setSubmissionsLoading] = useState(true)
 
   const [authMode, setAuthMode] = useState<"login" | "register">("login")
   const [loginEmail, setLoginEmail] = useState("")
@@ -59,44 +56,104 @@ export default function ContributorDashboard() {
     setIsAuthorized(true)
   }, [])
 
-  const handleInlineLogin = (e: React.FormEvent) => {
+  // Listen to Firestore research submissions for this user
+  useEffect(() => {
+    if (!userData.email) return
+
+    const q = query(collection(db, "research_submissions"), orderBy("createdAt", "desc"))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const all = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      const isAdmin = userData.email === "admin@dfih.org"
+      const userLower = userData.email.toLowerCase()
+      const nameLower = userData.name.toLowerCase()
+
+      const userDocs = isAdmin 
+        ? all 
+        : all.filter((item: any) => {
+            const itemUserEmail = (item.userEmail || "").toLowerCase()
+            const itemAuthorEmail = (item.authorEmail || "").toLowerCase()
+            const itemAuthor = (item.author || "").toLowerCase()
+            return itemUserEmail === userLower || itemAuthorEmail === userLower || (nameLower && itemAuthor === nameLower)
+          })
+
+      setSubmissions(userDocs)
+      setSubmissionsLoading(false)
+    }, (error) => {
+      console.error("Error fetching user submissions:", error)
+      setSubmissionsLoading(false)
+    })
+
+    return () => unsubscribe()
+  }, [userData.email, userData.name])
+
+  const handleInlineLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setAuthLoading(true)
-    setTimeout(() => {
-      sessionStorage.setItem("user_logged_in", "true")
-      sessionStorage.setItem("user_auth", "true")
-      sessionStorage.setItem("user_email", loginEmail)
-      const existingName = sessionStorage.getItem("user_name")
-      const resolvedName = existingName || loginEmail.split("@")[0].replace(/[._-]/g, " ")
-      const formattedName = resolvedName.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
-      sessionStorage.setItem("user_name", formattedName)
-      setUserData({
+    const cleanEmail = loginEmail.trim().toLowerCase()
+    const existingName = sessionStorage.getItem("user_name")
+    const resolvedName = existingName || cleanEmail.split("@")[0].replace(/[._-]/g, " ")
+    const formattedName = resolvedName.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+    const inst = sessionStorage.getItem("user_institution") || "Forestry Research Department"
+
+    try {
+      await setDoc(doc(db, "users", cleanEmail), {
+        email: cleanEmail,
         name: formattedName,
-        email: loginEmail,
-        institution: sessionStorage.getItem("user_institution") || "Forestry Research Department"
-      })
-      setIsAuthorized(true)
-      setAuthLoading(false)
-    }, 600)
+        lastActive: "Just now"
+      }, { merge: true })
+    } catch (err) {
+      console.warn("Could not sync user to Firestore:", err)
+    }
+
+    sessionStorage.setItem("user_logged_in", "true")
+    sessionStorage.setItem("user_auth", "true")
+    sessionStorage.setItem("user_email", cleanEmail)
+    sessionStorage.setItem("user_name", formattedName)
+    sessionStorage.setItem("user_institution", inst)
+
+    setUserData({
+      name: formattedName,
+      email: cleanEmail,
+      institution: inst
+    })
+    setIsAuthorized(true)
+    setAuthLoading(false)
   }
 
-  const handleInlineRegister = (e: React.FormEvent) => {
+  const handleInlineRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setAuthLoading(true)
-    setTimeout(() => {
-      sessionStorage.setItem("user_logged_in", "true")
-      sessionStorage.setItem("user_auth", "true")
-      sessionStorage.setItem("user_name", regName)
-      sessionStorage.setItem("user_email", regEmail)
-      sessionStorage.setItem("user_institution", regInstitution || "Forestry Institute")
-      setUserData({
-        name: regName,
-        email: regEmail,
-        institution: regInstitution || "Forestry Institute"
-      })
-      setIsAuthorized(true)
-      setAuthLoading(false)
-    }, 600)
+    const cleanEmail = regEmail.trim().toLowerCase()
+    const cleanName = regName.trim()
+    const cleanInst = regInstitution.trim() || "Forestry Institute"
+
+    try {
+      await setDoc(doc(db, "users", cleanEmail), {
+        name: cleanName,
+        email: cleanEmail,
+        institution: cleanInst,
+        role: "Contributor",
+        status: "Active",
+        lastActive: "Just now",
+        createdAt: serverTimestamp()
+      }, { merge: true })
+    } catch (err) {
+      console.warn("Could not write user to Firestore:", err)
+    }
+
+    sessionStorage.setItem("user_logged_in", "true")
+    sessionStorage.setItem("user_auth", "true")
+    sessionStorage.setItem("user_name", cleanName)
+    sessionStorage.setItem("user_email", cleanEmail)
+    sessionStorage.setItem("user_institution", cleanInst)
+
+    setUserData({
+      name: cleanName,
+      email: cleanEmail,
+      institution: cleanInst
+    })
+    setIsAuthorized(true)
+    setAuthLoading(false)
   }
 
   const handleLogout = () => {
@@ -284,9 +341,21 @@ export default function ContributorDashboard() {
 
   const initial = userData.name ? userData.name.charAt(0).toUpperCase() : "R"
 
+  const totalSubmissions = submissions.length
+  const pendingSubmissions = submissions.filter(s => (s.status || "").toLowerCase().includes("pending")).length
+  const publishedSubmissions = submissions.filter(s => (s.status || "").toLowerCase() === "published").length
+  const revisionSubmissions = submissions.filter(s => (s.status || "").toLowerCase().includes("revision") || (s.status || "").toLowerCase() === "rejected").length
+
+  const dynamicStats = [
+    { name: "Total Submissions", value: totalSubmissions.toString(), icon: FileText, color: "text-[#84cc16]" },
+    { name: "Pending Review", value: pendingSubmissions.toString(), icon: Clock, color: "text-yellow-400" },
+    { name: "Published", value: publishedSubmissions.toString(), icon: CheckCircle, color: "text-[#84cc16]" },
+    { name: "Needs Revision", value: revisionSubmissions.toString(), icon: AlertCircle, color: "text-red-400" },
+  ]
+
   return (
-    <div className="flex flex-col min-h-screen pt-24 pb-12 bg-[#163022] text-[#f5f0e6]">
-      <div className="container mx-auto px-6 max-w-6xl">
+    <div className="flex flex-col min-h-screen pt-28 pb-16 bg-[#163022] text-[#f5f0e6]">
+      <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
         
         {/* User Account Header with Small Circular Profile Image */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6 bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-xl">
@@ -339,7 +408,7 @@ export default function ContributorDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {stats.map((stat, idx) => {
+          {dynamicStats.map((stat, idx) => {
             const Icon = stat.icon
             return (
               <div key={idx} className="bg-[#1c3d2b]/70 backdrop-blur-md border border-white/10 rounded-3xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group hover:border-[#84cc16]/40 transition-colors">
@@ -359,32 +428,72 @@ export default function ContributorDashboard() {
         {/* Recent Submissions */}
         <div className="bg-[#1c3d2b]/70 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-[#f5f0e6]">Recent Submissions</h2>
-            <Link href="/resources" className="text-xs font-semibold text-[#84cc16] hover:underline uppercase tracking-wider">View all</Link>
+            <div>
+              <h2 className="text-2xl font-bold text-[#f5f0e6]">Your Research Submissions</h2>
+              <p className="text-xs text-[#cbd5e1]/70 mt-1">Live status of research papers and datasets submitted from your account.</p>
+            </div>
+            <Link href="/submit" className="text-xs font-semibold text-[#84cc16] hover:underline uppercase tracking-wider flex items-center gap-1">
+              <Plus size={14} /> New Submission
+            </Link>
           </div>
           
-          <div className="space-y-4">
-            {[
-              { title: "National Forest Inventory 2025", type: "Dataset", date: "Oct 2, 2026", status: "Published", color: "text-[#84cc16] bg-[#84cc16]/10 border-[#84cc16]/30" },
-              { title: "Impact of Wildfires on Soil Ecosystems", type: "Report", date: "Sep 28, 2026", status: "In Review", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/30" },
-              { title: "Deforestation Rates in the Amazon (Q3)", type: "Analysis", date: "Sep 15, 2026", status: "Needs Revision", color: "text-red-400 bg-red-400/10 border-red-400/30" }
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-[#0f2317]/60 border border-white/5 hover:border-white/15 transition-all cursor-pointer group">
-                <div className="flex items-center gap-4 mb-4 sm:mb-0">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#84cc16] group-hover:scale-110 transition-transform">
-                    <FileText size={18} />
+          {submissionsLoading ? (
+            <div className="py-12 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#84cc16]"></div>
+            </div>
+          ) : submissions.length > 0 ? (
+            <div className="space-y-4">
+              {submissions.map((item: any) => {
+                const dateStr = item.createdAt?.toDate 
+                  ? item.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                  : (item.date || "Recently submitted")
+
+                const statusLower = (item.status || "Pending Review").toLowerCase()
+                let badgeStyle = "text-yellow-400 bg-yellow-400/10 border-yellow-400/30"
+                if (statusLower === "published") {
+                  badgeStyle = "text-[#84cc16] bg-[#84cc16]/10 border-[#84cc16]/30"
+                } else if (statusLower.includes("revision") || statusLower === "rejected") {
+                  badgeStyle = "text-red-400 bg-red-400/10 border-red-400/30"
+                }
+
+                return (
+                  <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl bg-[#0f2317]/60 border border-white/5 hover:border-white/15 transition-all group">
+                    <div className="flex items-center gap-4 mb-4 sm:mb-0">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#84cc16] group-hover:scale-110 transition-transform shrink-0">
+                        <FileText size={18} />
+                      </div>
+                      <div>
+                        <h4 className="text-[#f5f0e6] font-medium group-hover:text-[#84cc16] transition-colors">{item.title}</h4>
+                        <p className="text-xs text-[#cbd5e1]/60 mt-0.5">
+                          {item.resourceType || item.category || "Research Paper"} &bull; Submitted {dateStr}
+                          {item.institution && ` &bull; ${item.institution}`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3.5 py-1 rounded-full text-xs font-semibold border ${badgeStyle}`}>
+                        {item.status || "Pending Review"}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-[#f5f0e6] font-medium group-hover:text-[#84cc16] transition-colors">{item.title}</h4>
-                    <p className="text-xs text-[#cbd5e1]/60 mt-0.5">{item.type} &bull; Submitted {item.date}</p>
-                  </div>
-                </div>
-                <div className={`px-3.5 py-1 rounded-full text-xs font-semibold border ${item.color}`}>
-                  {item.status}
-                </div>
-              </div>
-            ))}
-          </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-14 px-4 rounded-2xl bg-[#0f2317]/40 border border-white/5">
+              <FileText className="w-12 h-12 text-[#84cc16]/40 mx-auto mb-3" />
+              <h3 className="text-lg font-bold text-[#f5f0e6] mb-1">No research submissions yet</h3>
+              <p className="text-xs sm:text-sm text-[#cbd5e1]/70 max-w-md mx-auto mb-6">
+                You haven't submitted any research papers or datasets yet. Contribute to the global repository to share your findings.
+              </p>
+              <Link 
+                href="/submit" 
+                className="inline-flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#84cc16]/20"
+              >
+                <Plus size={16} /> Submit Research Paper
+              </Link>
+            </div>
+          )}
         </div>
 
       </div>

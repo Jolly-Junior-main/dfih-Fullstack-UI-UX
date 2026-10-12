@@ -58,17 +58,25 @@ export default function SubmitResourcePage() {
   const handleSubmit = async () => {
     try {
       setIsSubmitting(true)
+      const userEmail = (sessionStorage.getItem("user_email") || "").trim().toLowerCase()
+      const userName = sessionStorage.getItem("user_name") || "Researcher"
+      const userInst = sessionStorage.getItem("user_institution") || "Forestry Research Department"
+
       await addDoc(collection(db, "research_submissions"), {
-        title: formData.title,
-        category: formData.theme,
-        body: formData.description,
-        author: formData.author,
-        institution: formData.institution,
+        title: formData.title || "Untitled Research",
+        category: formData.theme || "Sustainable Forest Management",
+        body: formData.description || "",
+        author: formData.author || userName,
+        authorEmail: userEmail,
+        userEmail: userEmail,
+        institution: formData.institution || userInst,
+        year: new Date().getFullYear(),
+        resourceType: "Research Paper",
         status: "Pending Review",
         createdAt: serverTimestamp()
       })
-      alert("Research submitted successfully! It is now pending review.")
-      router.push("/")
+      alert("Research submitted successfully! It is now pending review and listed in your dashboard.")
+      router.push("/dashboard")
     } catch (error) {
       console.error("Error submitting document: ", error)
       alert("There was an error submitting your research.")

@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Leaf } from "lucide-react"
 
+import { db } from "@/lib/firebase"
+import { doc, setDoc, serverTimestamp } from "firebase/firestore"
+
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -15,17 +18,39 @@ export default function RegisterPage() {
   const [institution, setInstitution] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
+    try {
+      const cleanEmail = email.trim().toLowerCase()
+      await setDoc(doc(db, "users", cleanEmail), {
+        name: fullName.trim(),
+        email: cleanEmail,
+        institution: institution.trim() || "Forestry Research Department",
+        role: "Contributor",
+        status: "Active",
+        lastActive: "Just now",
+        createdAt: serverTimestamp()
+      }, { merge: true })
+
+      sessionStorage.setItem("user_logged_in", "true")
+      sessionStorage.setItem("user_auth", "true")
+      sessionStorage.setItem("user_name", fullName.trim())
+      sessionStorage.setItem("user_email", cleanEmail)
+      sessionStorage.setItem("user_institution", institution.trim() || "Forestry Research Department")
+      router.push("/dashboard")
+    } catch (err) {
+      console.error("Error creating user:", err)
+      // Fallback to session
       sessionStorage.setItem("user_logged_in", "true")
       sessionStorage.setItem("user_auth", "true")
       sessionStorage.setItem("user_name", fullName)
-      sessionStorage.setItem("user_email", email)
+      sessionStorage.setItem("user_email", email.trim().toLowerCase())
       sessionStorage.setItem("user_institution", institution)
       router.push("/dashboard")
-    }, 800)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Save } from "lucide-react"
+import { Save, Check, FileEdit } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { collection, doc, onSnapshot, setDoc } from "firebase/firestore"
 
@@ -10,27 +10,38 @@ export default function AdminPagesContent() {
   const [activeTab, setActiveTab] = useState("home")
   const [formData, setFormData] = useState<any>({})
   const [isSaving, setIsSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
-  // Default structure so admin has something to edit if db is empty
+  // Default structure so admin can edit any main page
   const defaultStructure: any = {
     home: {
       heroTitle: "Digital Forestry Information Hub",
       heroSubtitle: "Empowering global forestry research through open data sharing and collaborative analytics.",
-      heroButtonText: "Explore Data",
+      heroButtonText: "Explore Repository",
+      introTitle: "Global Repository",
+      introDescription: "Helping researchers, analysts, and policymakers access critical ecological datasets, silviculture models, and verified policy frameworks."
     },
     about: {
-      title: "About DFIH",
-      content: "The Digital Forestry Information Hub is an initiative dedicated to organizing and sharing critical forestry data worldwide.",
-      missionTitle: "Our Mission",
-      missionContent: "To accelerate ecological restoration by breaking down data silos.",
+      title: "About Us",
+      content: "Building the definitive global repository for forestry research.",
+      missionTitle: "Our Mission & Impact",
+      missionContent: "The Digital Forestry Information Hub (DFIH) was established to bridge the gap between academic research and actionable policymaking. By centralizing millions of datasets, peer-reviewed articles, and on-the-ground management manuals, we empower researchers and governments to make data-driven decisions that protect our world's lungs."
+    },
+    resources: {
+      headerTitle: "Forestry Research Repository",
+      headerSubtitle: "Search and access verified datasets, silviculture reports, biodiversity assessments, and field manuals from global research institutions."
+    },
+    contact: {
+      headerTitle: "Get in Touch",
+      headerSubtitle: "Have questions about submitting research, joining as a partner institution, or accessing restricted datasets? Connect with the DFIH secretariat."
     }
   }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "page_content"), (snapshot) => {
       const data: any = {}
-      snapshot.forEach(doc => {
-        data[doc.id] = doc.data()
+      snapshot.forEach(docSnap => {
+        data[docSnap.id] = docSnap.data()
       })
       setPages(data)
       
@@ -40,13 +51,14 @@ export default function AdminPagesContent() {
       } else {
         setFormData(defaultStructure[activeTab] || {})
       }
-    })
+    }, (err) => console.error("Error fetching pages:", err))
 
     return () => unsubscribe()
   }, [activeTab])
 
   const handleTabSwitch = (tab: string) => {
     setActiveTab(tab)
+    setSaveSuccess(false)
     if (pages[tab]) {
       setFormData(pages[tab])
     } else {
@@ -56,12 +68,14 @@ export default function AdminPagesContent() {
 
   const handleSave = async () => {
     setIsSaving(true)
+    setSaveSuccess(false)
     try {
       await setDoc(doc(db, "page_content", activeTab), formData)
-      alert("Page content saved successfully!")
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
     } catch (e) {
       console.error(e)
-      alert("Failed to save.")
+      alert("Failed to save page content.")
     } finally {
       setIsSaving(false)
     }
@@ -72,34 +86,37 @@ export default function AdminPagesContent() {
   }
 
   return (
-    <main className="p-6 md:p-10 relative">
-      <div className="max-w-4xl mx-auto">
+    <main className="p-6 md:p-10 bg-[#163022] min-h-screen text-[#f5f0e6]">
+      <div className="max-w-5xl mx-auto">
         
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight text-[#0f172a]">Static Pages</h1>
-            <p className="text-[#0f172a]/60 mt-1">Edit the text and content of the main website pages.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-[#f5f0e6]">Static Pages Editor</h1>
+            <p className="text-[#cbd5e1]/70 mt-1">
+              Edit the headings, copy, and key text across any public page in real time.
+            </p>
           </div>
           <button 
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#ffffff] px-5 py-2.5 rounded-xl font-semibold transition-colors shadow-lg disabled:opacity-50"
+            className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-[#84cc16]/20 cursor-pointer disabled:opacity-50 shrink-0"
           >
-            <Save size={18} />
-            {isSaving ? "Saving..." : "Save Changes"}
+            {saveSuccess ? <Check size={18} /> : <Save size={18} />}
+            {isSaving ? "Saving..." : saveSuccess ? "Saved Successfully!" : "Save Changes"}
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-white/20 pb-4">
+        {/* Page Switcher Tabs */}
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-white/10 pb-4">
           {Object.keys(defaultStructure).map(tab => (
             <button
               key={tab}
               onClick={() => handleTabSwitch(tab)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all capitalize ${
+              className={`px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === tab 
-                  ? "bg-[#84cc16]/20 text-[#84cc16] border border-[#84cc16]/30 shadow-inner" 
-                  : "text-[#0f172a]/70 hover:bg-[#f8fafc] hover:text-[#0f172a]"
+                  ? "bg-[#84cc16] text-[#0f2317] shadow-md shadow-[#84cc16]/20" 
+                  : "bg-[#1c3d2b] border border-white/10 text-[#cbd5e1] hover:text-white hover:bg-white/5"
               }`}
             >
               {tab} Page
@@ -107,34 +124,52 @@ export default function AdminPagesContent() {
           ))}
         </div>
 
-        {/* Editor Area */}
-        <div className="bg-[#84cc16]/15 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-xl">
+        {/* Content Form Editor */}
+        <div className="bg-[#1c3d2b]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+          <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/10">
+            <FileEdit className="text-[#84cc16]" size={20} />
+            <h2 className="text-xl font-bold text-[#f5f0e6] capitalize">{activeTab} Page Content</h2>
+          </div>
+
           <div className="space-y-6">
-            {Object.keys(formData).map((key) => (
-              <div key={key}>
-                <label className="text-sm font-medium text-[#0f172a]/80 mb-2 block capitalize">
-                  {key.replace(/([A-Z])/g, ' $1').trim()} {/* Format camelCase to Title Case */}
-                </label>
-                {key.toLowerCase().includes('content') || key.toLowerCase().includes('subtitle') ? (
-                  <textarea 
-                    value={formData[key]} 
-                    onChange={e => handleChange(key, e.target.value)}
-                    className="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 min-h-[120px] focus:outline-none focus:border-[#84cc16] focus:bg-white transition-colors"
-                  />
-                ) : (
-                  <input 
-                    type="text" 
-                    value={formData[key]} 
-                    onChange={e => handleChange(key, e.target.value)}
-                    className="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:border-[#84cc16] focus:bg-white transition-colors"
-                  />
-                )}
-              </div>
-            ))}
-            
-            {Object.keys(formData).length === 0 && (
-              <p className="text-[#0f172a]/50 text-center py-8">No editable fields configured for this page yet.</p>
-            )}
+            {Object.keys(formData).map((key) => {
+              const isLongText = key.toLowerCase().includes('content') || 
+                                key.toLowerCase().includes('subtitle') || 
+                                key.toLowerCase().includes('description')
+
+              return (
+                <div key={key}>
+                  <label className="text-xs font-bold text-[#cbd5e1] mb-2 block uppercase tracking-wider">
+                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                  </label>
+                  {isLongText ? (
+                    <textarea 
+                      value={formData[key] || ""} 
+                      onChange={e => handleChange(key, e.target.value)}
+                      className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-3 min-h-[110px] text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16] transition-colors"
+                    />
+                  ) : (
+                    <input 
+                      type="text" 
+                      value={formData[key] || ""} 
+                      onChange={e => handleChange(key, e.target.value)}
+                      className="w-full bg-[#12281b] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16] transition-colors"
+                    />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/10 flex justify-end">
+            <button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className="flex items-center gap-2 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-[#84cc16]/20 cursor-pointer disabled:opacity-50"
+            >
+              <Save size={16} />
+              {isSaving ? "Saving..." : "Save Page Content"}
+            </button>
           </div>
         </div>
 
