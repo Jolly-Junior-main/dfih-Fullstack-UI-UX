@@ -21,6 +21,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const [userName, setUserName] = React.useState("")
+  const [userAvatar, setUserAvatar] = React.useState("")
   const [accountMenuOpen, setAccountMenuOpen] = React.useState(false)
   const accountMenuRef = React.useRef<HTMLDivElement>(null)
 
@@ -28,6 +29,9 @@ export function Header() {
     const admin = sessionStorage.getItem("admin_auth") === "true"
     const email = sessionStorage.getItem("user_email")
     const loggedIn = sessionStorage.getItem("user_logged_in") === "true"
+    const avatar = sessionStorage.getItem("user_avatar") || ""
+
+    setUserAvatar(avatar)
 
     if (admin) {
       setIsLoggedIn(true)
@@ -40,6 +44,7 @@ export function Header() {
       sessionStorage.removeItem("user_auth")
       setIsLoggedIn(false)
       setUserName("")
+      setUserAvatar("")
     }
   }, [pathname])
 
@@ -59,8 +64,10 @@ export function Header() {
     sessionStorage.removeItem("user_name")
     sessionStorage.removeItem("user_email")
     sessionStorage.removeItem("user_institution")
+    sessionStorage.removeItem("user_avatar")
     setIsLoggedIn(false)
     setUserName("")
+    setUserAvatar("")
     setAccountMenuOpen(false)
   }
 
@@ -144,9 +151,13 @@ export function Header() {
                   title={`${userName || "User"}'s Account`}
                 >
                   <div className="w-8 h-8 rounded-full ring-2 ring-[#84cc16] overflow-hidden shadow-md shrink-0 bg-[#0f2317] flex items-center justify-center relative">
-                    <span className="text-xs font-bold text-[#84cc16]">
-                      {userName ? userName.charAt(0).toUpperCase() : "U"}
-                    </span>
+                    {userAvatar ? (
+                      <img src={userAvatar} alt={userName} className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                      <span className="text-xs font-bold text-[#84cc16]">
+                        {userName ? userName.charAt(0).toUpperCase() : "U"}
+                      </span>
+                    )}
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#84cc16] rounded-full border-2 border-[#163022]" />
                   </div>
                   <span className="text-xs font-semibold text-[#f5f0e6] hidden xl:inline group-hover:text-[#84cc16] transition-colors max-w-[120px] truncate">
@@ -174,8 +185,12 @@ export function Header() {
                   {isLoggedIn ? (
                     <div>
                       <div className="flex items-center gap-3 pb-3 mb-3 border-b border-white/10">
-                        <div className="w-10 h-10 rounded-full ring-2 ring-[#84cc16] bg-[#0f2317] flex items-center justify-center text-[#84cc16] font-bold text-sm shrink-0">
-                          {userName ? userName.charAt(0).toUpperCase() : "U"}
+                        <div className="w-10 h-10 rounded-full ring-2 ring-[#84cc16] bg-[#0f2317] overflow-hidden flex items-center justify-center text-[#84cc16] font-bold text-sm shrink-0">
+                          {userAvatar ? (
+                            <img src={userAvatar} alt={userName} className="w-full h-full object-cover rounded-full" />
+                          ) : (
+                            userName ? userName.charAt(0).toUpperCase() : "U"
+                          )}
                         </div>
                         <div className="overflow-hidden">
                           <p className="text-sm font-bold text-[#f5f0e6] truncate">{userName}</p>

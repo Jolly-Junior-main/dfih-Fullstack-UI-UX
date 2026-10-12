@@ -240,8 +240,12 @@ export default function AdminUsersPage() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#12281b] border border-[#84cc16]/40 flex items-center justify-center text-[#84cc16] font-extrabold shrink-0">
-                            {initial}
+                          <div className="w-10 h-10 rounded-full bg-[#12281b] border border-[#84cc16]/40 flex items-center justify-center text-[#84cc16] font-extrabold shrink-0 overflow-hidden">
+                            {user.avatar ? (
+                              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                            ) : (
+                              initial
+                            )}
                           </div>
                           <div>
                             <span className="font-semibold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors">
@@ -350,8 +354,12 @@ export default function AdminUsersPage() {
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-6 border-b border-white/10 gap-4">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#12281b] border-2 border-[#84cc16] flex items-center justify-center text-[#84cc16] text-2xl font-black shadow-lg">
-                  {selectedUser.name ? selectedUser.name.charAt(0).toUpperCase() : "U"}
+                <div className="w-16 h-16 rounded-full bg-[#12281b] border-2 border-[#84cc16] flex items-center justify-center text-[#84cc16] text-2xl font-black shadow-lg overflow-hidden shrink-0">
+                  {selectedUser.avatar ? (
+                    <img src={selectedUser.avatar} alt={selectedUser.name} className="w-full h-full object-cover" />
+                  ) : (
+                    selectedUser.name ? selectedUser.name.charAt(0).toUpperCase() : "U"
+                  )}
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">

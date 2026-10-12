@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { ThematicCarousel } from "@/components/resources/ThematicCarousel"
 import { db } from "@/lib/firebase"
 import { doc, getDoc } from "firebase/firestore"
 
@@ -95,7 +96,7 @@ export default function Home() {
               <h1 
                 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[92px] font-black tracking-tight leading-[1.05] text-[#ffffff] mb-6"
                 style={{
-                  textShadow: "0 2px 4px rgba(0,0,0,0.9), 0 6px 14px rgba(0,0,0,0.8), 0 16px 32px rgba(0,0,0,0.7), 0 0 40px rgba(132,204,22,0.2)"
+                  textShadow: "0 3px 6px rgba(0,0,0,0.95), 0 8px 24px rgba(0,0,0,0.95), 0 16px 40px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8)"
                 }}
               >
                 {content.heroTitle}
@@ -104,7 +105,7 @@ export default function Home() {
               <p 
                 className="text-base sm:text-xl md:text-2xl font-medium text-[#f5f0e6] max-w-4xl leading-relaxed mb-8"
                 style={{
-                  textShadow: "0 2px 6px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.7)"
+                  textShadow: "0 2px 6px rgba(0,0,0,0.95), 0 6px 18px rgba(0,0,0,0.9), 0 12px 30px rgba(0,0,0,0.85)"
                 }}
               >
                 {content.heroSubtitle}
@@ -161,8 +162,8 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Activity Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+          {/* Activity Cards: Horizontally scrollable on mobile, grid on desktop */}
+          <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 xl:gap-8 overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
             {[
               {
                 user: "Akeem Jamiu",
@@ -207,7 +208,7 @@ export default function Home() {
             ].map((activity, idx) => (
               <div 
                 key={idx}
-                className="bg-[#1c3d2b]/70 border border-white/10 rounded-3xl p-6 backdrop-blur-md shadow-xl flex flex-col justify-between hover:border-[#84cc16]/40 hover:-translate-y-1 transition-all duration-300 group"
+                className="min-w-[280px] sm:min-w-[320px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/70 border border-white/10 rounded-3xl p-6 backdrop-blur-md shadow-xl flex flex-col justify-between hover:border-[#84cc16]/40 hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -273,9 +274,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. BENTO GRID (Resources For Every Research Need) */}
+      {/* 5. THEMATIC AREAS CAROUSEL & BENTO GRID */}
       <section className="py-24 bg-[#12281b] border-t border-white/10 rounded-t-[3rem]">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
+          {/* Thematic Areas Sliding Carousel Navigation */}
+          <div className="mb-20">
+            <ThematicCarousel 
+              title="Thematic Areas" 
+              subtitle="Slide through 10 global forestry disciplines to discover verified datasets, manuals, and papers" 
+            />
+          </div>
+
           <div className="text-center mb-16">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Curated Disciplines</span>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#f5f0e6] mt-2">
@@ -283,9 +292,9 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-            {/* Top Left: Text Card */}
-            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[340px] md:h-[420px] xl:h-[460px] shadow-xl">
+          <div className="flex md:grid md:grid-cols-2 gap-6 md:gap-8 w-full overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
+            {/* Card 1: Policy & Governance */}
+            <div className="min-w-[85vw] sm:min-w-[360px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[320px] md:h-[420px] xl:h-[460px] shadow-xl">
               <h3 className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] mb-4">Policy & Governance</h3>
               <p className="text-sm sm:text-base text-[#cbd5e1] mb-8 max-w-md leading-relaxed">
                 Guidelines, legal blueprints, and legislative frameworks for sustainable institutional and community forestry.
@@ -295,14 +304,11 @@ export default function Home() {
               </Link>
             </div>
             
-            {/* Top Right: Image */}
-            <div className="bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[340px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
+            {/* Card 2: Image */}
+            <div className="min-w-[85vw] sm:min-w-[360px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[320px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
             
-            {/* Bottom Left: Image */}
-            <div className="hidden md:block bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[340px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
-            
-            {/* Bottom Right: Text Card */}
-            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[340px] md:h-[420px] xl:h-[460px] shadow-xl">
+            {/* Card 3: Climate Adaptation */}
+            <div className="min-w-[85vw] sm:min-w-[360px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[320px] md:h-[420px] xl:h-[460px] shadow-xl">
               <h3 className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] mb-4">Climate Adaptation</h3>
               <p className="text-sm sm:text-base text-[#cbd5e1] mb-8 max-w-md leading-relaxed">
                 Remote sensing models and field methodologies for ecological resilience in shifting climates.
@@ -312,7 +318,8 @@ export default function Home() {
               </Link>
             </div>
             
-            <div className="md:hidden bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[300px] h-[350px] border border-white/10" />
+            {/* Card 4: Image */}
+            <div className="min-w-[85vw] sm:min-w-[360px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[320px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
           </div>
         </div>
       </section>
@@ -358,8 +365,8 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-10 w-full">
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+          <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 xl:gap-10 w-full overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
+            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg flex flex-col justify-between">
               <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "Structured datasets that actually accelerate publications. Every model is verified and rigorous. DFIH stands out among global repositories."
               </p>
@@ -372,7 +379,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg flex flex-col justify-between">
               <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "Highly recommended for conservation analysts. Clean indexing, comprehensive categories, and an active international community."
               </p>
@@ -385,7 +392,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg flex flex-col justify-between">
               <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "The finest platform for academic and field forestry resources. Reliable metadata, easy document downloads, and responsive curators."
               </p>

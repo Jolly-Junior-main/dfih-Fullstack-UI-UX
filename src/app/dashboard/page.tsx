@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { FileText, Clock, CheckCircle, AlertCircle, Plus, LogOut, User, ShieldCheck } from "lucide-react"
+import { FileText, Clock, CheckCircle, AlertCircle, Plus, LogOut, User, ShieldCheck, Camera, Upload, X } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/firebase"
 import { collection, query, onSnapshot, setDoc, doc, serverTimestamp, orderBy } from "firebase/firestore"
@@ -14,6 +14,7 @@ export default function ContributorDashboard() {
     name: "",
     email: "",
     institution: "",
+    avatar: "",
   })
   const [submissions, setSubmissions] = useState<any[]>([])
   const [submissionsLoading, setSubmissionsLoading] = useState(true)
@@ -25,18 +26,21 @@ export default function ContributorDashboard() {
   const [regEmail, setRegEmail] = useState("")
   const [regInstitution, setRegInstitution] = useState("")
   const [regPassword, setRegPassword] = useState("")
+  const [regAvatar, setRegAvatar] = useState("")
   const [authLoading, setAuthLoading] = useState(false)
 
   useEffect(() => {
     const adminAuth = sessionStorage.getItem("admin_auth") === "true"
     const userEmail = sessionStorage.getItem("user_email")
     const loggedIn = sessionStorage.getItem("user_logged_in") === "true"
+    const avatar = sessionStorage.getItem("user_avatar") || ""
 
     if (adminAuth) {
       setUserData({
         name: "DFIH Administrator",
         email: "admin@dfih.org",
         institution: "DFIH Central Governance",
+        avatar: "",
       })
       setIsAuthorized(true)
       return
@@ -52,7 +56,7 @@ export default function ContributorDashboard() {
 
     const name = sessionStorage.getItem("user_name") || userEmail.split("@")[0]
     const institution = sessionStorage.getItem("user_institution") || "Forestry Research Department"
-    setUserData({ name, email: userEmail, institution })
+    setUserData({ name, email: userEmail, institution, avatar })
     setIsAuthorized(true)
   }, [])
 
@@ -111,10 +115,12 @@ export default function ContributorDashboard() {
     sessionStorage.setItem("user_name", formattedName)
     sessionStorage.setItem("user_institution", inst)
 
+    const userAvatar = sessionStorage.getItem("user_avatar") || ""
     setUserData({
       name: formattedName,
       email: cleanEmail,
-      institution: inst
+      institution: inst,
+      avatar: userAvatar,
     })
     setIsAuthorized(true)
     setAuthLoading(false)
@@ -132,6 +138,7 @@ export default function ContributorDashboard() {
         name: cleanName,
         email: cleanEmail,
         institution: cleanInst,
+        avatar: regAvatar || "",
         role: "Contributor",
         status: "Active",
         lastActive: "Just now",
@@ -146,11 +153,17 @@ export default function ContributorDashboard() {
     sessionStorage.setItem("user_name", cleanName)
     sessionStorage.setItem("user_email", cleanEmail)
     sessionStorage.setItem("user_institution", cleanInst)
+    if (regAvatar) {
+      sessionStorage.setItem("user_avatar", regAvatar)
+    } else {
+      sessionStorage.removeItem("user_avatar")
+    }
 
     setUserData({
       name: cleanName,
       email: cleanEmail,
-      institution: cleanInst
+      institution: cleanInst,
+      avatar: regAvatar || "",
     })
     setIsAuthorized(true)
     setAuthLoading(false)
@@ -162,7 +175,27 @@ export default function ContributorDashboard() {
     sessionStorage.removeItem("user_name")
     sessionStorage.removeItem("user_email")
     sessionStorage.removeItem("user_institution")
+    sessionStorage.removeItem("user_avatar")
     setIsAuthorized(false)
+  }
+
+  const handleUpdateDashboardAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string
+      setUserData(prev => ({ ...prev, avatar: dataUrl }))
+      sessionStorage.setItem("user_avatar", dataUrl)
+      if (userData.email) {
+        try {
+          await setDoc(doc(db, "users", userData.email.toLowerCase()), { avatar: dataUrl }, { merge: true })
+        } catch (err) {
+          console.warn("Avatar update sync error:", err)
+        }
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   if (!isAuthorized) {
@@ -265,6 +298,50 @@ export default function ContributorDashboard() {
           {/* Mode 2: Create Account Form */}
           {authMode === "register" && (
             <form onSubmit={handleInlineRegister} className="space-y-4 relative z-10 animate-in fade-in duration-300">
+              
+              {/* Profile Photo Upload */}
+              <div className="bg-[#12281b]/70 border border-white/10 rounded-2xl p-3.5 flex items-center gap-4">
+                <div className="relative shrink-0">
+                  <div className="w-14 h-14 rounded-full ring-2 ring-[#84cc16] overflow-hidden bg-[#0f2317] flex items-center justify-center">
+                    {regAvatar ? (
+                      <img src={regAvatar} alt="Upload preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <User size={22} className="text-white/40" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex-1">
+                  <div className="text-xs font-semibold text-[#f5f0e6] mb-1">Profile Photo (Optional)</div>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/15 text-[11px] font-bold text-[#84cc16] cursor-pointer transition-colors">
+                    <Upload size={12} />
+                    {regAvatar ? "Change Image" : "Upload Image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          const reader = new FileReader()
+                          reader.onload = (ev) => setRegAvatar(ev.target?.result as string)
+                          reader.readAsDataURL(file)
+                        }
+                      }}
+                    />
+                  </label>
+                  {regAvatar && (
+                    <button
+                      type="button"
+                      onClick={() => setRegAvatar("")}
+                      className="text-[11px] text-red-300 hover:text-red-200 ml-2 font-medium"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-[#cbd5e1]">Full Name</label>
                 <input
@@ -361,13 +438,28 @@ export default function ContributorDashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6 bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-xl">
           <div className="flex items-center gap-5">
             {/* Small Circular Profile Image with User Initial or Avatar */}
-            <div className="relative shrink-0">
+            <div className="relative shrink-0 group">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full ring-4 ring-[#84cc16]/80 overflow-hidden shadow-xl bg-[#0f2317] flex items-center justify-center">
-                <span className="text-2xl sm:text-3xl font-extrabold text-[#84cc16]">
-                  {initial}
-                </span>
+                {userData.avatar ? (
+                  <img src={userData.avatar} alt={userData.name} className="w-full h-full object-cover rounded-full" />
+                ) : (
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#84cc16]">
+                    {initial}
+                  </span>
+                )}
               </div>
-              <span className="absolute bottom-1 right-1 w-4 h-4 bg-[#84cc16] rounded-full border-2 border-[#163022] shadow-sm" title="Active Contributor" />
+              <label 
+                className="absolute bottom-0 right-0 w-6 h-6 bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] rounded-full border-2 border-[#163022] shadow-sm flex items-center justify-center cursor-pointer transition-transform group-hover:scale-110"
+                title="Change Profile Picture"
+              >
+                <Camera size={12} />
+                <input 
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpdateDashboardAvatar}
+                />
+              </label>
             </div>
 
             <div>
