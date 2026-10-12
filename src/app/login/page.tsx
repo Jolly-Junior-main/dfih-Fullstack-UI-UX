@@ -10,14 +10,25 @@ import { ArrowRight, Leaf } from "lucide-react"
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate auth for contributor portal
     setTimeout(() => {
       sessionStorage.setItem("user_auth", "true")
-      router.push("/submit")
+      sessionStorage.setItem("user_email", email)
+      const existingName = sessionStorage.getItem("user_name")
+      if (!existingName) {
+        const raw = email.split("@")[0].replace(/[._-]/g, " ")
+        const formatted = raw
+          .split(" ")
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+        sessionStorage.setItem("user_name", formatted || "Researcher Contributor")
+      }
+      router.push("/dashboard")
     }, 800)
   }
 
@@ -46,6 +57,8 @@ export default function LoginPage() {
                 <Input 
                   type="email" 
                   placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="bg-[#12281b] border-white/10 text-[#f5f0e6] placeholder:text-[#cbd5e1]/40 h-12 focus:border-[#84cc16]"
                 />
@@ -59,6 +72,8 @@ export default function LoginPage() {
                 <Input 
                   type="password" 
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="bg-[#12281b] border-white/10 text-[#f5f0e6] placeholder:text-[#cbd5e1]/40 h-12 focus:border-[#84cc16]"
                 />

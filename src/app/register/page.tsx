@@ -10,14 +10,20 @@ import { Leaf } from "lucide-react"
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [institution, setInstitution] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate user account creation
     setTimeout(() => {
       sessionStorage.setItem("user_auth", "true")
-      router.push("/submit")
+      sessionStorage.setItem("user_name", fullName)
+      sessionStorage.setItem("user_email", email)
+      sessionStorage.setItem("user_institution", institution)
+      router.push("/dashboard")
     }, 800)
   }
 
@@ -38,22 +44,50 @@ export default function RegisterPage() {
             <form className="space-y-5" onSubmit={handleRegister}>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#f5f0e6]">Full Name</label>
-                <Input type="text" placeholder="Dr. Jane Doe" required className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" />
+                <Input 
+                  type="text" 
+                  placeholder="Dr. Jane Doe" 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required 
+                  className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" 
+                />
               </div>
               
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#f5f0e6]">Email Address</label>
-                <Input type="email" placeholder="jane.doe@university.edu" required className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" />
+                <Input 
+                  type="email" 
+                  placeholder="jane.doe@university.edu" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                  className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" 
+                />
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#f5f0e6]">Organization / Institution</label>
-                <Input type="text" placeholder="Ministry of Forestry" required className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" />
+                <Input 
+                  type="text" 
+                  placeholder="Ministry of Forestry" 
+                  value={institution}
+                  onChange={(e) => setInstitution(e.target.value)}
+                  required 
+                  className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" 
+                />
               </div>
               
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#f5f0e6]">Password</label>
-                <Input type="password" placeholder="••••••••" required className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" />
+                <Input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                  className="bg-[#163022] border-white/10 h-12 focus:border-[#84cc16]/50 text-[#f5f0e6] placeholder:text-white/40" 
+                />
               </div>
               
               <Button disabled={loading} className="w-full h-12 rounded-xl bg-[#84cc16] hover:bg-[#84cc16]/90 text-[#0f2317] font-bold text-base mt-2 shadow-[0_0_15px_rgba(132,204,22,0.2)] hover:shadow-[0_0_25px_rgba(132,204,22,0.4)] transition-all">

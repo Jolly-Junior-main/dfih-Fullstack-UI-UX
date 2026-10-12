@@ -175,9 +175,9 @@ export default function Home() {
                 badgeColor: "bg-[#84cc16] text-[#0f2317]"
               },
               {
-                user: "Dr. Elena Smith",
-                role: "Lead Curator",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200",
+                user: "Dr. Rachel Thorne",
+                role: "Biometrician",
+                avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200",
                 action: "Verified Manuscript",
                 title: "Amazon Carbon Density Model",
                 category: "Climate Mitigation",
