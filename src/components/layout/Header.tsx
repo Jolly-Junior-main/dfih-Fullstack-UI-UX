@@ -76,11 +76,11 @@ export function Header() {
       )}
     >
       <div className={cn(
-        "container mx-auto px-4 sm:px-6 lg:px-8",
+        "w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20",
         isHome && "pt-6" // Add some top spacing on the homepage
       )}>
         <div className={cn(
-          "flex h-20 items-center justify-between px-6 transition-all",
+          "flex h-20 items-center justify-between px-6 sm:px-8 md:px-10 transition-all",
           isHome && "bg-[#163022]/85 backdrop-blur-xl border border-white/15 shadow-2xl rounded-full"
         )}>
           

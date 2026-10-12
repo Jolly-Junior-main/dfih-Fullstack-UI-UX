@@ -7,8 +7,8 @@ export function Footer() {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="container mx-auto px-4 pb-8 pt-16 sm:px-6 lg:px-8 lg:pt-20">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+      <div className="w-full max-w-[1920px] mx-auto px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 pb-8 pt-16 lg:pt-20">
+        <div className="xl:grid xl:grid-cols-3 xl:gap-12">
           <div className="space-y-6 xl:col-span-1">
             <Link href="/" className="flex items-center gap-3 inline-flex group">
               <div className="bg-white/10 p-1.5 rounded-xl border border-white/20 shadow-md">
@@ -25,7 +25,7 @@ export function Footer() {
                 <p className="text-[10px] uppercase tracking-widest text-[#84cc16] font-semibold">Forests - Lungs of the World</p>
               </div>
             </Link>
-            <p className="text-sm leading-6 text-[#cbd5e1]/70 max-w-xs">
+            <p className="text-sm leading-6 text-[#cbd5e1]/80 max-w-sm">
               A centralized digital resource platform dedicated to forestry research, sustainable management, and knowledge sharing worldwide.
             </p>
           </div>

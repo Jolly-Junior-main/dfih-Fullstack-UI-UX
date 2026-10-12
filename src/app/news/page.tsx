@@ -21,7 +21,7 @@ export default function NewsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#163022] text-[#f5f0e6] pt-32 pb-24">
-      <div className="container mx-auto px-6 md:px-12 max-w-6xl">
+      <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
         
         <div className="mb-16">
           <div className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold mb-4 bg-[#84cc16]/10 border border-[#84cc16]/30 px-3 py-1 rounded-full inline-block">

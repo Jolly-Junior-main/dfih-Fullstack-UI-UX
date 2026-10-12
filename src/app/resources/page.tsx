@@ -11,13 +11,13 @@ export default function ResourcesPage() {
   return (
     <div className="flex flex-col min-h-screen pt-20 bg-[#163022] text-[#f5f0e6]">
       <div className="border-b border-white/10 bg-[#11281b]/50 backdrop-blur-md">
-        <div className="container mx-auto px-6 py-8 md:py-12 max-w-6xl">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto py-8 md:py-12">
           <div className="mb-6">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16] bg-[#84cc16]/10 border border-[#84cc16]/20 px-3 py-1 rounded-full">
               Forestry Research Hub
             </span>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#f5f0e6] mt-4 mb-2">Resources</h1>
-            <p className="text-[#cbd5e1] text-sm md:text-base max-w-2xl">
+            <p className="text-[#cbd5e1] text-sm md:text-base max-w-3xl">
               Discover peer-reviewed studies, government inventories, datasets, and environmental policy guides across 10 major forestry domains.
             </p>
           </div>
@@ -30,7 +30,7 @@ export default function ResourcesPage() {
         </div>
       </div>
       
-      <div className="container mx-auto px-6 py-12 flex-1 max-w-6xl">
+      <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto py-12 flex-1">
         <h2 className="text-2xl font-bold tracking-tight text-[#f5f0e6] mb-8">Search Repository</h2>
         <SearchInterface />
       </div>

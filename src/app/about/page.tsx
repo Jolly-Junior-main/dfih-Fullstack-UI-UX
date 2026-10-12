@@ -41,7 +41,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[#163022]/80 backdrop-blur-sm" />
       </div>
 
-      <div className="container mx-auto px-4 md:px-8 relative z-10 flex-1 flex flex-col">
+      <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto relative z-10 flex-1 flex flex-col">
         
         {/* Main Glassmorphism Dashboard Container */}
         <div className="flex-1 bg-[#1c3d2b]/60 backdrop-blur-[30px] border border-white/10 rounded-[2.5rem] shadow-2xl p-6 md:p-10 flex flex-col xl:flex-row gap-8">

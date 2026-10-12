@@ -51,20 +51,20 @@ export default function Home() {
         </div>
 
         {/* Hero Content - Logo on Left & 3D Shadow Text */}
-        <div className="relative z-10 container mx-auto px-6 md:px-12 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
             
             {/* Left Column: Transparent Logo & Institutional Badge */}
-            <div className="lg:col-span-4 flex flex-col items-start">
+            <div className="lg:col-span-4 xl:col-span-4 flex flex-col items-start w-full">
               {/* Logo on the Left Side without background */}
               <div className="flex items-center gap-4 mb-6 group">
-                <div className="p-2 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-2xl transition-transform group-hover:scale-105">
+                <div className="p-2.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-2xl transition-transform group-hover:scale-105">
                   <Image 
                     src="/logo.png" 
                     alt="DFIH Logo Emblem" 
                     width={180} 
                     height={180} 
-                    className="object-contain w-[90px] h-[90px] sm:w-[110px] sm:h-[110px]"
+                    className="object-contain w-[95px] h-[95px] sm:w-[115px] sm:h-[115px]"
                     priority
                   />
                 </div>
@@ -79,7 +79,7 @@ export default function Home() {
               </div>
 
               {/* Small Intro Card (Glassmorphic) */}
-              <div className="p-6 rounded-3xl backdrop-blur-xl bg-[#1c3d2b]/70 border border-white/15 shadow-2xl max-w-sm">
+              <div className="p-6 sm:p-7 rounded-3xl backdrop-blur-xl bg-[#1c3d2b]/70 border border-white/15 shadow-2xl w-full max-w-md lg:max-w-none">
                 <p className="text-xs sm:text-sm leading-relaxed text-[#f5f0e6]">
                   Helping researchers, analysts, and policymakers access critical ecological datasets, silviculture models, and verified policy frameworks.
                 </p>
@@ -91,9 +91,9 @@ export default function Home() {
             </div>
 
             {/* Right/Center Column: Hero Title with 3D / Shadow Effect */}
-            <div className="lg:col-span-8 flex flex-col items-start">
+            <div className="lg:col-span-8 xl:col-span-8 flex flex-col items-start w-full">
               <h1 
-                className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] text-[#ffffff] mb-6"
+                className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[92px] font-black tracking-tight leading-[1.05] text-[#ffffff] mb-6"
                 style={{
                   textShadow: "0 2px 4px rgba(0,0,0,0.9), 0 6px 14px rgba(0,0,0,0.8), 0 16px 32px rgba(0,0,0,0.7), 0 0 40px rgba(132,204,22,0.2)"
                 }}
@@ -102,7 +102,7 @@ export default function Home() {
               </h1>
 
               <p 
-                className="text-base sm:text-xl md:text-2xl font-medium text-[#f5f0e6] max-w-2xl leading-relaxed mb-8"
+                className="text-base sm:text-xl md:text-2xl font-medium text-[#f5f0e6] max-w-4xl leading-relaxed mb-8"
                 style={{
                   textShadow: "0 2px 6px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.7)"
                 }}
@@ -140,7 +140,7 @@ export default function Home() {
 
       {/* 3. RECENT ACTIVITY SECTION (Moved from About Us to Home page!) */}
       <section className="relative z-20 py-16 bg-[#12281b] border-t border-b border-white/10">
-        <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16] bg-[#84cc16]/15 border border-[#84cc16]/30 px-3 py-1 rounded-full">
@@ -162,7 +162,7 @@ export default function Home() {
           </div>
 
           {/* Activity Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
             {[
               {
                 user: "Akeem Jamiu",
@@ -242,26 +242,32 @@ export default function Home() {
       </section>
 
       {/* 4. SUB-HERO TEXT (Frameworks & Strategic Priorities) */}
-      <section className="relative z-20 container mx-auto px-6 md:px-12 py-24 max-w-7xl">
-        <div className="max-w-4xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl leading-[1.15] font-bold tracking-tight text-[#f5f0e6] mb-12">
+      <section className="relative z-20 w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 py-24 max-w-[1920px] mx-auto">
+        <div className="w-full">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.15] font-bold tracking-tight text-[#f5f0e6] mb-14 max-w-6xl">
             Building Strong Frameworks, Smart Strategies, And Confident Forestry Decisions At Every Level.
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-start">
-            <div className="text-sm leading-relaxed text-[#cbd5e1] max-w-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+            <div className="lg:col-span-5 text-base sm:text-lg leading-relaxed text-[#cbd5e1]">
               We focus on building strong fundamentals, transparent open science, and resilient policies for researchers, governments, and NGOs working on the frontlines of global conservation.
             </div>
             
-            <div className="md:col-span-2 grid grid-cols-2 gap-4 h-36 md:h-48">
-              <div className="bg-[#1c3d2b]/80 rounded-2xl p-6 flex flex-col justify-between border border-white/10 shadow-lg">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[#84cc16]">Data Fidelity</span>
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#f5f0e6]">100% Peer-Reviewed</div>
-                <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div className="w-full h-full bg-[#84cc16]" />
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 h-56 sm:h-64">
+              <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 flex flex-col justify-between border border-white/10 shadow-xl">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#84cc16]">Data Fidelity</span>
+                <div className="text-3xl sm:text-4xl font-extrabold text-[#f5f0e6]">100% Peer-Reviewed</div>
+                <div>
+                  <div className="flex justify-between text-xs text-[#cbd5e1]/70 mb-2">
+                    <span>Verification Index</span>
+                    <span className="text-[#84cc16] font-bold">Grade A</span>
+                  </div>
+                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-full h-full bg-[#84cc16]" />
+                  </div>
                 </div>
               </div>
-              <div className="bg-[url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=600')] bg-cover bg-center rounded-2xl border border-white/10 shadow-lg" />
+              <div className="bg-[url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=800')] bg-cover bg-center rounded-3xl border border-white/10 shadow-xl" />
             </div>
           </div>
         </div>
@@ -269,7 +275,7 @@ export default function Home() {
 
       {/* 5. BENTO GRID (Resources For Every Research Need) */}
       <section className="py-24 bg-[#12281b] border-t border-white/10 rounded-t-[3rem]">
-        <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="text-center mb-16">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Curated Disciplines</span>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#f5f0e6] mt-2">
@@ -277,11 +283,11 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
             {/* Top Left: Text Card */}
-            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center text-center border border-white/10 min-h-[320px] md:h-[400px] shadow-xl">
-              <h3 className="text-2xl font-bold text-[#f5f0e6] mb-4">Policy & Governance</h3>
-              <p className="text-sm text-[#cbd5e1] mb-8 max-w-sm leading-relaxed">
+            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[340px] md:h-[420px] xl:h-[460px] shadow-xl">
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] mb-4">Policy & Governance</h3>
+              <p className="text-sm sm:text-base text-[#cbd5e1] mb-8 max-w-md leading-relaxed">
                 Guidelines, legal blueprints, and legislative frameworks for sustainable institutional and community forestry.
               </p>
               <Link href="/resources?theme=Policy%20and%20Governance" className="text-xs uppercase font-extrabold tracking-widest text-[#84cc16] hover:text-[#a3e635] flex items-center">
@@ -290,15 +296,15 @@ export default function Home() {
             </div>
             
             {/* Top Right: Image */}
-            <div className="bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800')] bg-cover bg-center rounded-3xl min-h-[320px] md:h-[400px] border border-white/10 shadow-xl" />
+            <div className="bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[340px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
             
             {/* Bottom Left: Image */}
-            <div className="hidden md:block bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800')] bg-cover bg-center rounded-3xl min-h-[320px] md:h-[400px] border border-white/10 shadow-xl" />
+            <div className="hidden md:block bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[340px] md:h-[420px] xl:h-[460px] border border-white/10 shadow-xl" />
             
             {/* Bottom Right: Text Card */}
-            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center text-center border border-white/10 min-h-[320px] md:h-[400px] shadow-xl">
-              <h3 className="text-2xl font-bold text-[#f5f0e6] mb-4">Climate Adaptation</h3>
-              <p className="text-sm text-[#cbd5e1] mb-8 max-w-sm leading-relaxed">
+            <div className="bg-[#1c3d2b]/80 rounded-3xl p-8 md:p-14 flex flex-col items-center justify-center text-center border border-white/10 min-h-[340px] md:h-[420px] xl:h-[460px] shadow-xl">
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#f5f0e6] mb-4">Climate Adaptation</h3>
+              <p className="text-sm sm:text-base text-[#cbd5e1] mb-8 max-w-md leading-relaxed">
                 Remote sensing models and field methodologies for ecological resilience in shifting climates.
               </p>
               <Link href="/resources?theme=Climate%20Change%20Adaptation%20%26%20Mitigation" className="text-xs uppercase font-extrabold tracking-widest text-[#84cc16] hover:text-[#a3e635] flex items-center">
@@ -306,7 +312,7 @@ export default function Home() {
               </Link>
             </div>
             
-            <div className="md:hidden bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800')] bg-cover bg-center rounded-3xl min-h-[300px] h-[350px] border border-white/10" />
+            <div className="md:hidden bg-[url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1200')] bg-cover bg-center rounded-3xl min-h-[300px] h-[350px] border border-white/10" />
           </div>
         </div>
       </section>
@@ -315,26 +321,26 @@ export default function Home() {
       <section className="py-28 overflow-hidden bg-[#163022]">
         <div className="text-center mb-16">
           <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Field Expeditions</span>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#f5f0e6] mt-2 mb-4">
+          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#f5f0e6] mt-2 mb-4">
             Moments From The Field
           </h2>
-          <p className="text-sm text-[#cbd5e1] max-w-md mx-auto">
+          <p className="text-sm sm:text-base text-[#cbd5e1] max-w-xl mx-auto">
             A glimpse into worldwide research expeditions, on-the-ground biomass measurements, and the teams advancing DFIH.
           </p>
         </div>
         
-        <div className="w-full overflow-x-auto pb-12 pt-8 px-6 no-scrollbar flex md:justify-center">
-          <div className="flex justify-start md:justify-center items-center gap-4 md:gap-8 w-max min-w-full">
-            <div className="w-48 h-72 md:w-64 md:h-96 shrink-0 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=600')] bg-cover bg-center rounded-3xl -rotate-6 shadow-2xl border border-white/15" />
-            <div className="w-48 h-72 md:w-64 md:h-96 shrink-0 bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600')] bg-cover bg-center rounded-3xl rotate-3 shadow-2xl border border-white/15 -mt-6 md:-mt-10" />
-            <div className="w-48 h-72 md:w-64 md:h-96 shrink-0 bg-[url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=600')] bg-cover bg-center rounded-3xl -rotate-2 shadow-2xl border border-white/15 mt-6 md:mt-10" />
-            <div className="w-48 h-72 md:w-64 md:h-96 shrink-0 bg-[url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=600')] bg-cover bg-center rounded-3xl rotate-6 shadow-2xl border border-white/15" />
+        <div className="w-full overflow-x-auto pb-14 pt-8 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 no-scrollbar flex justify-center">
+          <div className="flex justify-start md:justify-center items-center gap-6 sm:gap-8 lg:gap-10 xl:gap-12 w-max min-w-full">
+            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800')] bg-cover bg-center rounded-3xl -rotate-6 shadow-2xl border border-white/15 transition-transform hover:scale-105" />
+            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800')] bg-cover bg-center rounded-3xl rotate-3 shadow-2xl border border-white/15 -mt-6 md:-mt-10 transition-transform hover:scale-105" />
+            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800')] bg-cover bg-center rounded-3xl -rotate-2 shadow-2xl border border-white/15 mt-6 md:mt-10 transition-transform hover:scale-105" />
+            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800')] bg-cover bg-center rounded-3xl rotate-6 shadow-2xl border border-white/15 transition-transform hover:scale-105" />
           </div>
         </div>
         
-        <div className="mt-8 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <Button 
-            className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-8 font-bold text-xs uppercase tracking-widest shadow-xl"
+            className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-8 py-6 font-extrabold text-xs uppercase tracking-widest shadow-xl shadow-[#84cc16]/20"
             asChild
           >
             <Link href="/resources">View Repository</Link>
@@ -344,50 +350,50 @@ export default function Home() {
 
       {/* 7. TESTIMONIALS */}
       <section className="py-24 border-t border-white/10 bg-[#12281b]">
-        <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="text-center mb-16">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Global Trust</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#f5f0e6] mt-2">
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#f5f0e6] mt-2">
               Trusted By Researchers & Institutions
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-lg">
-              <p className="text-sm leading-relaxed text-[#cbd5e1] mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-10 w-full">
+            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+              <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "Structured datasets that actually accelerate publications. Every model is verified and rigorous. DFIH stands out among global repositories."
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[url('https://randomuser.me/api/portraits/men/32.jpg')] bg-cover ring-2 ring-[#84cc16]" />
+                <div className="w-11 h-11 rounded-full bg-[url('https://randomuser.me/api/portraits/men/32.jpg')] bg-cover ring-2 ring-[#84cc16]" />
                 <div>
                   <div className="text-sm font-bold text-[#f5f0e6]">David Laid</div>
-                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider">Lead Researcher</div>
+                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider font-semibold">Lead Researcher</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-lg">
-              <p className="text-sm leading-relaxed text-[#cbd5e1] mb-6">
+            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+              <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "Highly recommended for conservation analysts. Clean indexing, comprehensive categories, and an active international community."
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[url('https://randomuser.me/api/portraits/women/44.jpg')] bg-cover ring-2 ring-[#84cc16]" />
+                <div className="w-11 h-11 rounded-full bg-[url('https://randomuser.me/api/portraits/women/44.jpg')] bg-cover ring-2 ring-[#84cc16]" />
                 <div>
                   <div className="text-sm font-bold text-[#f5f0e6]">Sarah Jenkins</div>
-                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider">Policy Director</div>
+                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider font-semibold">Policy Director</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-lg">
-              <p className="text-sm leading-relaxed text-[#cbd5e1] mb-6">
+            <div className="bg-[#1c3d2b]/60 border border-white/10 rounded-3xl p-8 lg:p-10 backdrop-blur-md shadow-lg">
+              <p className="text-sm sm:text-base leading-relaxed text-[#cbd5e1] mb-8">
                 "The finest platform for academic and field forestry resources. Reliable metadata, easy document downloads, and responsive curators."
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[url('https://randomuser.me/api/portraits/men/67.jpg')] bg-cover ring-2 ring-[#84cc16]" />
+                <div className="w-11 h-11 rounded-full bg-[url('https://randomuser.me/api/portraits/men/67.jpg')] bg-cover ring-2 ring-[#84cc16]" />
                 <div>
                   <div className="text-sm font-bold text-[#f5f0e6]">Michael Chen</div>
-                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider">Conservationist</div>
+                  <div className="text-[10px] text-[#cbd5e1]/60 uppercase tracking-wider font-semibold">Conservationist</div>
                 </div>
               </div>
             </div>
@@ -397,46 +403,46 @@ export default function Home() {
 
       {/* 8. RESEARCH INSIGHTS */}
       <section className="py-24 bg-[#163022] border-t border-white/10">
-        <div className="container mx-auto px-6 md:px-12 max-w-6xl">
-          <div className="flex flex-col md:flex-row gap-16">
-            <div className="md:w-1/3">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
+          <div className="flex flex-col lg:flex-row gap-12 xl:gap-20 items-start w-full">
+            <div className="lg:w-1/3 xl:w-1/3">
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Analysis & Science</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#f5f0e6] mt-2 mb-4">
+              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#f5f0e6] mt-2 mb-4 leading-tight">
                 Forestry Insights & Articles
               </h2>
-              <p className="text-sm text-[#cbd5e1] mb-8 leading-relaxed">
+              <p className="text-sm sm:text-base text-[#cbd5e1] mb-8 leading-relaxed">
                 Expert articles, field methods, and strategies from accredited forestry scientists to help you navigate open datasets.
               </p>
               <Button 
-                className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-8 font-bold text-xs uppercase tracking-widest" 
+                className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-8 py-6 font-extrabold text-xs uppercase tracking-widest shadow-xl shadow-[#84cc16]/20" 
                 asChild
               >
                 <Link href="/news">View News & Insights</Link>
               </Button>
             </div>
             
-            <div className="md:w-2/3 flex flex-col gap-6">
-              <Link href="/resources/1" className="group flex flex-col sm:flex-row gap-6 items-center bg-[#1c3d2b]/60 p-4 rounded-3xl border border-white/10 hover:border-[#84cc16]/40 transition-all">
-                <div className="w-full sm:w-56 h-36 bg-[url('https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?q=80&w=600')] bg-cover bg-center rounded-2xl overflow-hidden shrink-0" />
+            <div className="lg:w-2/3 xl:w-2/3 flex flex-col gap-6 w-full">
+              <Link href="/resources/1" className="group flex flex-col sm:flex-row gap-6 items-center bg-[#1c3d2b]/60 p-5 rounded-3xl border border-white/10 hover:border-[#84cc16]/40 transition-all shadow-lg">
+                <div className="w-full sm:w-64 h-40 bg-[url('https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?q=80&w=800')] bg-cover bg-center rounded-2xl overflow-hidden shrink-0" />
                 <div className="flex-1">
-                  <div className="text-[10px] text-[#84cc16] font-bold uppercase tracking-widest mb-1">Peer Reviewed &bull; Nov 2026</div>
-                  <h3 className="text-lg font-bold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors leading-snug">
+                  <div className="text-[10px] text-[#84cc16] font-bold uppercase tracking-widest mb-1.5">Peer Reviewed &bull; Nov 2026</div>
+                  <h3 className="text-lg sm:text-xl font-bold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors leading-snug">
                     Understanding Carbon Sequestration In Old Growth Canopy
                   </h3>
-                  <p className="text-xs text-[#cbd5e1]/70 mt-2 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-[#cbd5e1]/80 mt-2 line-clamp-2 leading-relaxed">
                     A multi-year assessment of biomass retention and carbon flux in primary rainforest corridors.
                   </p>
                 </div>
               </Link>
 
-              <Link href="/resources/2" className="group flex flex-col sm:flex-row gap-6 items-center bg-[#1c3d2b]/60 p-4 rounded-3xl border border-white/10 hover:border-[#84cc16]/40 transition-all">
-                <div className="w-full sm:w-56 h-36 bg-[url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=600')] bg-cover bg-center rounded-2xl overflow-hidden shrink-0" />
+              <Link href="/resources/2" className="group flex flex-col sm:flex-row gap-6 items-center bg-[#1c3d2b]/60 p-5 rounded-3xl border border-white/10 hover:border-[#84cc16]/40 transition-all shadow-lg">
+                <div className="w-full sm:w-64 h-40 bg-[url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=800')] bg-cover bg-center rounded-2xl overflow-hidden shrink-0" />
                 <div className="flex-1">
-                  <div className="text-[10px] text-[#84cc16] font-bold uppercase tracking-widest mb-1">Policy Framework &bull; Oct 2026</div>
-                  <h3 className="text-lg font-bold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors leading-snug">
+                  <div className="text-[10px] text-[#84cc16] font-bold uppercase tracking-widest mb-1.5">Policy Framework &bull; Oct 2026</div>
+                  <h3 className="text-lg sm:text-xl font-bold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors leading-snug">
                     Building Resilient Forestry Policy Frameworks
                   </h3>
-                  <p className="text-xs text-[#cbd5e1]/70 mt-2 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-[#cbd5e1]/80 mt-2 line-clamp-2 leading-relaxed">
                     Synthesizing cross-border treaties into practical local conservation ordinances and enforcement guidelines.
                   </p>
                 </div>

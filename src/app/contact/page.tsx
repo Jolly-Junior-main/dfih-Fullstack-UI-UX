@@ -9,19 +9,19 @@ export default function ContactPage() {
       
       {/* 1. HERO & INFO CARDS */}
       <section className="relative pt-12 pb-24 border-b border-white/10">
-        <div className="container mx-auto px-6 md:px-12">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[10px] uppercase tracking-widest text-[#84cc16] font-bold bg-[#84cc16]/10 border border-[#84cc16]/30 px-3 py-1 rounded-full inline-block mb-3">
               Reach Our Team
             </span>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-[#f5f0e6] mb-4">Get in touch.</h1>
-            <p className="text-base text-[#cbd5e1] leading-relaxed">
+            <p className="text-base sm:text-lg text-[#cbd5e1] leading-relaxed">
               We are always open to discuss research partnerships, institutional data access, or any questions you might have about our repository.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 xl:gap-8 w-full">
             {/* Location Card */}
             <div className="bg-[#1c3d2b]/70 backdrop-blur-xl border border-white/10 p-8 rounded-3xl flex flex-col items-center text-center shadow-xl hover:border-[#84cc16]/40 transition-colors">
               <div className="w-14 h-14 bg-[#84cc16]/15 border border-[#84cc16]/30 rounded-2xl flex items-center justify-center mb-6">
@@ -66,7 +66,7 @@ export default function ContactPage() {
 
       {/* 2. FORM SECTION */}
       <section className="py-24 bg-[#12281b] border-b border-white/10">
-        <div className="container mx-auto px-6 md:px-12 max-w-6xl">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             
             {/* Left: Text */}
