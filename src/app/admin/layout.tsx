@@ -45,15 +45,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Prevent flash of unauthenticated content
   if (!isAuthenticated) {
-    return <div className="min-h-screen bg-[#ffffff]"></div>
+    return <div className="min-h-screen bg-[#163022]"></div>
   }
 
   return (
-    <div className="flex min-h-screen pt-20">
+    <div className="flex min-h-screen pt-20 bg-[#163022]">
       {/* Sidebar */}
-      <aside className="w-64 flex-shrink-0 hidden md:block border-r border-white/20 bg-[#84cc16]/10 backdrop-blur-sm relative z-10 flex flex-col">
+      <aside className="w-64 flex-shrink-0 hidden md:block border-r border-white/10 bg-[#0d1e14]/70 backdrop-blur-sm relative z-10 flex flex-col">
         <div className="p-6 flex-1 flex flex-col">
-          <div className="text-xs font-bold text-[#0f172a]/50 uppercase tracking-wider mb-6">Admin Menu</div>
+          <div className="text-xs font-bold text-[#f5f0e6]/50 uppercase tracking-wider mb-6">Admin Menu</div>
           <nav className="space-y-2 flex-1">
             {sidebarLinks.map((link, idx) => {
               const Icon = link.icon
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     isActive 
                       ? 'bg-[#84cc16]/20 text-[#84cc16] border border-[#84cc16]/30 shadow-inner' 
-                      : 'text-[#0f172a]/70 hover:bg-[#f8fafc]/30 hover:text-[#0f172a]'
+                      : 'text-[#f5f0e6]/70 hover:bg-white/5 hover:text-[#f5f0e6]'
                   }`}
                 >
                   <Icon size={18} />

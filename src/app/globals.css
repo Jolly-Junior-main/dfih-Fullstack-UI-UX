@@ -1,34 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  /* Earthy Editorial Theme (Based on Courtix) - Now Default for everything */
-  --background: #ffffff; /* Deep earthy forest/olive green */
-  --foreground: #0f172a; /* Cream/Beige text */
+  /* Rich Dark Forest Green Theme */
+  --background: #163022; /* Deep dark forest green */
+  --foreground: #f5f0e6; /* Crisp cream/white text */
   
-  --card: #f8fafc; /* Slightly lighter olive for cards */
-  --card-foreground: #0f172a;
+  --card: #1c3d2b; /* Card dark green */
+  --card-foreground: #f5f0e6;
   
-  --popover: #f8fafc;
-  --popover-foreground: #0f172a;
+  --popover: #1c3d2b;
+  --popover-foreground: #f5f0e6;
   
-  --primary: #0f172a; /* Cream as primary button */
-  --primary-foreground: #ffffff; /* Dark text on cream button */
+  --primary: #84cc16; /* Vibrant lime green primary */
+  --primary-foreground: #0f2317; /* Dark text on lime */
   
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
+  --secondary: #12281b;
+  --secondary-foreground: #f5f0e6;
   
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted: #12281b;
+  --muted-foreground: #cbd5e1;
   
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
+  --accent: #1f4430;
+  --accent-foreground: #f5f0e6;
   
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #0f172a;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #84cc16;
 }
 
 @theme inline {
