@@ -52,7 +52,7 @@ reporter = TestRailReporter()
 
 
 def fetch_route(path: str, timeout: int = 15):
-    """Utility to fetch a URL path with timing and standard headers."""
+    """Utility to fetch a URL path with timing, retry for transient network resets, and standard headers."""
     url = f"{BASE_URL}{path}"
     req = urllib.request.Request(
         url,
@@ -62,19 +62,26 @@ def fetch_route(path: str, timeout: int = 15):
             "Accept-Language": "en-US,en;q=0.5"
         }
     )
-    start = time.perf_counter()
-    ctx = ssl.create_default_context()
-    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as response:
-        duration_ms = (time.perf_counter() - start) * 1000
-        content = response.read().decode("utf-8", errors="replace")
-        headers = dict(response.info().items())
-        return {
-            "status": response.status,
-            "url": response.geturl(),
-            "duration_ms": duration_ms,
-            "content": content,
-            "headers": headers
-        }
+    last_err = None
+    for attempt in range(3):
+        try:
+            start = time.perf_counter()
+            ctx = ssl.create_default_context()
+            with urllib.request.urlopen(req, timeout=timeout, context=ctx) as response:
+                duration_ms = (time.perf_counter() - start) * 1000
+                content = response.read().decode("utf-8", errors="replace")
+                headers = dict(response.info().items())
+                return {
+                    "status": response.status,
+                    "url": response.geturl(),
+                    "duration_ms": duration_ms,
+                    "content": content,
+                    "headers": headers
+                }
+        except (urllib.error.URLError, ConnectionResetError, ssl.SSLError) as e:
+            last_err = e
+            time.sleep(0.5)
+    raise last_err
 
 
 class TestPublicRoutes(unittest.TestCase):

@@ -94,19 +94,17 @@ export function Header() {
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="bg-white/10 p-1.5 rounded-xl shadow-sm border border-white/20 backdrop-blur-sm group-hover:border-[#84cc16]/50 transition-colors">
-                <Image 
-                  src="/logo.png" 
-                  alt="DFIH Logo" 
-                  width={55} 
-                  height={55} 
-                  className="object-contain w-[44px] h-[44px]"
-                  priority
-                />
-              </div>
-              <div className="hidden sm:block text-[#f5f0e6]">
-                <h1 className="text-xl font-bold leading-tight tracking-tight group-hover:text-[#84cc16] transition-colors">DFIH</h1>
-                <p className="text-[10px] uppercase tracking-widest text-[#cbd5e1] font-medium">Forests - Lungs of the World</p>
+              <Image 
+                src="/logo.png" 
+                alt="DFIH Logo" 
+                width={50} 
+                height={50} 
+                className="object-contain w-[46px] h-[46px] transition-transform group-hover:scale-105 drop-shadow-md"
+                priority
+              />
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-extrabold leading-tight tracking-tight text-white group-hover:text-[#84cc16] transition-colors">DFIH</h1>
+                <p className="text-[10px] uppercase tracking-widest text-[#cbd5e1] font-semibold">Forests - Lungs of the World</p>
               </div>
             </Link>
           </div>

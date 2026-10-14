@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { PartnerDonorCarousel } from "./PartnerDonorCarousel"
 
 export function Footer() {
   return (
@@ -7,17 +8,21 @@ export function Footer() {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
+
+      {/* Global Donor & Partner Logo Strip */}
+      <PartnerDonorCarousel />
+
       <div className="w-full max-w-[1920px] mx-auto px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 pb-8 pt-16 lg:pt-20">
         <div className="xl:grid xl:grid-cols-3 xl:gap-12">
           <div className="space-y-6 xl:col-span-1">
             <Link href="/" className="flex items-center gap-3 inline-flex group">
-              <div className="bg-white/10 p-1.5 rounded-xl border border-white/20 shadow-md">
+              <div className="relative flex items-center justify-center">
                 <Image 
                   src="/logo.png" 
                   alt="DFIH Logo" 
                   width={44} 
                   height={44} 
-                  className="object-contain w-[40px] h-[40px]"
+                  className="object-contain w-[40px] h-[40px] transition-transform group-hover:scale-105 drop-shadow-md"
                 />
               </div>
               <div>
