@@ -156,8 +156,8 @@ export function ThematicCarousel({
           const CardContent = (
             <div 
               className={`
-                w-[260px] sm:w-[280px] shrink-0 snap-start
-                rounded-[24px] p-6 flex flex-col justify-between min-h-[190px]
+                w-[230px] sm:w-[260px] md:w-[280px] shrink-0 snap-start
+                rounded-[24px] p-5 sm:p-6 flex flex-col justify-between min-h-[180px] sm:min-h-[190px]
                 border transition-all duration-300 shadow-lg relative overflow-hidden group select-none
                 ${isSelected 
                   ? "bg-[#84cc16]/25 border-[#84cc16] shadow-[0_0_25px_rgba(132,204,22,0.35)] -translate-y-1" 

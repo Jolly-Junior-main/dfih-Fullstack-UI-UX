@@ -147,7 +147,7 @@ export function PartnerDonorCarousel() {
   }
 
   return (
-    <div className="w-full border-b border-white/10 bg-[#0a180f] py-12 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24">
+    <div className="w-full border-b border-white/10 bg-[#0a180f] py-10 sm:py-12 px-4 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24">
       <div className="max-w-[1920px] mx-auto">
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
@@ -205,7 +205,7 @@ export function PartnerDonorCarousel() {
               <Link
                 key={partner.id}
                 href="/partners"
-                className="group snap-start shrink-0 w-[270px] sm:w-[300px] p-5 rounded-2xl bg-[#12281b]/80 border border-white/10 hover:border-[#84cc16]/50 hover:bg-[#163323] transition-all duration-300 shadow-lg relative overflow-hidden flex flex-col justify-between"
+                className="group snap-start shrink-0 w-[240px] sm:w-[280px] md:w-[300px] p-5 rounded-2xl bg-[#12281b]/80 border border-white/10 hover:border-[#84cc16]/50 hover:bg-[#163323] transition-all duration-300 shadow-lg relative overflow-hidden flex flex-col justify-between"
               >
                 {/* Background Ambient Glow */}
                 <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${partner.color} rounded-full blur-2xl opacity-40 group-hover:opacity-80 transition-opacity pointer-events-none`} />

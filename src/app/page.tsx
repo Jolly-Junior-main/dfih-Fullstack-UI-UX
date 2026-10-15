@@ -78,7 +78,7 @@ export default function Home() {
             {/* Right/Center Column: Hero Title with 3D / Shadow Effect */}
             <div className="lg:col-span-8 xl:col-span-8 flex flex-col items-start w-full">
               <h1 
-                className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[92px] font-black tracking-tight leading-[1.05] text-[#ffffff] mb-6"
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[92px] font-black tracking-tight leading-[1.08] sm:leading-[1.05] text-[#ffffff] mb-6 break-words"
                 style={{
                   textShadow: "0 3px 6px rgba(0,0,0,0.95), 0 8px 24px rgba(0,0,0,0.95), 0 16px 40px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8)"
                 }}
@@ -87,7 +87,7 @@ export default function Home() {
               </h1>
 
               <p 
-                className="text-base sm:text-xl md:text-2xl font-medium text-[#f5f0e6] max-w-4xl leading-relaxed mb-8"
+                className="text-sm sm:text-lg md:text-xl lg:text-2xl font-medium text-[#f5f0e6] max-w-4xl leading-relaxed mb-8"
                 style={{
                   textShadow: "0 2px 6px rgba(0,0,0,0.95), 0 6px 18px rgba(0,0,0,0.9), 0 12px 30px rgba(0,0,0,0.85)"
                 }}
@@ -95,11 +95,11 @@ export default function Home() {
                 {content.heroSubtitle}
               </p>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4">
+              {/* Action Buttons: Full width stacked on small mobile, row on tablet/desktop */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
                 <Button 
                   size="lg" 
-                  className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-extrabold px-8 py-6 text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(132,204,22,0.4)] hover:shadow-[0_0_35px_rgba(132,204,22,0.6)] transition-all"
+                  className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-extrabold px-6 sm:px-8 py-5 sm:py-6 text-xs sm:text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(132,204,22,0.4)] hover:shadow-[0_0_35px_rgba(132,204,22,0.6)] transition-all w-full sm:w-auto text-center justify-center"
                   asChild
                 >
                   <Link href="/resources">
@@ -109,7 +109,7 @@ export default function Home() {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="rounded-full border-white/25 bg-white/10 hover:bg-white/20 text-[#ffffff] font-bold px-8 py-6 text-sm uppercase tracking-wider backdrop-blur-md shadow-lg"
+                  className="rounded-full border-white/25 bg-white/10 hover:bg-white/20 text-[#ffffff] font-bold px-6 sm:px-8 py-5 sm:py-6 text-xs sm:text-sm uppercase tracking-wider backdrop-blur-md shadow-lg w-full sm:w-auto text-center justify-center"
                   asChild
                 >
                   <Link href="/submit">
@@ -325,10 +325,10 @@ export default function Home() {
                 We focus on building strong fundamentals, transparent open science, and resilient policies for researchers, governments, and NGOs working on the frontlines of global conservation.
               </div>
               
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 h-56 sm:h-64">
-                <div className="bg-[#12281b] rounded-3xl p-8 flex flex-col justify-between border border-black/10 shadow-2xl">
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                <div className="bg-[#12281b] rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-black/10 shadow-2xl min-h-[220px] sm:min-h-[240px]">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#84cc16]">Data Fidelity</span>
-                  <div className="text-3xl sm:text-4xl font-extrabold text-white">100% Peer-Reviewed</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white my-3">100% Peer-Reviewed</div>
                   <div>
                     <div className="flex justify-between text-xs text-[#cbd5e1] mb-2">
                       <span>Verification Index</span>
@@ -339,7 +339,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-[url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=800')] bg-cover bg-center rounded-3xl border border-black/10 shadow-2xl" />
+                <div className="bg-[url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=800')] bg-cover bg-center rounded-3xl border border-black/10 shadow-2xl min-h-[180px] sm:min-h-[240px]" />
               </div>
             </div>
           </div>
@@ -395,30 +395,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. MOMENTS FROM THE FIELD */}
-      <section className="py-28 overflow-hidden bg-[#163022]">
-        <div className="text-center mb-16">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#84cc16]">Field Expeditions</span>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mt-2 mb-4">
+      {/* 6. MOMENTS FROM THE FIELD (Decreased, Proportional Size & Mobile Optimized) */}
+      <section className="py-12 sm:py-16 overflow-hidden bg-[#163022]">
+        <div className="text-center mb-6 sm:mb-10 px-4">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#84cc16]">Field Expeditions</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mt-1.5 mb-2">
             Moments From The Field
           </h2>
-          <p className="text-sm sm:text-base text-[#cbd5e1] max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-[#cbd5e1] max-w-lg mx-auto leading-relaxed mb-3">
             A glimpse into worldwide research expeditions, on-the-ground biomass measurements, and the teams advancing DFIH.
           </p>
-        </div>
-        
-        <div className="w-full overflow-x-auto pb-14 pt-8 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 no-scrollbar flex justify-center">
-          <div className="flex justify-start md:justify-center items-center gap-6 sm:gap-8 lg:gap-10 xl:gap-12 w-max min-w-full">
-            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800')] bg-cover bg-center rounded-3xl -rotate-6 shadow-2xl border border-white/15 transition-transform hover:scale-105" />
-            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800')] bg-cover bg-center rounded-3xl rotate-3 shadow-2xl border border-white/15 -mt-6 md:-mt-10 transition-transform hover:scale-105" />
-            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800')] bg-cover bg-center rounded-3xl -rotate-2 shadow-2xl border border-white/15 mt-6 md:mt-10 transition-transform hover:scale-105" />
-            <div className="w-56 h-80 sm:w-64 sm:h-96 lg:w-72 lg:h-[440px] xl:w-80 xl:h-[480px] shrink-0 bg-[url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800')] bg-cover bg-center rounded-3xl rotate-6 shadow-2xl border border-white/15 transition-transform hover:scale-105" />
+          <div className="inline-flex md:hidden items-center gap-1.5 text-[10px] text-[#cbd5e1]/70 font-semibold bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+            <span>&larr; Swipe to explore expeditions &rarr;</span>
           </div>
         </div>
         
-        <div className="mt-10 flex justify-center">
+        <div className="w-full overflow-x-auto pb-6 pt-2 px-4 sm:px-8 no-scrollbar scroll-smooth snap-x snap-mandatory flex justify-start md:justify-center">
+          <div className="flex items-center gap-3.5 sm:gap-6 lg:gap-8 mx-auto w-max px-4 sm:px-6">
+            <div className="w-36 h-52 sm:w-44 sm:h-64 md:w-48 md:h-68 lg:w-52 lg:h-72 xl:w-56 xl:h-76 shrink-0 snap-center bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800')] bg-cover bg-center rounded-2xl -rotate-3 sm:-rotate-6 shadow-xl border border-white/15 transition-transform hover:scale-105" />
+            <div className="w-36 h-52 sm:w-44 sm:h-64 md:w-48 md:h-68 lg:w-52 lg:h-72 xl:w-56 xl:h-76 shrink-0 snap-center bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800')] bg-cover bg-center rounded-2xl rotate-2 sm:rotate-3 shadow-xl border border-white/15 -mt-2 sm:-mt-4 transition-transform hover:scale-105" />
+            <div className="w-36 h-52 sm:w-44 sm:h-64 md:w-48 md:h-68 lg:w-52 lg:h-72 xl:w-56 xl:h-76 shrink-0 snap-center bg-[url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800')] bg-cover bg-center rounded-2xl -rotate-1 sm:-rotate-2 shadow-xl border border-white/15 mt-2 sm:mt-4 transition-transform hover:scale-105" />
+            <div className="w-36 h-52 sm:w-44 sm:h-64 md:w-48 md:h-68 lg:w-52 lg:h-72 xl:w-56 xl:h-76 shrink-0 snap-center bg-[url('https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=800')] bg-cover bg-center rounded-2xl rotate-3 sm:rotate-6 shadow-xl border border-white/15 transition-transform hover:scale-105" />
+          </div>
+        </div>
+        
+        <div className="mt-6 sm:mt-8 flex justify-center">
           <Button 
-            className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-8 py-6 font-extrabold text-xs uppercase tracking-widest shadow-xl shadow-[#84cc16]/20"
+            className="rounded-full bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] px-6 py-5 font-extrabold text-xs uppercase tracking-widest shadow-lg shadow-[#84cc16]/20"
             asChild
           >
             <Link href="/resources">View Repository</Link>
@@ -426,18 +429,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. TESTIMONIALS (Balanced Neutral Palette) */}
-      <section className="py-24 border-t border-b border-[#e2e8f0] bg-[#f8faf7] text-[#0f2317]">
+      {/* 7. TESTIMONIALS (Balanced Neutral Palette - Tablet & Mobile Responsive) */}
+      <section className="py-20 sm:py-24 border-t border-b border-[#e2e8f0] bg-[#f8faf7] text-[#0f2317]">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#15803d] bg-[#15803d]/10 px-3 py-1 rounded-full border border-[#15803d]/20">Global Trust</span>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#0f2317] mt-3">
               Trusted By Researchers & Institutions
             </h2>
           </div>
           
-          <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 xl:gap-10 w-full overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-6 px-6 sm:-mx-10 sm:px-10 md:mx-0 md:px-0">
-            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
+          <div className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 xl:gap-8 w-full overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-none snap-x snap-mandatory -mx-6 px-6 sm:-mx-10 sm:px-10 lg:mx-0 lg:px-0">
+            <div className="min-w-[280px] sm:min-w-[340px] lg:min-w-0 flex-shrink-0 lg:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
               <p className="text-sm sm:text-base leading-relaxed text-[#334155] mb-8 font-medium">
                 "Structured datasets that actually accelerate publications. Every model is verified and rigorous. DFIH stands out among global repositories."
               </p>
@@ -450,7 +453,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
+            <div className="min-w-[280px] sm:min-w-[340px] lg:min-w-0 flex-shrink-0 lg:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
               <p className="text-sm sm:text-base leading-relaxed text-[#334155] mb-8 font-medium">
                 "Highly recommended for conservation analysts. Clean indexing, comprehensive categories, and an active international community."
               </p>
@@ -463,7 +466,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="min-w-[290px] sm:min-w-[340px] md:min-w-0 flex-shrink-0 md:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
+            <div className="min-w-[280px] sm:min-w-[340px] lg:min-w-0 flex-shrink-0 lg:flex-shrink snap-start bg-white border border-[#e2e8f0] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-lg flex flex-col justify-between hover:shadow-xl transition-shadow">
               <p className="text-sm sm:text-base leading-relaxed text-[#334155] mb-8 font-medium">
                 "The finest platform for academic and field forestry resources. Reliable metadata, easy document downloads, and responsive curators."
               </p>

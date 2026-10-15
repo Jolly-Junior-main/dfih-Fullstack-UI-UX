@@ -79,8 +79,8 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* Navigation Pill Tabs */}
-              <div className="flex flex-wrap items-center gap-2 bg-[#0f2317]/80 p-1.5 rounded-2xl border border-white/10 self-start sm:self-auto">
+              {/* Navigation Pill Tabs: Horizontal scroll on mobile, wrap on tablet/desktop */}
+              <div className="flex flex-nowrap sm:flex-wrap items-center gap-1.5 sm:gap-2 bg-[#0f2317]/80 p-1.5 rounded-2xl border border-white/10 self-start sm:self-auto overflow-x-auto max-w-full scrollbar-none">
                 {[
                   { id: "mandate", label: "Mandate" },
                   { id: "pillars", label: "Strategic Pillars" },
