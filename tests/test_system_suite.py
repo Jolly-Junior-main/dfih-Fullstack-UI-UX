@@ -173,6 +173,14 @@ class TestPublicRoutes(unittest.TestCase):
         reporter.record("C112", "Reviewer Portal (/reviewer) & Auth Guard", passed, res["duration_ms"])
         self.assertEqual(res["status"], 200)
 
+    def test_c126_reviewer_evaluation_form(self):
+        """C126: Verify Reviewer Evaluation Score Sheet Route (/reviewer/evaluate)."""
+        res = fetch_route("/reviewer/evaluate")
+        passed = res["status"] == 200 and ("Evaluation" in res["content"] or "Reviewer" in res["content"])
+        reporter.record("C126", "Reviewer Evaluation Form (/reviewer/evaluate)", passed, res["duration_ms"])
+        self.assertEqual(res["status"], 200)
+
+
 
 
 class TestAdminPortalRoutes(unittest.TestCase):
