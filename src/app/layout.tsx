@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300`}>
+    <html lang="en" className="h-full antialiased overflow-x-hidden" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden max-w-[100vw]`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -27,7 +27,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className="flex-1 flex flex-col">
+          <main className="flex-1 flex flex-col overflow-x-hidden w-full max-w-full">
             {children}
           </main>
           <Footer />

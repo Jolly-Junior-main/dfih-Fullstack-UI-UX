@@ -114,6 +114,7 @@ export default function ReviewerPortal() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"assigned" | "completed">("assigned")
   const [completedList, setCompletedList] = useState<EvaluationRecord[]>([])
+  const [assignedList, setAssignedList] = useState<any[]>(DEFAULT_ASSIGNED)
   const [selectedEvaluation, setSelectedEvaluation] = useState<EvaluationRecord | null>(null)
 
   useEffect(() => {
@@ -124,6 +125,26 @@ export default function ReviewerPortal() {
       setIsAuthorized(true)
     } else {
       setIsAuthorized(false)
+    }
+
+    // Load assigned items from localStorage if newly dispatched
+    try {
+      const storedAssigned = localStorage.getItem("dfih_reviewer_assigned_items")
+      if (storedAssigned) {
+        const parsed = JSON.parse(storedAssigned)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Merge unique
+          const merged = [...parsed]
+          DEFAULT_ASSIGNED.forEach(def => {
+            if (!merged.some(m => m.id === def.id || m.title === def.title)) {
+              merged.push(def)
+            }
+          })
+          setAssignedList(merged)
+        }
+      }
+    } catch (e) {
+      console.error("Error reading assigned:", e)
     }
 
     // Load completed evaluations from localStorage
@@ -184,10 +205,10 @@ export default function ReviewerPortal() {
     )
   }
 
-  const assignedItems = DEFAULT_ASSIGNED.filter(item => 
+  const assignedItems = assignedList.filter(item => 
     searchQuery === "" || 
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    item.author.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    item.author?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const filteredCompleted = completedList.filter(item =>

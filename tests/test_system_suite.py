@@ -256,6 +256,14 @@ class TestAdminPortalRoutes(unittest.TestCase):
         reporter.record("C122", "Admin Settings (/admin/settings)", passed, res["duration_ms"])
         self.assertEqual(res["status"], 200)
 
+    def test_c128_admin_logs(self):
+        """C128: Verify Admin System Logs Route."""
+        res = fetch_route("/admin/logs")
+        passed = res["status"] == 200 and ("System Logs" in res["content"] or "Audit" in res["content"] or "Admin" in res["content"])
+        reporter.record("C128", "Admin System Logs (/admin/logs)", passed, res["duration_ms"])
+        self.assertEqual(res["status"], 200)
+
+
 
 class TestPerformanceAndSecurity(unittest.TestCase):
     """Performance benchmarks and security boundary audits."""

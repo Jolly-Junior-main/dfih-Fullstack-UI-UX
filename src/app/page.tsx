@@ -31,10 +31,10 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#163022] text-[#f5f0e6] selection:bg-[#84cc16] selection:text-[#0f2317] overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#163022] text-[#f5f0e6] selection:bg-[#84cc16] selection:text-[#0f2317] overflow-x-hidden w-full max-w-full">
       
       {/* 2. HERO SECTION */}
-      <section className="relative w-full min-h-[92vh] flex flex-col justify-center pt-28 pb-20">
+      <section className="relative w-full max-w-full min-h-[92vh] flex flex-col justify-center pt-28 pb-20 overflow-hidden">
         {/* Dark Forest Background Video */}
         <div className="absolute inset-0 z-0 overflow-hidden bg-[#0d1e14]">
           <video 
@@ -124,7 +124,7 @@ export default function Home() {
       </section>
 
       {/* 3. RECENT ACTIVITY SECTION WITH RESPONSIVE IMAGE GALLERY GRID */}
-      <section className="relative z-20 py-16 bg-[#12281b] border-t border-b border-white/10">
+      <section className="relative z-20 py-16 bg-[#12281b] border-t border-b border-white/10 overflow-hidden w-full max-w-full">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
@@ -309,7 +309,7 @@ export default function Home() {
       </section>
 
       {/* 4. SUB-HERO TEXT (Frameworks & Strategic Priorities - Balanced Neutral Palette) */}
-      <section className="relative z-20 w-full bg-[#f8faf7] text-[#0f2317] border-t border-b border-[#e2e8f0] py-24">
+      <section className="relative z-20 w-full max-w-full bg-[#f8faf7] text-[#0f2317] border-t border-b border-[#e2e8f0] py-24 overflow-hidden">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="w-full">
             <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-[#0f2317]/5 border border-[#0f2317]/10 text-[#0f2317] text-xs font-bold uppercase tracking-wider">
@@ -347,7 +347,7 @@ export default function Home() {
       </section>
 
       {/* 5. THEMATIC AREAS CAROUSEL */}
-      <section className="py-24 bg-[#0d1e14] border-t border-white/10">
+      <section className="py-24 bg-[#0d1e14] border-t border-white/10 overflow-hidden w-full max-w-full">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           {/* Thematic Areas Sliding Carousel Navigation with Independent Scroll */}
           <div>
@@ -430,7 +430,7 @@ export default function Home() {
       </section>
 
       {/* 7. TESTIMONIALS (Balanced Neutral Palette - Tablet & Mobile Responsive) */}
-      <section className="py-20 sm:py-24 border-t border-b border-[#e2e8f0] bg-[#f8faf7] text-[#0f2317]">
+      <section className="py-20 sm:py-24 border-t border-b border-[#e2e8f0] bg-[#f8faf7] text-[#0f2317] overflow-hidden w-full max-w-full">
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 2xl:px-24 max-w-[1920px] mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#15803d] bg-[#15803d]/10 px-3 py-1 rounded-full border border-[#15803d]/20">Global Trust</span>

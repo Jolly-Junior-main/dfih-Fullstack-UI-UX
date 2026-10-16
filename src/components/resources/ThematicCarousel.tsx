@@ -14,7 +14,8 @@ import {
   Mountain, 
   Globe,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  MousePointer2
 } from "lucide-react"
 
 export interface ThemeItem {
@@ -48,7 +49,7 @@ interface ThematicCarouselProps {
 
 export function ThematicCarousel({
   title = "Thematic Areas",
-  subtitle = "Explore research and policy datasets across key forestry disciplines",
+  subtitle = "Slide through disciplines to filter publications, policy documents, and field datasets",
   selectedTheme,
   onSelectTheme,
   showViewAll = true
@@ -57,6 +58,17 @@ export function ThematicCarousel({
   const [canScrollLeft, setCanScrollLeft] = React.useState(false)
   const [canScrollRight, setCanScrollRight] = React.useState(true)
   const [scrollProgress, setScrollProgress] = React.useState(0)
+  const [isHovering, setIsHovering] = React.useState(false)
+  const [activePanDirection, setActivePanDirection] = React.useState<"left" | "right" | "idle">("idle")
+  
+  // Dragging state
+  const [isDragging, setIsDragging] = React.useState(false)
+  const [startX, setStartX] = React.useState(0)
+  const [scrollStartLeft, setScrollStartLeft] = React.useState(0)
+
+  // Hover Pan animation velocity
+  const panVelocityRef = React.useRef(0)
+  const animFrameRef = React.useRef<number | null>(null)
 
   const checkScroll = React.useCallback(() => {
     if (!scrollContainerRef.current) return
@@ -81,6 +93,77 @@ export function ThematicCarousel({
     }
   }, [checkScroll])
 
+  // Continuous animation loop for cursor-detected movement
+  React.useEffect(() => {
+    const step = () => {
+      if (scrollContainerRef.current && Math.abs(panVelocityRef.current) > 0.1 && !isDragging) {
+        scrollContainerRef.current.scrollLeft += panVelocityRef.current
+        checkScroll()
+      }
+      animFrameRef.current = requestAnimationFrame(step)
+    }
+    animFrameRef.current = requestAnimationFrame(step)
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
+    }
+  }, [isDragging, checkScroll])
+
+  // Mouse Move Cursor Detection: Moves track while cursor is detected
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // If dragging with mouse, handle drag scroll
+    if (isDragging && scrollContainerRef.current) {
+      const deltaX = e.pageX - startX
+      scrollContainerRef.current.scrollLeft = scrollStartLeft - deltaX
+      return
+    }
+
+    if (!scrollContainerRef.current) return
+    const rect = scrollContainerRef.current.getBoundingClientRect()
+    const relativeX = e.clientX - rect.left
+    const width = rect.width
+
+    const leftZone = width * 0.35   // Left 35%
+    const rightZone = width * 0.65  // Right 35%
+
+    if (relativeX < leftZone) {
+      // Scale velocity up to -12px/frame
+      const intensity = (leftZone - relativeX) / leftZone
+      panVelocityRef.current = -Math.max(1, intensity * 14)
+      setActivePanDirection("left")
+    } else if (relativeX > rightZone) {
+      // Scale velocity up to +12px/frame
+      const intensity = (relativeX - rightZone) / (width - rightZone)
+      panVelocityRef.current = Math.max(1, intensity * 14)
+      setActivePanDirection("right")
+    } else {
+      panVelocityRef.current = 0
+      setActivePanDirection("idle")
+    }
+  }
+
+  const handleMouseEnter = () => {
+    setIsHovering(true)
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovering(false)
+    panVelocityRef.current = 0
+    setActivePanDirection("idle")
+    setIsDragging(false)
+  }
+
+  // Mouse Drag handlers
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollContainerRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX)
+    setScrollStartLeft(scrollContainerRef.current.scrollLeft)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
   const scroll = (direction: "left" | "right") => {
     if (!scrollContainerRef.current) return
     const cardWidth = 280
@@ -88,7 +171,6 @@ export function ThematicCarousel({
     scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" })
   }
 
-  // Support independent wheel scrolling over the carousel
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (!scrollContainerRef.current) return
     if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) {
@@ -102,9 +184,17 @@ export function ThematicCarousel({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
         <div>
           {title && (
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-1">
-              {title}
-            </h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-1">
+                {title}
+              </h2>
+              {isHovering && (
+                <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#84cc16]/20 border border-[#84cc16]/40 text-[#84cc16] animate-pulse">
+                  <MousePointer2 size={11} />
+                  Cursor Detected • Dynamic Move
+                </span>
+              )}
+            </div>
           )}
           {subtitle && (
             <p className="text-sm text-[#cbd5e1] max-w-xl">
@@ -113,7 +203,7 @@ export function ThematicCarousel({
           )}
         </div>
 
-        {/* Arrow Controls */}
+        {/* Arrow Controls & View All */}
         <div className="flex items-center gap-2 self-end sm:self-auto">
           {showViewAll && (
             <Link 
@@ -124,6 +214,7 @@ export function ThematicCarousel({
             </Link>
           )}
           <button
+            type="button"
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
             aria-label="Previous themes"
@@ -132,6 +223,7 @@ export function ThematicCarousel({
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
+            type="button"
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
             aria-label="Next themes"
@@ -142,11 +234,30 @@ export function ThematicCarousel({
         </div>
       </div>
 
-      {/* Carousel Track with independent wheel and touch scrolling */}
+      {/* Edge Motion Glow Indicator when moving while cursor is detected */}
+      <div 
+        className={`absolute left-0 top-16 bottom-10 w-24 bg-gradient-to-r from-[#84cc16]/20 to-transparent pointer-events-none transition-opacity duration-300 z-20 ${
+          activePanDirection === "left" ? "opacity-100" : "opacity-0"
+        }`} 
+      />
+      <div 
+        className={`absolute right-0 top-16 bottom-10 w-24 bg-gradient-to-l from-[#84cc16]/20 to-transparent pointer-events-none transition-opacity duration-300 z-20 ${
+          activePanDirection === "right" ? "opacity-100" : "opacity-0"
+        }`} 
+      />
+
+      {/* Carousel Track with cursor detection and mouse dragging */}
       <div
         ref={scrollContainerRef}
         onWheel={handleWheel}
-        className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-2 scroll-smooth snap-x snap-mandatory focus:outline-none scrollbar-none"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        className={`flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-2 scroll-smooth snap-x snap-mandatory focus:outline-none scrollbar-none select-none ${
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        }`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {THEMES.map((theme) => {
@@ -203,7 +314,9 @@ export function ThematicCarousel({
             return (
               <div 
                 key={theme.id}
-                onClick={() => onSelectTheme(theme.name)}
+                onClick={(e) => {
+                  if (!isDragging) onSelectTheme(theme.name)
+                }}
                 className="cursor-pointer"
               >
                 {CardContent}
@@ -215,6 +328,9 @@ export function ThematicCarousel({
             <Link
               key={theme.id}
               href={`/resources?theme=${encodeURIComponent(theme.name)}`}
+              onClick={(e) => {
+                if (isDragging) e.preventDefault()
+              }}
               className="cursor-pointer block"
             >
               {CardContent}
@@ -223,9 +339,11 @@ export function ThematicCarousel({
         })}
       </div>
 
-      {/* Independent Scrollbar Track & Progress Indicator */}
-      <div className="w-full max-w-md mx-auto mt-4 px-2 flex items-center gap-3">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1]/50">Scroll</span>
+      {/* Progress Track & Indicator */}
+      <div className="w-full max-w-md mx-auto mt-4 px-2 flex items-center justify-between gap-3">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1]/50">
+          Scroll
+        </span>
         <div className="flex-1 bg-white/10 h-1.5 rounded-full overflow-hidden relative border border-white/5">
           <div 
             className="h-full bg-gradient-to-r from-[#84cc16] to-[#a3e635] rounded-full transition-all duration-150"

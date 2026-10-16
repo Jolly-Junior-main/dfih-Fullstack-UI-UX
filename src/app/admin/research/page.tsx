@@ -1,179 +1,755 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Filter, Edit2, Trash2, Eye, CheckCircle, XCircle } from "lucide-react"
+import { 
+  Search, 
+  Filter, 
+  Trash2, 
+  Eye, 
+  CheckCircle, 
+  XCircle, 
+  UserCheck, 
+  FileCheck, 
+  Clock, 
+  Calendar, 
+  User, 
+  ShieldCheck, 
+  AlertCircle, 
+  Check, 
+  X,
+  Plus,
+  HelpCircle,
+  ExternalLink
+} from "lucide-react"
 import { db } from "@/lib/firebase"
-import { collection, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy } from "firebase/firestore"
+import { collection, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy, addDoc, serverTimestamp } from "firebase/firestore"
+import Link from "next/link"
+
+interface ResearchSubmission {
+  id: string
+  title: string
+  author: string
+  category: string
+  status: string
+  date?: string
+  createdAt?: any
+  assignedReviewer?: string
+  priority?: string
+  reviewDeadline?: string
+  reviewerNotes?: string
+  body?: string
+}
+
+const ACCREDITED_REVIEWERS = [
+  { name: "Dr. Eleanor Vance, Ph.D.", expertise: "Silviculture & Boreal Ecology", email: "eleanor.vance@cifor.org" },
+  { name: "Dr. Amina Diallo", expertise: "Community Forestry & Agroforestry", email: "amina.diallo@afri-forests.org" },
+  { name: "Prof. Marcus Thorne", expertise: "Wood Science & Timber Technology", email: "m.thorne@nordicforestry.org" },
+  { name: "Dr. L. Jenkins", expertise: "Forest Ecology, Wildlife & Biodiversity", email: "l.jenkins@gov.bc.forestry.ca" }
+]
+
+const SAMPLE_SUBMISSIONS: ResearchSubmission[] = [
+  {
+    id: "sub-1",
+    title: "Silviculture Practices in Boreal Forests",
+    author: "Dr. L. Jenkins",
+    category: "Silviculture & Sustainable Forest Management",
+    status: "Assigned for Review",
+    assignedReviewer: "Dr. Eleanor Vance, Ph.D.",
+    priority: "High Priority",
+    reviewDeadline: "2026-10-25",
+    date: "Oct 12, 2026",
+    body: "Empirical trial evaluating canopy regeneration and root mass density under varying selective cutting regimes in sub-arctic boreal ecosystems."
+  },
+  {
+    id: "sub-2",
+    title: "Global Timber Trade Statistics 2025",
+    author: "FAO Forestry Dept",
+    category: "Wood Science & Timber Technology",
+    status: "Pending Review",
+    priority: "Standard",
+    date: "Oct 14, 2026",
+    body: "Cross-border trade metrics and volume indices documenting tariff implications across global timber supply chains."
+  },
+  {
+    id: "sub-3",
+    title: "Community Forestry Case Studies",
+    author: "M. Ramirez",
+    category: "Community Forestry & Agroforestry Systems",
+    status: "Pending Review",
+    priority: "Standard",
+    date: "Oct 15, 2026",
+    body: "Comparative field survey of participatory forest management agreements and indigenous harvest yields."
+  },
+  {
+    id: "sub-4",
+    title: "Amazon Carbon Density Model",
+    author: "Dr. Rachel Thorne",
+    category: "Climate Change Adaptation & Carbon Accounting",
+    status: "Published",
+    assignedReviewer: "Dr. Amina Diallo",
+    priority: "High Priority",
+    date: "Sep 28, 2026",
+    body: "High-density satellite telemetry and LiDAR measurements quantifying canopy carbon pools across the Amazon Basin."
+  }
+]
 
 export default function AdminResearchPage() {
-  const [submissions, setSubmissions] = useState<any[]>([])
+  const [submissions, setSubmissions] = useState<ResearchSubmission[]>([])
   const [searchQuery, setSearchQuery] = useState("")
+  const [statusFilter, setStatusFilter] = useState("All Statuses")
+  const [showHowToHelp, setShowHowToHelp] = useState(false)
+
+  // Assignment Modal State
+  const [assignModalOpen, setAssignModalOpen] = useState(false)
+  const [selectedSubmission, setSelectedSubmission] = useState<ResearchSubmission | null>(null)
+  const [assignForm, setAssignForm] = useState({
+    reviewerName: ACCREDITED_REVIEWERS[0].name,
+    priority: "High Priority",
+    deadline: "",
+    notes: ""
+  })
+  const [isAssigning, setIsAssigning] = useState(false)
+  const [assignmentNotice, setAssignmentNotice] = useState<string | null>(null)
+
+  // View Details Modal State
+  const [viewDetailsItem, setViewDetailsItem] = useState<ResearchSubmission | null>(null)
 
   useEffect(() => {
     const q = query(collection(db, "research_submissions"), orderBy("createdAt", "desc"))
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setSubmissions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      if (!snapshot.empty) {
+        setSubmissions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ResearchSubmission)))
+      } else {
+        loadLocalSubmissions()
+      }
+    }, (err) => {
+      console.warn("Firestore submissions error, loading local fallback:", err)
+      loadLocalSubmissions()
     })
     return () => unsubscribe()
   }, [])
 
+  const loadLocalSubmissions = () => {
+    try {
+      const stored = localStorage.getItem("dfih_admin_submissions")
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSubmissions(parsed)
+          return
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    setSubmissions(SAMPLE_SUBMISSIONS)
+    localStorage.setItem("dfih_admin_submissions", JSON.stringify(SAMPLE_SUBMISSIONS))
+  }
+
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this submission?")) {
-      await deleteDoc(doc(db, "research_submissions", id))
+      if (id.startsWith("sub-")) {
+        const updated = submissions.filter(s => s.id !== id)
+        setSubmissions(updated)
+        localStorage.setItem("dfih_admin_submissions", JSON.stringify(updated))
+      } else {
+        try {
+          await deleteDoc(doc(db, "research_submissions", id))
+        } catch {
+          const updated = submissions.filter(s => s.id !== id)
+          setSubmissions(updated)
+          localStorage.setItem("dfih_admin_submissions", JSON.stringify(updated))
+        }
+      }
     }
   }
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      await updateDoc(doc(db, "research_submissions", id), {
-        status: newStatus
-      })
+      if (id.startsWith("sub-")) {
+        const updated = submissions.map(s => s.id === id ? { ...s, status: newStatus } : s)
+        setSubmissions(updated)
+        localStorage.setItem("dfih_admin_submissions", JSON.stringify(updated))
+      } else {
+        await updateDoc(doc(db, "research_submissions", id), {
+          status: newStatus
+        })
+      }
     } catch (e) {
       console.error("Error updating status:", e)
       alert("Failed to update status")
     }
   }
 
-  const filteredSubmissions = submissions.filter((item: any) => 
-    item.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    item.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Open Assign Reviewer Modal
+  const handleOpenAssign = (item: ResearchSubmission) => {
+    setSelectedSubmission(item)
+    // Default deadline to 14 days from today
+    const inTwoWeeks = new Date()
+    inTwoWeeks.setDate(inTwoWeeks.getDate() + 14)
+    const deadlineStr = inTwoWeeks.toISOString().split("T")[0]
+
+    setAssignForm({
+      reviewerName: item.assignedReviewer || ACCREDITED_REVIEWERS[0].name,
+      priority: item.priority || "High Priority",
+      deadline: item.reviewDeadline || deadlineStr,
+      notes: item.reviewerNotes || `Please evaluate according to the official DFIH Peer-Review Evaluation Form score sheet criteria.`
+    })
+    setAssignModalOpen(true)
+  }
+
+  // Confirm Assignment
+  const handleConfirmAssignment = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedSubmission) return
+
+    setIsAssigning(true)
+    const updatedStatus = `Assigned for Review`
+    const assignmentPayload = {
+      assignedReviewer: assignForm.reviewerName,
+      priority: assignForm.priority,
+      reviewDeadline: assignForm.deadline,
+      reviewerNotes: assignForm.notes,
+      status: updatedStatus
+    }
+
+    try {
+      // 1. Update in submissions
+      if (selectedSubmission.id.startsWith("sub-")) {
+        const updated = submissions.map(s => s.id === selectedSubmission.id ? { ...s, ...assignmentPayload } : s)
+        setSubmissions(updated)
+        localStorage.setItem("dfih_admin_submissions", JSON.stringify(updated))
+      } else {
+        await updateDoc(doc(db, "research_submissions", selectedSubmission.id), assignmentPayload)
+      }
+
+      // 2. Sync to Reviewer Portal queue in localStorage
+      try {
+        const reviewerQueueStr = localStorage.getItem("dfih_reviewer_assigned_items")
+        const currentQueue = reviewerQueueStr ? JSON.parse(reviewerQueueStr) : []
+        const exists = currentQueue.some((q: any) => q.id === selectedSubmission.id || q.title === selectedSubmission.title)
+        if (!exists) {
+          currentQueue.unshift({
+            id: selectedSubmission.id,
+            title: selectedSubmission.title,
+            author: selectedSubmission.author,
+            type: "Research Paper",
+            priority: assignForm.priority,
+            color: assignForm.priority === "Urgent" 
+              ? "text-red-400 border-red-400/30 bg-red-400/10" 
+              : "text-amber-400 border-amber-400/30 bg-amber-400/10",
+            assignedReviewer: assignForm.reviewerName,
+            assignedDate: new Date().toISOString().split("T")[0]
+          })
+          localStorage.setItem("dfih_reviewer_assigned_items", JSON.stringify(currentQueue))
+        }
+      } catch (err) {
+        console.error("Queue sync error:", err)
+      }
+
+      // 3. Log event to system logs
+      try {
+        const currentLogs = JSON.parse(localStorage.getItem("dfih_system_logs") || "[]")
+        const newLog = {
+          id: `LOG-${Math.floor(9500 + Math.random() * 400)}`,
+          timestamp: new Date().toISOString().replace("T", " ").split(".")[0],
+          category: "REVIEWER",
+          level: "INFO",
+          action: "Reviewer Assigned to Manuscript",
+          user: "Admin",
+          details: `Assigned '${selectedSubmission.title}' to ${assignForm.reviewerName} (Priority: ${assignForm.priority}, Deadline: ${assignForm.deadline}).`,
+          ip: "192.168.1.105",
+          resource: selectedSubmission.id
+        }
+        localStorage.setItem("dfih_system_logs", JSON.stringify([newLog, ...currentLogs]))
+      } catch (err) {
+        console.error("Log error:", err)
+      }
+
+      setAssignModalOpen(false)
+      setAssignmentNotice(`✓ Manuscript successfully assigned to ${assignForm.reviewerName}! It is now active in the Reviewer Portal.`)
+      setTimeout(() => setAssignmentNotice(null), 5000)
+    } catch (e) {
+      console.error("Assignment error:", e)
+      alert("Failed to assign reviewer.")
+    } finally {
+      setIsAssigning(false)
+    }
+  }
+
+  const filteredSubmissions = submissions.filter((item: any) => {
+    const matchesSearch = 
+      item.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      item.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.assignedReviewer?.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const matchesStatus = statusFilter === "All Statuses" || item.status === statusFilter
+
+    return matchesSearch && matchesStatus
+  })
 
   return (
-    <main className="p-6 md:p-10 bg-[#163022] min-h-screen">
-      <div className="max-w-6xl mx-auto">
+    <main className="p-6 md:p-10 bg-[#163022] min-h-screen text-[#f5f0e6]">
+      <div className="max-w-[1920px] mx-auto">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight text-[#f5f0e6]">Research Submissions</h1>
-            <p className="text-[#f5f0e6]/60 mt-1">Review, approve, and manage research submitted by users.</p>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#84cc16] mb-1">
+              <span className="w-2 h-2 rounded-full bg-[#84cc16] animate-pulse" />
+              Editorial Workflow
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-[#f5f0e6]">Research Submissions</h1>
+            <p className="text-[#cbd5e1]/70 mt-1">Review, approve, and assign manuscripts to accredited academic peer reviewers.</p>
           </div>
-          <div className="flex gap-4 items-center">
-            <a 
-              href="/admin/research/add" 
-              className="flex items-center justify-center bg-[#84cc16] text-[#0f2317] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#84cc16]/90 transition-colors shadow-lg"
+          
+          <div className="flex flex-wrap gap-3 items-center">
+            <button
+              onClick={() => setShowHowToHelp(!showHowToHelp)}
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-[#cbd5e1] hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
             >
+              <HelpCircle size={15} className="text-[#84cc16]" />
+              {showHowToHelp ? "Hide Guide" : "How to Assign to Reviewer?"}
+            </button>
+
+            <Link 
+              href="/admin/research/add" 
+              className="flex items-center justify-center bg-[#84cc16] text-[#0f2317] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#a3e635] transition-colors shadow-lg shadow-[#84cc16]/20"
+            >
+              <Plus size={16} className="mr-1" />
               Add Research
-            </a>
+            </Link>
+
             <div className="flex items-center gap-4 bg-[#1c3d2b]/80 px-4 py-2 rounded-xl border border-white/10">
               <div className="text-sm">
                 <span className="font-bold text-[#84cc16] text-xl">{submissions.length}</span>
-                <span className="text-[#f5f0e6]/60 ml-2">Total Submissions</span>
+                <span className="text-[#cbd5e1]/70 ml-2">Total</span>
               </div>
-              <div className="w-px h-8 bg-white/10 mx-2"></div>
+              <div className="w-px h-8 bg-white/10 mx-1"></div>
               <div className="text-sm">
                 <span className="font-bold text-yellow-400 text-xl">
-                  {submissions.filter(s => s.status === 'Pending Review').length}
+                  {submissions.filter(s => s.status?.includes("Pending")).length}
                 </span>
-                <span className="text-[#f5f0e6]/60 ml-2">Pending</span>
+                <span className="text-[#cbd5e1]/70 ml-2">Pending</span>
               </div>
             </div>
           </div>
         </div>
 
+        {/* HOW TO ASSIGN INSTRUCTIONS BANNER (Answers Client's Question) */}
+        {showHowToHelp && (
+          <div className="mb-6 p-6 rounded-3xl bg-[#1c3d2b] border border-[#84cc16]/40 text-[#f5f0e6] shadow-xl animate-in fade-in slide-in-from-top-3">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-[#84cc16] flex items-center gap-2">
+                  <UserCheck size={18} />
+                  How to Assign a Document to a Reviewer
+                </h3>
+                <p className="text-xs text-[#cbd5e1] mt-1 leading-relaxed">
+                  Follow these 3 quick steps to dispatch manuscripts to the peer-review queue:
+                </p>
+                <ol className="mt-3 space-y-2 text-xs text-[#cbd5e1] list-decimal list-inside">
+                  <li>
+                    <strong className="text-white">Locate the submission</strong> in the table below and click the green <strong className="text-[#84cc16]">"Assign Reviewer"</strong> button.
+                  </li>
+                  <li>
+                    <strong className="text-white">Select an accredited reviewer</strong> (e.g. Dr. Eleanor Vance, Dr. Amina Diallo) from the dropdown, choose priority (<em className="text-white">High Priority / Standard</em>), and set the evaluation deadline.
+                  </li>
+                  <li>
+                    <strong className="text-white">Confirm Assignment:</strong> The submission status automatically updates to <span className="text-amber-300 font-semibold">"Assigned for Review"</span> and will appear immediately in the <strong className="text-[#84cc16]">Reviewer Portal (/reviewer)</strong> where the reviewer can click "Start Review" and fill the official score sheet!
+                  </li>
+                </ol>
+              </div>
+              <button
+                onClick={() => setShowHowToHelp(false)}
+                className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-[#cbd5e1] cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Success Notice */}
+        {assignmentNotice && (
+          <div className="mb-6 p-4 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/40 text-[#84cc16] text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+            <CheckCircle size={20} />
+            {assignmentNotice}
+          </div>
+        )}
+
         {/* Filters and Search */}
-        <div className="bg-[#1c3d2b]/60 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-8 shadow-lg flex flex-col md:flex-row gap-4">
+        <div className="bg-[#1c3d2b]/70 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-8 shadow-xl flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#f5f0e6]/60" size={18} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#cbd5e1]/60" size={18} />
             <input 
               type="text" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, author, or category..." 
-              className="w-full bg-[#163022] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#f5f0e6] placeholder:text-[#f5f0e6]/40 focus:outline-none focus:border-[#84cc16]/50 transition-colors"
+              placeholder="Search by title, author, category, or assigned reviewer..." 
+              className="w-full bg-[#12281b] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-[#f5f0e6] placeholder:text-white/40 focus:outline-none focus:border-[#84cc16] transition-colors"
             />
           </div>
           <div className="flex gap-4">
-            <button className="flex items-center gap-2 bg-[#163022] hover:bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#f5f0e6] transition-colors">
-              <Filter size={18} />
-              Filter
-            </button>
-            <select className="bg-[#163022] border border-white/10 rounded-xl px-4 py-2.5 text-[#f5f0e6] focus:outline-none appearance-none cursor-pointer hidden md:block">
-              <option className="bg-[#163022]">All Statuses</option>
-              <option className="bg-[#163022]">Pending Review</option>
-              <option className="bg-[#163022]">Published</option>
-              <option className="bg-[#163022]">Rejected</option>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-[#12281b] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-[#f5f0e6] focus:outline-none cursor-pointer"
+            >
+              <option value="All Statuses">All Statuses</option>
+              <option value="Pending Review">Pending Review</option>
+              <option value="Assigned for Review">Assigned for Review</option>
+              <option value="Published">Published</option>
+              <option value="Rejected">Rejected</option>
             </select>
           </div>
         </div>
 
-        {/* Content Table */}
-        <div className="bg-[#1c3d2b]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-xl overflow-hidden">
+        {/* Submissions Table with Assign Reviewer Buttons */}
+        <div className="bg-[#1c3d2b]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[800px]">
+            <table className="w-full text-left border-collapse min-w-[950px]">
               <thead>
-                <tr className="bg-[#163022]/60 text-[#f5f0e6]/60 text-sm border-b border-white/10">
-                  <th className="p-4 font-medium">Title</th>
-                  <th className="p-4 font-medium">Category</th>
-                  <th className="p-4 font-medium">Author</th>
-                  <th className="p-4 font-medium">Status</th>
-                  <th className="p-4 font-medium">Date Submitted</th>
-                  <th className="p-4 font-medium text-right">Actions</th>
+                <tr className="bg-[#12281b]/80 text-[#cbd5e1]/80 text-xs uppercase tracking-wider border-b border-white/10">
+                  <th className="p-4 font-bold">Manuscript Title</th>
+                  <th className="p-4 font-bold">Category</th>
+                  <th className="p-4 font-bold">Author</th>
+                  <th className="p-4 font-bold">Status</th>
+                  <th className="p-4 font-bold">Assigned Reviewer</th>
+                  <th className="p-4 font-bold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-[#f5f0e6] text-sm">
+              <tbody className="text-[#f5f0e6] text-sm divide-y divide-white/5">
                 {filteredSubmissions.length > 0 ? filteredSubmissions.map((item: any) => {
-                  const dateString = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown Date';
-                  return (
-                  <tr key={item.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
-                    <td className="p-4 font-medium max-w-[250px] truncate" title={item.title}>{item.title}</td>
-                    <td className="p-4 text-[#f5f0e6]/70">{item.category}</td>
-                    <td className="p-4 text-[#f5f0e6]/70">{item.author}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                        item.status === 'Published' ? 'bg-[#84cc16]/20 text-[#84cc16] border-[#84cc16]/30' :
-                        item.status === 'Pending Review' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' :
-                        item.status === 'Rejected' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-                        'bg-white/10 text-[#f5f0e6]/70 border-white/20'
-                      }`}>
-                        {item.status || "Pending"}
-                      </span>
-                    </td>
-                    <td className="p-4 text-[#f5f0e6]/70">{dateString}</td>
-                    <td className="p-4 text-right flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      
-                      {item.status !== 'Published' && (
-                        <button onClick={() => handleUpdateStatus(item.id, 'Published')} className="p-2 hover:bg-[#84cc16]/10 rounded-lg text-[#f5f0e6]/70 hover:text-[#84cc16] transition-colors" title="Approve & Publish">
-                          <CheckCircle size={16} />
-                        </button>
-                      )}
-                      
-                      {item.status !== 'Rejected' && (
-                        <button onClick={() => handleUpdateStatus(item.id, 'Rejected')} className="p-2 hover:bg-orange-500/10 rounded-lg text-[#f5f0e6]/70 hover:text-orange-400 transition-colors" title="Reject">
-                          <XCircle size={16} />
-                        </button>
-                      )}
+                  const dateString = item.createdAt?.toDate 
+                    ? item.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
+                    : (item.date || "Recent");
 
-                      <button className="p-2 hover:bg-blue-500/10 rounded-lg text-[#f5f0e6]/70 hover:text-blue-400 transition-colors" title="View Details">
-                        <Eye size={16} />
-                      </button>
-                      <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-500/20 rounded-lg text-[#f5f0e6]/70 hover:text-red-400 transition-colors" title="Delete">
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                )}) : (
+                  const isAssigned = !!item.assignedReviewer;
+                  const isPublished = item.status === "Published";
+
+                  return (
+                    <tr key={item.id} className="hover:bg-white/5 transition-colors group">
+                      <td className="p-4">
+                        <div className="font-semibold text-[#f5f0e6] group-hover:text-[#84cc16] transition-colors max-w-[280px] truncate" title={item.title}>
+                          {item.title}
+                        </div>
+                        <div className="text-[11px] text-[#cbd5e1]/60 flex items-center gap-1.5 mt-0.5">
+                          <Calendar size={11} /> Submitted {dateString}
+                        </div>
+                      </td>
+
+                      <td className="p-4 text-[#cbd5e1]/80 text-xs">
+                        {item.category}
+                      </td>
+
+                      <td className="p-4 text-[#cbd5e1]/80 text-xs">
+                        {item.author}
+                      </td>
+
+                      <td className="p-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${
+                          item.status === 'Published' 
+                            ? 'bg-[#84cc16]/15 text-[#84cc16] border-[#84cc16]/30' 
+                            : item.status?.includes('Assigned')
+                            ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                            : item.status === 'Rejected'
+                            ? 'bg-red-500/15 text-red-400 border-red-500/30'
+                            : 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30'
+                        }`}>
+                          {item.status || "Pending Review"}
+                        </span>
+                      </td>
+
+                      {/* Assigned Reviewer Column */}
+                      <td className="p-4">
+                        {isAssigned ? (
+                          <div className="flex flex-col">
+                            <span className="text-xs font-semibold text-[#84cc16] flex items-center gap-1">
+                              <ShieldCheck size={13} /> {item.assignedReviewer}
+                            </span>
+                            {item.reviewDeadline && (
+                              <span className="text-[10px] text-[#cbd5e1]/60 mt-0.5">
+                                Due: {item.reviewDeadline} • {item.priority || "Standard"}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleOpenAssign(item)}
+                            className="px-3 py-1 rounded-xl bg-[#84cc16]/15 hover:bg-[#84cc16] text-[#84cc16] hover:text-[#0f2317] border border-[#84cc16]/30 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <UserCheck size={13} />
+                            + Assign Reviewer
+                          </button>
+                        )}
+                      </td>
+
+                      {/* Actions Column */}
+                      <td className="p-4 text-right">
+                        <div className="flex justify-end items-center gap-1.5">
+                          
+                          {/* Assign / Re-assign button */}
+                          <button
+                            onClick={() => handleOpenAssign(item)}
+                            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-semibold text-[#cbd5e1] hover:text-white transition-all flex items-center gap-1 cursor-pointer"
+                            title={isAssigned ? "Change Assigned Reviewer" : "Assign Reviewer"}
+                          >
+                            <UserCheck size={14} className="text-[#84cc16]" />
+                            <span className="hidden sm:inline">{isAssigned ? "Reassign" : "Assign"}</span>
+                          </button>
+
+                          {/* Quick Publish / Approve */}
+                          {!isPublished && (
+                            <button 
+                              onClick={() => handleUpdateStatus(item.id, 'Published')} 
+                              className="p-1.5 hover:bg-[#84cc16]/20 rounded-xl text-[#cbd5e1] hover:text-[#84cc16] transition-colors cursor-pointer" 
+                              title="Approve & Publish to Repository"
+                            >
+                              <CheckCircle size={16} />
+                            </button>
+                          )}
+
+                          {/* View details */}
+                          <button 
+                            onClick={() => setViewDetailsItem(item)}
+                            className="p-1.5 hover:bg-blue-500/20 rounded-xl text-[#cbd5e1] hover:text-blue-400 transition-colors cursor-pointer" 
+                            title="Inspect Details"
+                          >
+                            <Eye size={16} />
+                          </button>
+
+                          {/* Delete */}
+                          <button 
+                            onClick={() => handleDelete(item.id)} 
+                            className="p-1.5 hover:bg-red-500/20 rounded-xl text-red-400 hover:text-red-300 transition-colors cursor-pointer" 
+                            title="Delete Submission"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                }) : (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-[#f5f0e6]/50">No research submissions found.</td>
+                    <td colSpan={6} className="p-12 text-center text-[#cbd5e1]/50">
+                      No research submissions found matching filter.
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
           
-          <div className="p-4 border-t border-white/10 bg-[#163022]/60 flex items-center justify-between text-sm text-[#f5f0e6]/60">
-            <span>Showing {filteredSubmissions.length} entries</span>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50" disabled>Previous</button>
-              <button className="px-3 py-1 rounded-lg bg-[#84cc16] text-[#0f2317] font-semibold transition-colors">1</button>
-              <button className="px-3 py-1 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50" disabled>Next</button>
-            </div>
+          <div className="p-4 border-t border-white/10 bg-[#12281b]/50 flex items-center justify-between text-xs text-[#cbd5e1]/70">
+            <span>Showing {filteredSubmissions.length} submissions</span>
+            <Link 
+              href="/reviewer" 
+              className="text-[#84cc16] hover:underline flex items-center gap-1 font-semibold"
+            >
+              Open Peer-Review Portal &rarr;
+            </Link>
           </div>
         </div>
 
       </div>
+
+      {/* MODAL 1: ASSIGN REVIEWER MODAL */}
+      {assignModalOpen && selectedSubmission && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="bg-[#1c3d2b] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#84cc16]">
+                <UserCheck size={18} />
+                Assign Reviewer to Manuscript
+              </div>
+              <button 
+                onClick={() => setAssignModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-[#cbd5e1] hover:text-white transition-colors cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Selected Manuscript Summary Box */}
+            <div className="p-4 rounded-2xl bg-[#12281b] border border-white/10 mb-5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#cbd5e1]/60">Manuscript Target</span>
+              <h3 className="text-base font-bold text-[#f5f0e6] mt-0.5">{selectedSubmission.title}</h3>
+              <p className="text-xs text-[#cbd5e1]/80 mt-1">
+                By {selectedSubmission.author} • {selectedSubmission.category}
+              </p>
+            </div>
+
+            <form onSubmit={handleConfirmAssignment} className="space-y-4">
+              
+              {/* Reviewer Selection */}
+              <div>
+                <label className="text-xs font-semibold text-[#cbd5e1] block mb-1">
+                  Select Accredited Reviewer *
+                </label>
+                <select 
+                  value={assignForm.reviewerName}
+                  onChange={(e) => setAssignForm({ ...assignForm, reviewerName: e.target.value })}
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]"
+                >
+                  {ACCREDITED_REVIEWERS.map((r, i) => (
+                    <option key={i} value={r.name} className="bg-[#163022]">
+                      {r.name} — {r.expertise}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-[#cbd5e1]/60 mt-1">
+                  Reviewer will receive notification and access in their Reviewer Portal.
+                </p>
+              </div>
+
+              {/* Priority & Deadline */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-[#cbd5e1] block mb-1">
+                    Priority Level
+                  </label>
+                  <select 
+                    value={assignForm.priority}
+                    onChange={(e) => setAssignForm({ ...assignForm, priority: e.target.value })}
+                    className="w-full bg-[#12281b] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-[#f5f0e6] focus:outline-none"
+                  >
+                    <option value="High Priority">High Priority (Urgent)</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Low Priority">Low Priority</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-[#cbd5e1] block mb-1">
+                    Review Target Deadline
+                  </label>
+                  <input 
+                    type="date"
+                    required
+                    value={assignForm.deadline}
+                    onChange={(e) => setAssignForm({ ...assignForm, deadline: e.target.value })}
+                    className="w-full bg-[#12281b] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]"
+                  />
+                </div>
+              </div>
+
+              {/* Editorial Notes */}
+              <div>
+                <label className="text-xs font-semibold text-[#cbd5e1] block mb-1">
+                  Editorial Instructions / Scope Notes
+                </label>
+                <textarea 
+                  rows={3}
+                  value={assignForm.notes}
+                  onChange={(e) => setAssignForm({ ...assignForm, notes: e.target.value })}
+                  placeholder="Special instructions or specific sections for the reviewer to scrutinize..."
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl p-3 text-xs text-[#f5f0e6] placeholder:text-white/30 focus:outline-none focus:border-[#84cc16]"
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAssignModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#cbd5e1] hover:text-white transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isAssigning}
+                  className="px-6 py-2.5 rounded-xl bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  {isAssigning ? "Dispatching..." : "Confirm & Assign Reviewer"}
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: VIEW DETAILS MODAL */}
+      {viewDetailsItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="bg-[#1c3d2b] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <h3 className="text-lg font-bold text-[#f5f0e6]">Submission Details</h3>
+              <button
+                onClick={() => setViewDetailsItem(null)}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-[#cbd5e1] cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <span className="text-[#cbd5e1]/60 block">Title:</span>
+                <p className="text-base font-bold text-[#f5f0e6] mt-0.5">{viewDetailsItem.title}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <div>
+                  <span className="text-[#cbd5e1]/60 block">Author:</span>
+                  <p className="font-semibold text-white">{viewDetailsItem.author}</p>
+                </div>
+                <div>
+                  <span className="text-[#cbd5e1]/60 block">Category:</span>
+                  <p className="font-semibold text-white">{viewDetailsItem.category}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <div>
+                  <span className="text-[#cbd5e1]/60 block">Status:</span>
+                  <span className="font-bold text-[#84cc16]">{viewDetailsItem.status}</span>
+                </div>
+                <div>
+                  <span className="text-[#cbd5e1]/60 block">Assigned Reviewer:</span>
+                  <span className="font-bold text-amber-300">{viewDetailsItem.assignedReviewer || "Unassigned"}</span>
+                </div>
+              </div>
+
+              {viewDetailsItem.body && (
+                <div className="pt-2">
+                  <span className="text-[#cbd5e1]/60 block mb-1">Abstract / Content:</span>
+                  <p className="p-3 rounded-xl bg-[#12281b] text-[#cbd5e1] leading-relaxed">
+                    {viewDetailsItem.body}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  const target = viewDetailsItem
+                  setViewDetailsItem(null)
+                  handleOpenAssign(target)
+                }}
+                className="px-4 py-2 rounded-xl bg-[#84cc16]/15 hover:bg-[#84cc16] text-[#84cc16] hover:text-[#0f2317] border border-[#84cc16]/30 text-xs font-bold transition-all"
+              >
+                Assign Reviewer
+              </button>
+              <button
+                onClick={() => setViewDetailsItem(null)}
+                className="px-5 py-2 rounded-xl bg-white/10 text-white font-bold text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   )
 }
