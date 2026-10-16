@@ -108,6 +108,26 @@ export function ThematicCarousel({
     }
   }, [isDragging, checkScroll])
 
+  // Auto-scroll automatically every 3 seconds (pauses when cursor is detected/hovering or dragging)
+  React.useEffect(() => {
+    if (isHovering || isDragging) return
+
+    const interval = setInterval(() => {
+      if (!scrollContainerRef.current) return
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+      const cardWidth = 304 // card width + gap
+
+      // If reached the end, smoothly wrap back to start
+      if (scrollLeft >= scrollWidth - clientWidth - 25) {
+        scrollContainerRef.current.scrollTo({ left: 0, behavior: "smooth" })
+      } else {
+        scrollContainerRef.current.scrollBy({ left: cardWidth, behavior: "smooth" })
+      }
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [isHovering, isDragging])
+
   // Mouse Move Cursor Detection: Moves track while cursor is detected
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     // If dragging with mouse, handle drag scroll
@@ -188,10 +208,15 @@ export function ThematicCarousel({
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-1">
                 {title}
               </h2>
-              {isHovering && (
+              {isHovering ? (
                 <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#84cc16]/20 border border-[#84cc16]/40 text-[#84cc16] animate-pulse">
                   <MousePointer2 size={11} />
                   Cursor Detected • Dynamic Move
+                </span>
+              ) : (
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#84cc16]/10 border border-[#84cc16]/25 text-[#84cc16]/90">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#84cc16] animate-pulse" />
+                  Auto-Scroll (Every 3s)
                 </span>
               )}
             </div>

@@ -1,6 +1,6 @@
 {
   "suite": "DFIH System Regression & Performance Suite",
-  "timestamp": "2026-10-16T12:49:13Z",
+  "timestamp": "2026-10-16T13:44:21Z",
   "target": "https://dfih-frontend.pages.dev",
   "summary": {
     "total": 29,
@@ -12,203 +12,203 @@
       "case_id": "C101",
       "title": "Home Page (/) Availability & Hero",
       "status_id": 1,
-      "elapsed": "0.88s",
+      "elapsed": "0.56s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C102",
       "title": "About Page (/about) Content & Layout",
       "status_id": 1,
-      "elapsed": "0.44s",
+      "elapsed": "0.43s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C103",
       "title": "Resources Repository (/resources) Search Interface",
       "status_id": 1,
-      "elapsed": "0.48s",
+      "elapsed": "0.62s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C104",
       "title": "Resource Detail (/resources/1) SSG",
       "status_id": 1,
-      "elapsed": "0.48s",
+      "elapsed": "0.55s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C105",
       "title": "News & Insights (/news) Articles Feed",
       "status_id": 1,
-      "elapsed": "0.62s",
+      "elapsed": "0.46s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C106",
       "title": "Contact Page (/contact)",
       "status_id": 1,
-      "elapsed": "0.35s",
+      "elapsed": "0.47s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C107",
       "title": "Partners Page (/partners)",
       "status_id": 1,
-      "elapsed": "0.38s",
+      "elapsed": "0.47s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C108",
       "title": "Submit Research (/submit) Contributor Form",
       "status_id": 1,
-      "elapsed": "0.51s",
+      "elapsed": "0.46s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C109",
       "title": "Dashboard (/dashboard) Account Portal",
       "status_id": 1,
-      "elapsed": "0.41s",
+      "elapsed": "0.58s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C110",
       "title": "Register Page (/register)",
       "status_id": 1,
-      "elapsed": "1.1s",
+      "elapsed": "0.5s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C111",
       "title": "Login Page (/login)",
       "status_id": 1,
-      "elapsed": "0.74s",
+      "elapsed": "0.5s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C112",
       "title": "Reviewer Portal (/reviewer) & Auth Guard",
       "status_id": 1,
-      "elapsed": "0.74s",
+      "elapsed": "0.47s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C126",
       "title": "Reviewer Evaluation Form (/reviewer/evaluate)",
       "status_id": 5,
-      "elapsed": "0.83s",
+      "elapsed": "0.51s",
       "comment": "Test assertion failed"
     },
     {
       "case_id": "C113",
       "title": "Admin Login (/admin/login)",
       "status_id": 1,
-      "elapsed": "0.51s",
+      "elapsed": "0.48s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C114",
       "title": "Admin Overview (/admin)",
       "status_id": 1,
-      "elapsed": "0.46s",
+      "elapsed": "0.53s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C115",
       "title": "Admin Research Review (/admin/research)",
       "status_id": 1,
-      "elapsed": "0.66s",
+      "elapsed": "0.55s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C116",
       "title": "Admin Add Research (/admin/research/add)",
       "status_id": 1,
-      "elapsed": "0.72s",
+      "elapsed": "0.49s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C117",
       "title": "Admin Users & Researches (/admin/users)",
       "status_id": 1,
-      "elapsed": "0.4s",
+      "elapsed": "0.47s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C118",
       "title": "Admin News Management (/admin/news)",
       "status_id": 1,
-      "elapsed": "0.44s",
+      "elapsed": "0.54s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C119",
       "title": "Admin Pages Editor (/admin/pages)",
       "status_id": 1,
-      "elapsed": "0.35s",
+      "elapsed": "0.9s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C120",
       "title": "Admin Platform Content (/admin/content)",
       "status_id": 1,
-      "elapsed": "0.34s",
+      "elapsed": "0.6s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C121",
       "title": "Admin Categories (/admin/categories)",
       "status_id": 1,
-      "elapsed": "0.49s",
+      "elapsed": "0.66s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C122",
       "title": "Admin Settings (/admin/settings)",
       "status_id": 1,
-      "elapsed": "0.41s",
+      "elapsed": "0.75s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C128",
       "title": "Admin System Logs (/admin/logs)",
       "status_id": 5,
-      "elapsed": "0.4s",
+      "elapsed": "0.49s",
       "comment": "Test assertion failed"
     },
     {
       "case_id": "C123",
       "title": "TTFB Latency Benchmark (<1000ms)",
       "status_id": 1,
-      "elapsed": "0.16s",
-      "comment": "Average TTFB: 158.1ms"
+      "elapsed": "0.13s",
+      "comment": "Average TTFB: 127.9ms"
     },
     {
       "case_id": "C124",
       "title": "Concurrent Load Stress (10 Parallel Requests)",
       "status_id": 1,
-      "elapsed": "1.06s",
-      "comment": "Processed 10 requests in 1059.7ms, 100% 200 OK"
+      "elapsed": "0.83s",
+      "comment": "Processed 10 requests in 830.2ms, 100% 200 OK"
     },
     {
       "case_id": "C125",
       "title": "Cloudflare Edge Security & Content Headers",
       "status_id": 1,
-      "elapsed": "0.19s",
+      "elapsed": "0.23s",
       "comment": "Passed successfully"
     },
     {
       "case_id": "C126",
       "title": "Admin Route Concealment from Public Footer",
       "status_id": 1,
-      "elapsed": "0.16s",
+      "elapsed": "0.21s",
       "comment": "Verified /admin/login link is not advertised in public navigation or footer."
     },
     {
       "case_id": "C127",
       "title": "Zero Credential Leakage in Admin Gateway",
       "status_id": 1,
-      "elapsed": "0.14s",
+      "elapsed": "0.12s",
       "comment": "Verified administrative login gate does not expose default credentials or hints."
     }
   ]
