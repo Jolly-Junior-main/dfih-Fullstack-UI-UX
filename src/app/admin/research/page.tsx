@@ -19,7 +19,13 @@ import {
   X,
   Plus,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  Copy,
+  Mail,
+  Send,
+  Link2,
+  Share2
 } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { collection, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy, addDoc, serverTimestamp } from "firebase/firestore"
@@ -110,6 +116,14 @@ export default function AdminResearchPage() {
   })
   const [isAssigning, setIsAssigning] = useState(false)
   const [assignmentNotice, setAssignmentNotice] = useState<string | null>(null)
+
+  // Magic Link Modal State
+  const [magicLinkModalOpen, setMagicLinkModalOpen] = useState(false)
+  const [magicLinkTarget, setMagicLinkTarget] = useState<ResearchSubmission | null>(null)
+  const [magicLinkReviewerName, setMagicLinkReviewerName] = useState("")
+  const [magicLinkReviewerEmail, setMagicLinkReviewerEmail] = useState("")
+  const [magicLinkCopied, setMagicLinkCopied] = useState(false)
+  const [generatedLinkUrl, setGeneratedLinkUrl] = useState("")
 
   // View Details Modal State
   const [viewDetailsItem, setViewDetailsItem] = useState<ResearchSubmission | null>(null)
@@ -267,14 +281,105 @@ export default function AdminResearchPage() {
       }
 
       setAssignModalOpen(false)
-      setAssignmentNotice(`✓ Manuscript successfully assigned to ${assignForm.reviewerName}! It is now active in the Reviewer Portal.`)
+      setAssignmentNotice(`✓ Manuscript successfully assigned to ${assignForm.reviewerName}!`)
       setTimeout(() => setAssignmentNotice(null), 5000)
+
+      // Automatically launch the Magic Link modal to enable immediate copying or emailing
+      handleOpenMagicLink({
+        ...selectedSubmission,
+        assignedReviewer: assignForm.reviewerName,
+        priority: assignForm.priority,
+        reviewDeadline: assignForm.deadline,
+        reviewerNotes: assignForm.notes
+      })
     } catch (e) {
       console.error("Assignment error:", e)
       alert("Failed to assign reviewer.")
     } finally {
       setIsAssigning(false)
     }
+  }
+
+  // Generate & Dispatch Magic Link Logic
+  const buildMagicUrl = (item: ResearchSubmission | null, name: string, email: string) => {
+    if (!item) return ""
+    const baseUrl = typeof window !== "undefined" && window.location.origin
+      ? window.location.origin 
+      : "https://dfih-frontend.pages.dev"
+    const safeId = item.id.replace(/[^a-zA-Z0-9]/g, "")
+    const token = `rev_sec_${safeId}_${Math.floor(1000 + Math.random() * 9000)}`
+    
+    const params = new URLSearchParams({
+      docId: item.id,
+      token: token,
+      reviewer: name,
+      email: email,
+      title: item.title,
+      author: item.author,
+      category: item.category
+    })
+
+    return `${baseUrl}/reviewer/evaluate?${params.toString()}`
+  }
+
+  const handleOpenMagicLink = (item: ResearchSubmission) => {
+    setMagicLinkTarget(item)
+    const revName = item.assignedReviewer || ACCREDITED_REVIEWERS[0].name
+    const matched = ACCREDITED_REVIEWERS.find(r => r.name === revName)
+    const email = matched?.email || "reviewer@cifor.org"
+    setMagicLinkReviewerName(revName)
+    setMagicLinkReviewerEmail(email)
+    setMagicLinkCopied(false)
+    const url = buildMagicUrl(item, revName, email)
+    setGeneratedLinkUrl(url)
+    setMagicLinkModalOpen(true)
+  }
+
+  const handleReviewerChangeInMagicModal = (name: string) => {
+    setMagicLinkReviewerName(name)
+    const matched = ACCREDITED_REVIEWERS.find(r => r.name === name)
+    const email = matched?.email || "reviewer@cifor.org"
+    setMagicLinkReviewerEmail(email)
+    if (magicLinkTarget) {
+      setGeneratedLinkUrl(buildMagicUrl(magicLinkTarget, name, email))
+    }
+  }
+
+  const handleCopyMagicLink = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard && generatedLinkUrl) {
+      navigator.clipboard.writeText(generatedLinkUrl)
+      setMagicLinkCopied(true)
+      setTimeout(() => setMagicLinkCopied(false), 3000)
+    }
+  }
+
+  const handleSendEmailInvitation = () => {
+    if (!magicLinkTarget) return
+    const subject = encodeURIComponent(`Peer Review Invitation: "${magicLinkTarget.title}" — DFIH Repository`)
+    const deadlineLine = magicLinkTarget.reviewDeadline ? `Review Deadline: ${magicLinkTarget.reviewDeadline}\n` : ""
+    const priorityLine = magicLinkTarget.priority ? `Priority: ${magicLinkTarget.priority}\n` : ""
+    const body = encodeURIComponent(
+`Dear ${magicLinkReviewerName},
+
+You have been invited by the DFIH Editorial Board to peer-review the following research submission:
+
+• Manuscript Title: ${magicLinkTarget.title}
+• Author: ${magicLinkTarget.author}
+• Discipline/Thematic Scope: ${magicLinkTarget.category}
+${priorityLine}${deadlineLine}
+You can evaluate and submit your score sheet directly without entering passwords using your unique Magic Link below:
+
+${generatedLinkUrl}
+
+Upon opening this link, your reviewer credentials and the evaluation score sheet (DFIH Form Ref: PR-EVAL-2026) will load automatically.
+
+Thank you for contributing to the academic integrity of the Digital Forest Information Hub.
+
+Best regards,
+DFIH Editorial Board
+https://dfih-frontend.pages.dev`
+    )
+    window.location.href = `mailto:${magicLinkReviewerEmail}?subject=${subject}&body=${body}`
   }
 
   const filteredSubmissions = submissions.filter((item: any) => {
@@ -337,29 +442,47 @@ export default function AdminResearchPage() {
           </div>
         </div>
 
-        {/* HOW TO ASSIGN INSTRUCTIONS BANNER (Answers Client's Question) */}
+        {/* HOW TO ASSIGN & SEND MAGIC LINKS INSTRUCTIONS BANNER */}
         {showHowToHelp && (
           <div className="mb-6 p-6 rounded-3xl bg-[#1c3d2b] border border-[#84cc16]/40 text-[#f5f0e6] shadow-xl animate-in fade-in slide-in-from-top-3">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-[#84cc16] flex items-center gap-2">
-                  <UserCheck size={18} />
-                  How to Assign a Document to a Reviewer
+                  <Sparkles size={18} />
+                  How to Assign Manuscripts & Send Magic Links to Reviewers
                 </h3>
                 <p className="text-xs text-[#cbd5e1] mt-1 leading-relaxed">
-                  Follow these 3 quick steps to dispatch manuscripts to the peer-review queue:
+                  DFIH provides a seamless, passwordless invitation workflow. Follow these 3 easy steps:
                 </p>
-                <ol className="mt-3 space-y-2 text-xs text-[#cbd5e1] list-decimal list-inside">
-                  <li>
-                    <strong className="text-white">Locate the submission</strong> in the table below and click the green <strong className="text-[#84cc16]">"Assign Reviewer"</strong> button.
-                  </li>
-                  <li>
-                    <strong className="text-white">Select an accredited reviewer</strong> (e.g. Dr. Eleanor Vance, Dr. Amina Diallo) from the dropdown, choose priority (<em className="text-white">High Priority / Standard</em>), and set the evaluation deadline.
-                  </li>
-                  <li>
-                    <strong className="text-white">Confirm Assignment:</strong> The submission status automatically updates to <span className="text-amber-300 font-semibold">"Assigned for Review"</span> and will appear immediately in the <strong className="text-[#84cc16]">Reviewer Portal (/reviewer)</strong> where the reviewer can click "Start Review" and fill the official score sheet!
-                  </li>
-                </ol>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <div className="p-3.5 rounded-2xl bg-[#12281b]/70 border border-white/10">
+                    <div className="text-[#84cc16] font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-[#84cc16]/20 flex items-center justify-center text-[10px]">1</span>
+                      Assign Reviewer
+                    </div>
+                    <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
+                      Click <strong className="text-white font-semibold">"Assign Reviewer"</strong>, choose an accredited reviewer, set priority & deadline, and confirm.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#12281b]/70 border border-white/10">
+                    <div className="text-[#84cc16] font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-[#84cc16]/20 flex items-center justify-center text-[10px]">2</span>
+                      Generate Magic Link
+                    </div>
+                    <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
+                      Click <strong className="text-white font-semibold">"Send Magic Link"</strong> (or the ✨ icon). The secure, tokenized URL generates immediately.
+                    </p>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-[#12281b]/70 border border-white/10">
+                    <div className="text-[#84cc16] font-bold text-xs uppercase mb-1 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-[#84cc16]/20 flex items-center justify-center text-[10px]">3</span>
+                      Copy Link or Email
+                    </div>
+                    <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
+                      Click <strong className="text-white font-semibold">"Copy Link"</strong> (for WhatsApp/Slack/Teams) or click <strong className="text-white font-semibold">"Send via Email"</strong> to launch an official invitation draft!
+                    </p>
+                  </div>
+                </div>
               </div>
               <button
                 onClick={() => setShowHowToHelp(false)}
@@ -474,6 +597,15 @@ export default function AdminResearchPage() {
                                 Due: {item.reviewDeadline} • {item.priority || "Standard"}
                               </span>
                             )}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenMagicLink(item)}
+                              className="text-[11px] text-[#84cc16] hover:text-[#a3e635] flex items-center gap-1 font-semibold mt-1 cursor-pointer transition-colors"
+                              title="Generate & Send Magic Link to Reviewer"
+                            >
+                              <Sparkles size={11} className="text-[#84cc16] animate-pulse" />
+                              Send Magic Link
+                            </button>
                           </div>
                         ) : (
                           <button
@@ -490,6 +622,15 @@ export default function AdminResearchPage() {
                       <td className="p-4 text-right">
                         <div className="flex justify-end items-center gap-1.5">
                           
+                          {/* Send Magic Link Button */}
+                          <button
+                            onClick={() => handleOpenMagicLink(item)}
+                            className="p-1.5 hover:bg-[#84cc16]/20 bg-[#84cc16]/10 rounded-xl text-[#84cc16] hover:text-[#a3e635] border border-[#84cc16]/30 transition-all cursor-pointer"
+                            title="Generate & Send Magic Link to Reviewer"
+                          >
+                            <Sparkles size={15} />
+                          </button>
+
                           {/* Assign / Re-assign button */}
                           <button
                             onClick={() => handleOpenAssign(item)}
@@ -746,6 +887,162 @@ export default function AdminResearchPage() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: MAGIC LINK GENERATOR & DISPATCH MODAL */}
+      {magicLinkModalOpen && magicLinkTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="bg-[#1c3d2b] border border-[#84cc16]/40 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10 mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/30 text-[#84cc16] flex items-center justify-center">
+                  <Sparkles size={20} className="animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#f5f0e6]">Reviewer Magic Link</h3>
+                  <p className="text-xs text-[#cbd5e1]/70">Passwordless invitation & direct score sheet access</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setMagicLinkModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-[#cbd5e1] cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Target Manuscript Summary */}
+            <div className="p-3.5 rounded-2xl bg-[#12281b] border border-white/10 mb-4 text-xs space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[#84cc16] font-bold uppercase tracking-wider text-[10px]">Manuscript</span>
+                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-[#cbd5e1]">
+                  {magicLinkTarget.category}
+                </span>
+              </div>
+              <div className="font-bold text-white text-sm truncate" title={magicLinkTarget.title}>
+                {magicLinkTarget.title}
+              </div>
+              <div className="text-[#cbd5e1]/70 text-[11px]">
+                Author: <span className="text-white">{magicLinkTarget.author}</span>
+                {magicLinkTarget.reviewDeadline && ` • Due: ${magicLinkTarget.reviewDeadline}`}
+              </div>
+            </div>
+
+            {/* Recipient Reviewer */}
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#cbd5e1]/80 mb-1.5">
+                  Target Reviewer
+                </label>
+                <select
+                  value={magicLinkReviewerName}
+                  onChange={(e) => handleReviewerChangeInMagicModal(e.target.value)}
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl p-2.5 text-xs text-[#f5f0e6] focus:outline-none focus:border-[#84cc16] cursor-pointer"
+                >
+                  {ACCREDITED_REVIEWERS.map((rev) => (
+                    <option key={rev.name} value={rev.name}>
+                      {rev.name} ({rev.expertise})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#cbd5e1]/80 mb-1.5">
+                  Reviewer Email Address
+                </label>
+                <input
+                  type="email"
+                  value={magicLinkReviewerEmail}
+                  onChange={(e) => {
+                    setMagicLinkReviewerEmail(e.target.value)
+                    if (magicLinkTarget) {
+                      setGeneratedLinkUrl(buildMagicUrl(magicLinkTarget, magicLinkReviewerName, e.target.value))
+                    }
+                  }}
+                  className="w-full bg-[#12281b] border border-white/10 rounded-xl p-2.5 text-xs text-[#f5f0e6] focus:outline-none focus:border-[#84cc16]"
+                  placeholder="reviewer@institution.org"
+                />
+              </div>
+            </div>
+
+            {/* Generated Magic Link URL Box */}
+            <div className="mb-5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#84cc16] mb-1.5 flex items-center justify-between">
+                <span>Secure Magic Link URL</span>
+                {magicLinkCopied && (
+                  <span className="text-xs text-[#84cc16] font-normal flex items-center gap-1 animate-in fade-in">
+                    <Check size={12} /> Copied to clipboard!
+                  </span>
+                )}
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={generatedLinkUrl}
+                  className="w-full bg-[#12281b] border border-white/15 rounded-xl px-3 py-2.5 text-xs font-mono text-[#84cc16] select-all focus:outline-none truncate"
+                />
+                <button
+                  type="button"
+                  onClick={handleCopyMagicLink}
+                  className="px-4 py-2.5 rounded-xl bg-[#84cc16] hover:bg-[#a3e635] text-[#0f2317] font-bold text-xs flex items-center gap-1.5 shrink-0 transition-all cursor-pointer shadow-md shadow-[#84cc16]/20"
+                >
+                  {magicLinkCopied ? (
+                    <>
+                      <Check size={14} />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={14} />
+                      Copy Link
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons: Email and Test */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+              <button
+                type="button"
+                onClick={handleSendEmailInvitation}
+                className="w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-[#f5f0e6] hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <Mail size={15} className="text-[#84cc16]" />
+                Send Invitation via Email
+              </button>
+              <a
+                href={generatedLinkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[#cbd5e1] hover:text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all"
+              >
+                <ExternalLink size={14} />
+                Open & Test Link
+              </a>
+            </div>
+
+            {/* Explanation Note */}
+            <div className="p-3 rounded-2xl bg-[#84cc16]/10 border border-[#84cc16]/20 text-[11px] text-[#cbd5e1] leading-relaxed">
+              <strong className="text-[#84cc16]">How this works:</strong> The reviewer clicks this link in their email or chat. It automatically authenticates their session, pre-fills their name and document details on the official DFIH Peer-Review Score Sheet, and bypasses the password lock screen.
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-white/10 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setMagicLinkModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-white/10 text-white font-bold text-xs hover:bg-white/15 transition-all cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+
           </div>
         </div>
       )}

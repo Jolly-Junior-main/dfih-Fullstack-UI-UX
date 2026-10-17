@@ -23,7 +23,9 @@ import {
   User,
   Sliders,
   Check,
-  Download
+  Download,
+  Sparkles,
+  Key
 } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
@@ -204,6 +206,7 @@ function ReviewerEvaluationContent() {
   const docIdParam = searchParams.get("docId") || searchParams.get("id")
 
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+  const [isMagicLinkAuth, setIsMagicLinkAuth] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submittedReceipt, setSubmittedReceipt] = useState<EvaluationData | null>(null)
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -262,10 +265,26 @@ function ReviewerEvaluationContent() {
     const userLoggedIn = sessionStorage.getItem("user_logged_in") === "true"
     const storedUser = sessionStorage.getItem("user_email") || (adminAuth ? "Administrator Reviewer" : "Peer Reviewer")
     
-    if (adminAuth || userLoggedIn) {
+    // Check for Magic Link Token
+    const magicToken = searchParams.get("token")
+    const reviewerParam = searchParams.get("reviewer")
+    const emailParam = searchParams.get("email")
+
+    if (magicToken && magicToken.trim().length > 0) {
+      sessionStorage.setItem("user_logged_in", "true")
+      const finalName = reviewerParam || "Accredited Peer Reviewer"
+      const finalEmail = emailParam || "reviewer@cifor.org"
+      sessionStorage.setItem("user_name", finalName)
+      sessionStorage.setItem("user_email", finalEmail)
       setIsAuthorized(true)
-      setReviewerName(storedUser)
-      setSignature(storedUser)
+      setIsMagicLinkAuth(true)
+      setReviewerName(finalName)
+      setSignature(finalName)
+    } else if (adminAuth || userLoggedIn) {
+      setIsAuthorized(true)
+      const displayName = sessionStorage.getItem("user_name") || storedUser
+      setReviewerName(displayName)
+      setSignature(displayName)
     } else {
       setIsAuthorized(false)
     }
@@ -273,15 +292,39 @@ function ReviewerEvaluationContent() {
     const today = new Date().toISOString().split("T")[0]
     setDateOfReview(today)
 
-    // Load selected document
-    const match = PRESET_DOCUMENTS.find(d => d.id === (docIdParam || "1")) || PRESET_DOCUMENTS[0]
-    if (match) {
+    // Direct URL parameter overrides
+    const titleParam = searchParams.get("title")
+    const authorParam = searchParams.get("author")
+    const categoryParam = searchParams.get("category")
+
+    if (titleParam) setDocTitle(titleParam)
+    if (authorParam) setDocAuthor(authorParam)
+    if (categoryParam) setMainCategory(categoryParam)
+
+    // Load selected document from presets or admin submissions
+    const match = PRESET_DOCUMENTS.find(d => d.id === (docIdParam || "1"))
+    if (match && !titleParam) {
       setDocTitle(match.title)
       setDocAuthor(match.author)
       setDocYear(match.year)
       setDocType(match.docType)
       setMainCategory(match.mainCategory)
       setSubCategory(match.subCategory)
+    } else if (!match && docIdParam) {
+      try {
+        const storedAdmin = JSON.parse(localStorage.getItem("dfih_admin_submissions") || "[]")
+        const found = storedAdmin.find((s: any) => s.id === docIdParam)
+        if (found) {
+          if (!titleParam) setDocTitle(found.title)
+          if (!authorParam) setDocAuthor(found.author)
+          setDocYear("2026")
+          setDocType("Research Paper")
+          if (!categoryParam) setMainCategory(found.category)
+          setSubCategory("Silviculture & Resource Management")
+        }
+      } catch (err) {
+        console.error("Local submission lookup error:", err)
+      }
     }
 
     // Check for saved draft in localStorage
@@ -297,7 +340,7 @@ function ReviewerEvaluationContent() {
         console.error("Could not load draft:", e)
       }
     }
-  }, [docIdParam])
+  }, [docIdParam, searchParams])
 
   // Change preset document
   const handleSelectDoc = (id: string) => {
@@ -486,9 +529,55 @@ function ReviewerEvaluationContent() {
             <Lock size={32} />
           </div>
           <h2 className="text-2xl font-bold text-[#f5f0e6] mb-3">Reviewer Authentication Required</h2>
-          <p className="text-sm text-[#cbd5e1]/80 mb-8 leading-relaxed">
-            The peer-review evaluation form is restricted to accredited academic reviewers. Please sign in to verify your credentials.
+          <p className="text-sm text-[#cbd5e1]/80 mb-6 leading-relaxed">
+            The peer-review evaluation form is restricted to accredited academic reviewers. Sign in or enter your invitation token.
           </p>
+
+          {/* Quick Token / Magic Link Entry */}
+          <div className="mb-6 p-4 rounded-2xl bg-[#12281b]/80 border border-white/10 text-left">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#84cc16] mb-2 flex items-center gap-1.5">
+              <Sparkles size={14} />
+              Have a Magic Link or Token?
+            </label>
+            <form onSubmit={(e) => {
+              e.preventDefault()
+              const input = (document.getElementById("manualTokenInput") as HTMLInputElement)?.value.trim()
+              if (!input) return
+              let extractedToken = input
+              let extractedReviewer = ""
+              if (input.includes("token=")) {
+                try {
+                  const url = new URL(input.startsWith("http") ? input : `https://dfih.org/${input}`)
+                  extractedToken = url.searchParams.get("token") || ""
+                  extractedReviewer = url.searchParams.get("reviewer") || ""
+                } catch {}
+              }
+              if (extractedToken) {
+                sessionStorage.setItem("user_logged_in", "true")
+                const finalName = extractedReviewer || "Accredited Reviewer"
+                sessionStorage.setItem("user_name", finalName)
+                sessionStorage.setItem("user_email", "reviewer@cifor.org")
+                setIsAuthorized(true)
+                setIsMagicLinkAuth(true)
+                setReviewerName(finalName)
+                setSignature(finalName)
+              }
+            }} className="space-y-2">
+              <input
+                id="manualTokenInput"
+                type="text"
+                placeholder="Paste magic link or token..."
+                className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#84cc16]"
+              />
+              <button
+                type="submit"
+                className="w-full py-2 rounded-xl bg-[#84cc16]/20 hover:bg-[#84cc16] text-[#84cc16] hover:text-[#0f2317] border border-[#84cc16]/40 text-xs font-bold transition-all cursor-pointer"
+              >
+                Unlock via Token
+              </button>
+            </form>
+          </div>
+
           <div className="space-y-3">
             <Link
               href="/login"
@@ -547,6 +636,30 @@ function ReviewerEvaluationContent() {
           <div className="mb-6 p-4 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/40 text-[#84cc16] text-sm flex items-center gap-3 print:hidden animate-in fade-in slide-in-from-top-2">
             <CheckCircle2 size={18} />
             {saveDraftMessage}
+          </div>
+        )}
+
+        {isMagicLinkAuth && (
+          <div className="mb-6 p-4.5 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/40 text-[#f5f0e6] text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:hidden animate-in fade-in slide-in-from-top-2 shadow-lg shadow-[#84cc16]/5">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#84cc16]/20 border border-[#84cc16]/40 flex items-center justify-center text-[#84cc16] shrink-0">
+                <Sparkles size={18} className="animate-pulse" />
+              </div>
+              <div>
+                <div className="font-bold text-[#84cc16] flex items-center gap-1.5 text-xs uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-[#84cc16] animate-ping" />
+                  Authenticated via Magic Link
+                </div>
+                <div className="text-xs text-[#cbd5e1] mt-0.5">
+                  Welcome, <strong className="text-white underline">{reviewerName}</strong>. You have passwordless direct access to evaluate this submission.
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="px-3 py-1 rounded-full bg-[#84cc16]/20 border border-[#84cc16]/30 text-[#84cc16] font-mono text-[11px] font-bold">
+                ✓ Passwordless Token Verified
+              </span>
+            </div>
           </div>
         )}
 

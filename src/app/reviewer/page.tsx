@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { 
   ClipboardList, 
   CheckCircle, 
@@ -17,7 +18,8 @@ import {
   ExternalLink,
   X,
   Printer,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from "lucide-react"
 import Link from "next/link"
 
@@ -109,8 +111,10 @@ const INITIAL_COMPLETED: EvaluationRecord[] = [
   }
 ]
 
-export default function ReviewerPortal() {
+function ReviewerPortalContent() {
+  const searchParams = useSearchParams()
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+  const [isMagicLinkAuth, setIsMagicLinkAuth] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"assigned" | "completed">("assigned")
   const [completedList, setCompletedList] = useState<EvaluationRecord[]>([])
@@ -121,7 +125,20 @@ export default function ReviewerPortal() {
     const adminAuth = sessionStorage.getItem("admin_auth") === "true"
     const userLoggedIn = sessionStorage.getItem("user_logged_in") === "true"
     
-    if (adminAuth || userLoggedIn) {
+    // Check for Magic Link Token
+    const magicToken = searchParams.get("token")
+    const reviewerParam = searchParams.get("reviewer")
+    const emailParam = searchParams.get("email")
+
+    if (magicToken && magicToken.trim().length > 0) {
+      sessionStorage.setItem("user_logged_in", "true")
+      const finalName = reviewerParam || "Accredited Peer Reviewer"
+      const finalEmail = emailParam || "reviewer@cifor.org"
+      sessionStorage.setItem("user_name", finalName)
+      sessionStorage.setItem("user_email", finalEmail)
+      setIsAuthorized(true)
+      setIsMagicLinkAuth(true)
+    } else if (adminAuth || userLoggedIn) {
       setIsAuthorized(true)
     } else {
       setIsAuthorized(false)
@@ -164,7 +181,7 @@ export default function ReviewerPortal() {
       console.error("Error reading evaluations:", e)
       setCompletedList(INITIAL_COMPLETED)
     }
-  }, [])
+  }, [searchParams])
 
   if (isAuthorized === null) {
     return (
@@ -182,9 +199,53 @@ export default function ReviewerPortal() {
             <Lock size={32} />
           </div>
           <h2 className="text-2xl font-bold text-[#f5f0e6] mb-3">Reviewer Authentication Required</h2>
-          <p className="text-sm text-[#cbd5e1]/80 mb-8 leading-relaxed">
-            The peer-review portal is restricted to accredited academic reviewers and system administrators. Please sign in to verify your credentials.
+          <p className="text-sm text-[#cbd5e1]/80 mb-6 leading-relaxed">
+            The peer-review portal is restricted to accredited academic reviewers. Sign in or enter your invitation token.
           </p>
+
+          {/* Quick Token / Magic Link Entry */}
+          <div className="mb-6 p-4 rounded-2xl bg-[#12281b]/80 border border-white/10 text-left">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#84cc16] mb-2 flex items-center gap-1.5">
+              <Sparkles size={14} />
+              Have a Magic Link or Token?
+            </label>
+            <form onSubmit={(e) => {
+              e.preventDefault()
+              const input = (document.getElementById("portalTokenInput") as HTMLInputElement)?.value.trim()
+              if (!input) return
+              let extractedToken = input
+              let extractedReviewer = ""
+              if (input.includes("token=")) {
+                try {
+                  const url = new URL(input.startsWith("http") ? input : `https://dfih.org/${input}`)
+                  extractedToken = url.searchParams.get("token") || ""
+                  extractedReviewer = url.searchParams.get("reviewer") || ""
+                } catch {}
+              }
+              if (extractedToken) {
+                sessionStorage.setItem("user_logged_in", "true")
+                const finalName = extractedReviewer || "Accredited Reviewer"
+                sessionStorage.setItem("user_name", finalName)
+                sessionStorage.setItem("user_email", "reviewer@cifor.org")
+                setIsAuthorized(true)
+                setIsMagicLinkAuth(true)
+              }
+            }} className="space-y-2">
+              <input
+                id="portalTokenInput"
+                type="text"
+                placeholder="Paste magic link or token..."
+                className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#84cc16]"
+              />
+              <button
+                type="submit"
+                className="w-full py-2 rounded-xl bg-[#84cc16]/20 hover:bg-[#84cc16] text-[#84cc16] hover:text-[#0f2317] border border-[#84cc16]/40 text-xs font-bold transition-all cursor-pointer"
+              >
+                Unlock Portal via Token
+              </button>
+            </form>
+          </div>
+
           <div className="space-y-3">
             <Link
               href="/login"
@@ -227,6 +288,30 @@ export default function ReviewerPortal() {
   return (
     <div className="flex flex-col min-h-screen pt-28 pb-16 bg-[#163022] text-[#f5f0e6]">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+
+        {isMagicLinkAuth && (
+          <div className="mb-8 p-4.5 rounded-2xl bg-[#84cc16]/15 border border-[#84cc16]/40 text-[#f5f0e6] text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 shadow-lg shadow-[#84cc16]/5">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#84cc16]/20 border border-[#84cc16]/40 flex items-center justify-center text-[#84cc16] shrink-0">
+                <Sparkles size={18} className="animate-pulse" />
+              </div>
+              <div>
+                <div className="font-bold text-[#84cc16] flex items-center gap-1.5 text-xs uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-[#84cc16] animate-ping" />
+                  Authenticated via Magic Link
+                </div>
+                <div className="text-xs text-[#cbd5e1] mt-0.5">
+                  Welcome to the portal queue, <strong className="text-white underline">{sessionStorage.getItem("user_name") || "Accredited Reviewer"}</strong>. You have instant access to your assigned manuscripts.
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="px-3 py-1 rounded-full bg-[#84cc16]/20 border border-[#84cc16]/30 text-[#84cc16] font-mono text-[11px] font-bold">
+                ✓ Passwordless Session
+              </span>
+            </div>
+          </div>
+        )}
         
         {/* Top Header Card */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 bg-[#1c3d2b]/80 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-xl">
@@ -571,5 +656,17 @@ export default function ReviewerPortal() {
 
       </div>
     </div>
+  )
+}
+
+export default function ReviewerPortal() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#163022] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-[#84cc16] border-t-transparent animate-spin" />
+      </div>
+    }>
+      <ReviewerPortalContent />
+    </Suspense>
   )
 }
